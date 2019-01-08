@@ -5,11 +5,14 @@ from hs_restclient import HydroShare, HydroShareAuthBasic
 from czo2hs_parser import get_spatial_coverage, get_creator, get_files
 from _czo import _update_core_metadata
 
-
-hs_user_name = "drew"
-hs_user_pwd = "123456"
 #hs_host_url = "dev-hs-6.cuahsi.org"
 hs_host_url = "www.hydroshare.org"
+hs_user_name = ""
+hs_user_pwd = ""
+
+hs_host_url = "127.0.0.1"
+hs_user_name = ""
+hs_user_pwd = ""
 
 czo_df = pd.read_csv("czo.csv")
 df_6524 = czo_df.loc[czo_df['czo_id'] == 2414]
@@ -191,7 +194,10 @@ for index, row in czo_df.iterrows():
             return file_id
 
         auth = HydroShareAuthBasic(username=hs_user_name, password=hs_user_pwd)
-        hs = HydroShare(auth=auth, hostname=hs_host_url)
+        if "hydroshare.org" in hs_host_url or "cuahsi.org" in hs_host_url:
+            hs = HydroShare(auth=auth, hostname=hs_host_url)
+        else:
+            hs = HydroShare(auth=auth, hostname=hs_host_url, port=8000, use_https=False, verify=False)
 
         # Step 1: create an empty resource with Resource Type and Title
         resource_id = hs.createResource(example_res["resource_type"],
@@ -199,36 +205,20 @@ for index, row in czo_df.iterrows():
                                         keywords=example_res["keywords"],
                                         abstract=example_res["abstract"],
                                         )
-        # resource_id = hs.createResource(example_res["resource_type"],
-        #                                 example_res["title"],
-        #                                 keywords=example_res["keywords"],
-        #                                 abstract=example_res["abstract"],
-        #                                 metadata=json.dumps(example_res["metadata"]),
-        #                                 extra_metadata=json.dumps(example_res["extra_metadata"]),
-        #                                 )
 
-        metadata = {
-            # "title": "A new title for my resource",
-            "coverages":
-                [{"coverage": {"type": "period", "value": {"start": "01/01/2000", "end": "12/12/2010", "name": "123",}}}
-                 ]
-            ,
-
-            # 'source': {'derived_from': 'http://hydroshare.org/resource/0001'},
-            # "creators": [
-            #     {"name": "John Smith", "organization": "USU"},
-            #     {"name": "Lisa Miller", "email": "lisa_miller@gmail.com"}
-            # ]
-        }
-        science_metadata_json = _update_core_metadata(hs, resource_id, metadata)
-        metadata = {
-            "creators": [
-                {"name": "John Smith11", "organization": "USU"},
-                {"name": "Lisa Miller11", "email": "lisa_miller@gmail.com"}
-            ]
-        }
-        science_metadata_json = _update_core_metadata(hs, resource_id, metadata)
-
+        # # https://hs-restclient.readthedocs.io/en/latest/
+        # metadata = {
+        #     "title": "A new title for my resource",
+        #     "coverages":
+        #         [ {"type": "period", "value": {"start": "01/01/2000", "end": "12/12/2010"}}
+        #          ],
+        #     'source': {'derived_from': 'http://hydroshare.org/resource/0001'},
+        #     "creators": [
+        #         {"name": "John Smith", "organization": "USU"},
+        #         {"name": "Lisa Miller", "email": "lisa_miller@gmail.com"}
+        #     ]
+        # }
+        # science_metadata_json = _update_core_metadata(hs, resource_id, metadata)
 
 
         # core metadata
@@ -236,18 +226,25 @@ for index, row in czo_df.iterrows():
         science_metadata_json = _update_core_metadata(hs, resource_id, {"creators": [hs_creator]})
 
         # spatial coverage
-        science_metadata_json = _update_core_metadata(hs, resource_id, {'coverages': [ {"type": "period", "value": {"start": "01/01/2000", "end": "12/12/2010"}}]})
+        science_metadata_json = _update_core_metadata(hs, resource_id, {'coverages': [{"type": "period", "value": {"start": "01/01/2000", "end": "12/12/2010"}}]})
 
         # period coverage
         science_metadata_json = _update_core_metadata(hs, resource_id, {'coverages': [hs_coverage_spatial]})
 
-        resource_id = hs.createResource(example_res["resource_type"],
-                                        example_res["title"],
-                                        keywords=example_res["keywords"],
-                                        abstract=example_res["abstract"],
-                                        metadata=json.dumps(example_res["metadata"]),
-                                        extra_metadata=json.dumps(example_res["extra_metadata"]),
-                                        )
+
+        # rights
+        right= {'statement': 'This is the rights statement for this CZO resource',
+                    'url': 'http://criticalzone.org/national/'}
+        science_metadata_json = _update_core_metadata(hs, resource_id, {'rights': [right]})
+
+        #
+        # resource_id = hs.createResource(example_res["resource_type"],
+        #                                 example_res["title"],
+        #                                 keywords=example_res["keywords"],
+        #                                 abstract=example_res["abstract"],
+        #                                 metadata=json.dumps(example_res["metadata"]),
+        #                                 extra_metadata=json.dumps(example_res["extra_metadata"]),
+        #                                 )
 
         print(resource_id)
         #for f in example_res["files"]:
@@ -280,5 +277,5 @@ for index, row in czo_df.iterrows():
         # print (json.dumps(science_metadata_json, sort_keys=True, indent=4))
 
     except Exception as e:
-        print (e)
+        pass
 print("Done")

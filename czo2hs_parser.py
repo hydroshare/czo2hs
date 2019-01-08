@@ -1,4 +1,4 @@
-import nltk
+#import nltk
 # nltk.download('punkt')
 # nltk.download('averaged_perceptron_tagger')
 # nltk.download('maxent_ne_chunker')
@@ -6,6 +6,8 @@ import nltk
 import requests
 import tempfile
 import os
+
+
 def get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None):
     if east_long == west_long and south_lat == north_lat:
         # point
