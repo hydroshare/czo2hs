@@ -5,50 +5,58 @@ from hs_restclient import HydroShare, HydroShareAuthBasic
 from czo2hs_parser import get_spatial_coverage, get_creator, get_files
 from _czo import _update_core_metadata
 
+# Which HydroShare to talk to
+
 #hs_host_url = "dev-hs-6.cuahsi.org"
-hs_host_url = "www.hydroshare.org"
-hs_user_name = ""
-hs_user_pwd = ""
-
+#hs_host_url = "www.hydroshare.org"
 hs_host_url = "127.0.0.1"
-hs_user_name = ""
-hs_user_pwd = ""
+hs_user_name = "drew"
+hs_user_pwd = "123"
 
+# read csv file into dataframe
 czo_df = pd.read_csv("czo.csv")
-df_6524 = czo_df.loc[czo_df['czo_id'] == 2414]
 
+# extract a specific data row by czo_id
+# df_row = czo_df.loc[czo_df['czo_id'] == 6524]
+
+# loop through dataframe rows
+PROCESS_FIRST_N_ROWS = 3  # just process first N rows
 for index, row in czo_df.iterrows():
     try:
-        if index > 2:
+        if index > PROCESS_FIRST_N_ROWS - 1:
             break
-        df_6524 = row
-        pass
+
         #dict_6524 = df_6524.to_dict(orient='records')[0]
 
-        dict_6524 = df_6524.to_dict()
-        print (dict_6524)
+        czo_res_dict = row.to_dict()  # convert row to dict
 
-
-        czo_res_dict = dict_6524
+        # parse file info
         czo_files = czo_res_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
         get_files(czo_files)
 
+        # CZO Name
         czos = czo_res_dict["CZOS"]
-        # title
-        hs_res_title = czo_res_dict["title"]
-        # abstract
-        hs_res_abstract = "{} \n\n " \
-                        "[Description]\n {} \n\n " \
-                          "[Comments]\n {} \n\n " \
-                          "[Variables]\n {} \n\n".format(czo_res_dict["subtitle"],
-                                                  czo_res_dict["description"],
-                                                  czo_res_dict["comments"],
-                                                  czo_res_dict["VARIABLES"],)
-        date_range_comments = czo_res_dict["date_range_comments"]
-        if isinstance(date_range_comments, str) and len(date_range_comments) > 0 :
-            hs_res_abstract = hs_res_abstract + "[Date Range Comments] \n {}\n\n".format(date_range_comments)
+        # hs title
+        hs_res_title = czos + ":" + czo_res_dict["title"]
 
-        # keywords
+        # hs abstract
+        hs_res_abstract = "{czos} \n\n" \
+                          "{subtitle} \n\n" \
+                          "[Description]\n {description} \n\n" \
+                          "[Comments]\n {comments} \n\n" \
+                          "[Variables]\n {VARIABLES} \n\n".format(czos=czos,
+                                                                  subtitle=czo_res_dict["subtitle"],
+                                                                  description=czo_res_dict["description"],
+                                                                  comments=czo_res_dict["comments"],
+                                                                  VARIABLES=czo_res_dict["VARIABLES"],)
+        # if date_range_comments exists, append to hs abstract
+        date_range_comments = czo_res_dict["date_range_comments"]
+        if isinstance(date_range_comments, str) and len(date_range_comments) > 0:
+            hs_res_abstract = hs_res_abstract + "[Date Range Comments] \n {date_range_comments}\n\n"\
+                .format(date_range_comments=date_range_comments)
+        # hs abstract end
+
+        # hs keywords
         hs_res_keywords = []
         for item in ("VARIABLES", "TOPICS", "KEYWORDS", "CZOS"):
             hs_res_keywords += czo_res_dict[item].split("|")
@@ -56,14 +64,17 @@ for index, row in czo_df.iterrows():
         hs_res_keywords = set(hs_res_keywords)
         if "" in hs_res_keywords:
             hs_res_keywords.remove("")
+        # hs keywords end
 
         czo_id = czo_res_dict["czo_id"]
+
+        # hs creator/author
         contact_email = czo_res_dict["contact"]
         creator_name = czo_res_dict["creator"]
-
         hs_creator = get_creator(czos, creator_name, contact_email)
+        # hs creator/author end
 
-        # coverage
+        # hs coverage
         # temporal
         date_start = czo_res_dict["date_start"]
         date_end = czo_res_dict["date_end"]
@@ -75,11 +86,10 @@ for index, row in czo_df.iterrows():
         field_areas = czo_res_dict["FIELD_AREAS"]
         location = czo_res_dict["location"]
         hs_coverage_spatial = get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=field_areas + "-" + location)
-        hs_coverage_period = {'type': 'period', 'value': {#'name': 'Name for period coverage',
-                                                                   'start': date_start,
-                                                                   'end': date_end,
-                                                                   }
-                              }
+        hs_coverage_period = {'type': 'period', 'value': {'start': date_start, 'end': date_end, }}
+        # hs coverage end
+
+        # hs res level extended metadata
         hs_extra_metadata = dict((str(name), str(czo_res_dict[name])) for name in ['czo_id', 'subtitle', 'CZOS', 'FIELD_AREAS',
                                                                  'location', 'TOPICS', 'sub_topic', 'KEYWORDS',
                                                                  'VARIABLES', 'description', 'comments', 'RELATED_DATASETS',
@@ -200,53 +210,25 @@ for index, row in czo_df.iterrows():
             hs = HydroShare(auth=auth, hostname=hs_host_url, port=8000, use_https=False, verify=False)
 
         # Step 1: create an empty resource with Resource Type and Title
-        resource_id = hs.createResource(example_res["resource_type"],
-                                        example_res["title"],
-                                        keywords=example_res["keywords"],
-                                        abstract=example_res["abstract"],
+        resource_id = hs.createResource("CompositeResource",
+                                        hs_res_title,
+                                        keywords=hs_res_keywords,
+                                        abstract=hs_res_abstract,
                                         )
+        print(resource_id)
 
-        # # https://hs-restclient.readthedocs.io/en/latest/
-        # metadata = {
-        #     "title": "A new title for my resource",
-        #     "coverages":
-        #         [ {"type": "period", "value": {"start": "01/01/2000", "end": "12/12/2010"}}
-        #          ],
-        #     'source': {'derived_from': 'http://hydroshare.org/resource/0001'},
-        #     "creators": [
-        #         {"name": "John Smith", "organization": "USU"},
-        #         {"name": "Lisa Miller", "email": "lisa_miller@gmail.com"}
-        #     ]
-        # }
-        # science_metadata_json = _update_core_metadata(hs, resource_id, metadata)
-
-
-        # core metadata
+        # hs res core metadata
         # creators
         science_metadata_json = _update_core_metadata(hs, resource_id, {"creators": [hs_creator]})
 
-        # spatial coverage
-        science_metadata_json = _update_core_metadata(hs, resource_id, {'coverages': [{"type": "period", "value": {"start": "01/01/2000", "end": "12/12/2010"}}]})
+        # spatial coverage and period coverage should be updated at the same time
+        science_metadata_json = _update_core_metadata(hs, resource_id, {'coverages': [hs_coverage_spatial, hs_coverage_period]})
 
-        # period coverage
-        science_metadata_json = _update_core_metadata(hs, resource_id, {'coverages': [hs_coverage_spatial]})
-
-
-        # rights
-        right= {'statement': 'This is the rights statement for this CZO resource',
+        # hs rights/license
+        right = {'statement': 'This is the rights statement for this CZO resource',
                     'url': 'http://criticalzone.org/national/'}
         science_metadata_json = _update_core_metadata(hs, resource_id, {'rights': [right]})
 
-        #
-        # resource_id = hs.createResource(example_res["resource_type"],
-        #                                 example_res["title"],
-        #                                 keywords=example_res["keywords"],
-        #                                 abstract=example_res["abstract"],
-        #                                 metadata=json.dumps(example_res["metadata"]),
-        #                                 extra_metadata=json.dumps(example_res["extra_metadata"]),
-        #                                 )
-
-        print(resource_id)
         #for f in example_res["files"]:
         for f in get_files(czo_files):
 
