@@ -214,6 +214,7 @@ for index, row in czo_df.iterrows():
                                         hs_res_title,
                                         keywords=hs_res_keywords,
                                         abstract=hs_res_abstract,
+                                        extra_metadata=json.dumps(hs_extra_metadata)
                                         )
         print(resource_id)
 
@@ -221,13 +222,27 @@ for index, row in czo_df.iterrows():
         # creators
         science_metadata_json = _update_core_metadata(hs, resource_id, {"creators": [hs_creator]})
 
-        # spatial coverage and period coverage should be updated at the same time
+        # spatial coverage and period coverage must be updated at the same time as updating any single one would remove the other
         science_metadata_json = _update_core_metadata(hs, resource_id, {'coverages': [hs_coverage_spatial, hs_coverage_period]})
 
+        # not working!!!!
         # hs rights/license
-        right = {'statement': 'This is the rights statement for this CZO resource',
-                    'url': 'http://criticalzone.org/national/'}
-        science_metadata_json = _update_core_metadata(hs, resource_id, {'rights': [right]})
+        right_dict = {'statement': 'This is the rights statement for this resource',
+                      'url': 'http://rights.ord/001', }
+        science_metadata_json = _update_core_metadata(hs, resource_id, {'rights': [right_dict]})
+
+        # not working!!!!, moved to hs.createResource() instead
+        # hs extra/extended metadata doesnt work in update
+        # science_metadata_json = _update_core_metadata(hs, resource_id, {'extra_metadata': json.dumps(hs_extra_metadata)})
+
+        # not working !!!!
+        # hs funding
+        agent_dict = {"agency_name": "National Science Foundation",
+                      "award_title": "CZO",
+                      "award_number": "NSF_123456789",
+                      "agency_url": "http://www.nsf.gov",}
+        science_metadata_json = _update_core_metadata(hs, resource_id, {'funding_agencies': [agent_dict]})
+
 
         #for f in example_res["files"]:
         for f in get_files(czo_files):
