@@ -1,11 +1,7 @@
-#import nltk
-# nltk.download('punkt')
-# nltk.download('averaged_perceptron_tagger')
-# nltk.download('maxent_ne_chunker')
-# nltk.download('words')
 import requests
 import tempfile
 import os
+import validators
 
 
 def get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None):
@@ -34,15 +30,8 @@ def get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None):
 
 def get_creator(czos, creator, email):
 
+    # Hard coded to return "Someone" for now
     hs_creator = {'organization': czos, 'name': "Someone", 'email': "xxxx@czo.org", }
-    #hs_creator = {'organization': czos, 'name': creator, 'email': email, }
-    # hs_creator = {'organization': 'ddddd', 'address': 'ggggg', 'name': 'sss', 'email': 'bbb@gmail.com', 'phone': "456"}
-    #print (get_human_names(creator))
-    # if ";" in creator: # multiple creator separated by ;
-    #     pass
-    # elif "," in creator:
-    #
-    # pass
     return hs_creator
 
 # "files": [
@@ -93,8 +82,10 @@ def get_creator(czos, creator, email):
 #                                  },  # "metadata"
 #                  },  # file2
 #             ]
-import validators
+
+
 def get_files(in_str):
+
     files_list = []
     for f_str in in_str.split("|"):
         f_info_list = f_str.split("$")
@@ -111,7 +102,7 @@ def get_files(in_str):
                 file_name = f_url.split("/")[-2]
             path_or_url = f_url
             file_type = "ReferencedFile"
-            metadata= {"title": f_topic,
+            metadata = {"title": f_topic,
 
                           # "spatial_coverage": {
                           #                      "name": f_location,
@@ -139,8 +130,8 @@ def get_files(in_str):
                         }
                 files_list.append(file)
 
-
     return files_list
+
 
 def _download_file(url, save_to):
     response = requests.get(url, stream=True)
@@ -148,49 +139,3 @@ def _download_file(url, save_to):
         f.write(response.content)
 
 
-# # from nameparser.parser import HumanName
-#
-# def get_human_names(text):
-#     tokens = nltk.tokenize.word_tokenize(text)
-#     pos = nltk.pos_tag(tokens)
-#     sentt = nltk.ne_chunk(pos, binary = False)
-#     person_list = []
-#     person = []
-#     name = ""
-#     for subtree in sentt.subtrees(filter=lambda t: t.node == 'PERSON'):
-#         for leaf in subtree.leaves():
-#             person.append(leaf[0])
-#         if len(person) > 1: #avoid grabbing lone surnames
-#             for part in person:
-#                 name += part + ' '
-#             if name[:-1] not in person_list:
-#                 person_list.append(name[:-1])
-#             name = ''
-#         person = []
-#
-#     return (person_list)
-#
-# # import nltk
-# # from nameparser.parser import HumanName
-# # from nltk.corpus import wordnet
-#
-#
-# def get_human_names(text):
-#     person_list = []
-#     tokens = nltk.tokenize.word_tokenize(text)
-#     pos = nltk.pos_tag(tokens)
-#     sentt = nltk.ne_chunk(pos, binary = False)
-#
-#     person = []
-#     name = ""
-#     for subtree in sentt.subtrees(filter=lambda t: t.label() == 'PERSON'):
-#         for leaf in subtree.leaves():
-#             person.append(leaf[0])
-#         if len(person) > 1: #avoid grabbing lone surnames
-#             for part in person:
-#                 name += part + ' '
-#             if name[:-1] not in person_list:
-#                 person_list.append(name[:-1])
-#             name = ''
-#         person = []
-#     return person_list
