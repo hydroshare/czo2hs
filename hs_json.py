@@ -3,7 +3,7 @@ import logging
 import pandas as pd
 import json
 from hs_restclient import HydroShare, HydroShareAuthBasic
-from czo2hs_parser import get_spatial_coverage, get_creator, get_files
+from czo2hs_parser import get_spatial_coverage, get_creator, get_files, get_file_id_by_name
 from _czo import _update_core_metadata
 
 logging.basicConfig(level=logging.INFO)
@@ -125,6 +125,7 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
 
         for f in get_files(czo_files):
             file_id = None
+            logging.info("Uploading file: {}".format(str(f)))
             if f["file_type"] == "ReferencedFile":
                 resp_dict = hs.createReferencedFile(pid=resource_id,
                                                     path='data/contents',
@@ -136,10 +137,8 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
                 # auto file type detect
                 file_id = hs.addResourceFile(resource_id,
                                              f["path_or_url"])
-
-            # # find file id (to be replaced by new hs_restclient)
-            # if not file_id:
-            #     file_id = get_file_id_by_name(hs, resource_id, f["file_name"])
+                # # find file id (to be replaced by new hs_restclient)
+                file_id = get_file_id_by_name(hs, resource_id, f["file_name"])
 
             hs.resource(resource_id).files.metadata(file_id, f["metadata"])
 
@@ -148,7 +147,7 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
 
         # science_metadata_json = hs.getScienceMetadata(resource_id)
         # print (json.dumps(science_metadata_json, sort_keys=True, indent=4))
-        logging.info("Done Row No.{row}, CZO_ID: {czo_id}".fromat(row=index + 1, czo_id=czo_id))
+        logging.info("Done Row No.{row}, CZO_ID: {czo_id}".format(row=index + 1, czo_id=czo_id))
     except Exception as ex:
         logging.error(ex)
     finally:
@@ -162,7 +161,7 @@ hs_host_url = "127.0.0.1"
 hs_user_name = "drew"
 hs_user_pwd = "123"
 PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
-PROCESS_CZO_ID = 6524  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
+PROCESS_CZO_ID = 2414  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
 
 if __name__ == "__main__":
     # read csv file into dataframe

@@ -2,7 +2,8 @@ import requests
 import tempfile
 import os
 import validators
-
+import time
+import json
 
 def get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None):
     if east_long == west_long and south_lat == north_lat:
@@ -84,6 +85,15 @@ def get_creator(czos, creator, email):
 #             ]
 
 
+def _whether_to_harvest_file(filename):
+
+    filename = filename.lower()
+    for ext in [".csv", ".doc", ".xls"]:
+        if filename.endswith(ext):
+            return True
+    return False
+
+
 def get_files(in_str):
 
     files_list = []
@@ -100,42 +110,77 @@ def get_files(in_str):
             file_name = f_url.split("/")[-1]
             if len(file_name) == 0:
                 file_name = f_url.split("/")[-2]
-            path_or_url = f_url
-            file_type = "ReferencedFile"
-            metadata = {"title": f_topic,
 
-                          # "spatial_coverage": {
-                          #                      "name": f_location,
-                          #                     },  # "spatial_coverage"
-                        "extra_metadata": {"private": f_private,
-                                           "data_level": f_data_level,
-                                           "metadata_url": f_metadata_url,
-                                           "url": f_url,
-                                           "location": f_location
-                                        },  # extra_metadata
-                         }
+            if _whether_to_harvest_file(file_name):
+                file_path_local = _download_file(f_url, file_name)
+                file_info = {"path_or_url": file_path_local,
+                             "file_name": file_name,
+                             "file_type": "",
+                             "metadata": {},
+                             }
 
-            file = {"file_type": file_type, "path_or_url": path_or_url, "file_name": file_name,
-                "metadata": metadata}
-            files_list.append(file)
+            else:
+                file_info = {"file_type": "ReferencedFile",
+                             "path_or_url": f_url,
+                             "file_name": file_name,
+                             "metadata": {},
+                             }
+
+            file_info["metadata"] = {"title": f_topic,
+
+                                          # "spatial_coverage": {
+                                          #                      "name": f_location,
+                                          #                     },  # "spatial_coverage"
+                                     "extra_metadata": {"private": f_private,
+                                                           "data_level": f_data_level,
+                                                           "metadata_url": f_metadata_url,
+                                                           "url": f_url,
+                                                           "location": f_location,
+                                                           "doi": f_doi,
+                                                        },  # extra_metadata
+                                    }
+
+            #files_list.append(file_info)
+            yield file_info
 
         if validators.url(f_metadata_url):
             file_name = f_metadata_url.split("/")[-1]
-            if len(file_name) > 0:
-                save_to_base = tempfile.mkdtemp()
-                save_to = os.path.join(save_to_base, file_name)
-                _download_file(f_metadata_url, save_to)
-                path_or_url = save_to
-                file = {"path_or_url": path_or_url, "file_name": file_name, "file_type": "", "metadata": {},
-                        }
-                files_list.append(file)
+            if len(file_name) == 0:
+                file_name = f_metadata_url.split("/")[-2]
+            file_path_local = _download_file(f_metadata_url, file_name)
+            file_info = {"path_or_url": file_path_local,
+                         "file_name": file_name,
+                         "file_type": "",
+                         "metadata": {}, }
 
-    return files_list
+            #files_list.append(file_info)
+            yield file_info
+
+    #return files_list
 
 
-def _download_file(url, save_to):
+def _download_file(url, file_name):
+    save_to_base = tempfile.mkdtemp()
+    save_to = os.path.join(save_to_base, file_name)
     response = requests.get(url, stream=True)
     with open(save_to, 'wb') as f:
         f.write(response.content)
+    return save_to
+
+
+def get_file_id_by_name(hs, resource_id, fname):
+
+    resource = hs.resource(resource_id)
+    file = ""
+    for f in resource.files.all():
+        file += f.decode('utf8')
+    file_id = -1
+    file_json = json.loads(file)
+    for file in file_json["results"]:
+        if fname.lower() in str(file["url"]).lower():
+            file_id = file["id"]
+    if file_id == -1:
+        print("couldn't find file for {} in resource {}".format(fname, resource_id))
+    return file_id
 
 
