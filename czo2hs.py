@@ -4,6 +4,7 @@ import json
 from hs_restclient import HydroShare, HydroShareAuthBasic
 from _utils import get_spatial_coverage, get_creator, get_files, get_file_id_by_name, _update_core_metadata
 
+
 logging.basicConfig(level=logging.INFO)
 
 

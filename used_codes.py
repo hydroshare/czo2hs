@@ -1,4 +1,7 @@
+## This file contains some used codes that miggt be useful down the road
+
 #https://github.com/hydroshare/hydroshare/blob/develop/hs_core/hydroshare/resource.py#L779
+
 
 # def get_file_id_by_name(hs, resource_id, fname):
 #     resource = hs.resource(resource_id)

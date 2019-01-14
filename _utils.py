@@ -54,6 +54,7 @@ def get_creator(czos, creator, email):
     return hs_creator
 
 
+
 def _whether_to_harvest_file(filename):
 
     filename = filename.lower()
@@ -168,12 +169,12 @@ def get_file_id_by_name(hs, resource_id, fname):
 
 def _update_core_metadata(hs_obj, res_id, metadata_dict, message=None):
     """
-    Update core metadata for a HydroShare
-    :param hs_obj: hs obj initialized by hs_restclient
-    :param res_id: resource id
-    :param metadata_dict: metadata dict
-    :param message: logging message
-    :return:
+       Update core metadata for a HydroShare
+       :param hs_obj: hs obj initialized by hs_restclient
+       :param res_id: resource id
+       :param metadata_dict: metadata dict
+       :param message: logging message
+       :return:
     """
     science_metadata_json = hs_obj.updateScienceMetadata(res_id, metadata=metadata_dict)
     if not message:
