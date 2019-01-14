@@ -1,11 +1,22 @@
+import logging
 import requests
 import tempfile
 import os
 import validators
-import time
 import json
 
+
 def get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None):
+    """
+    Assemble HydroShare spatial coverage metadata dict
+    :param north_lat: north limit of the bounding box
+    :param west_long: west limit of the bounding box
+    :param south_lat: south limit of the bounding box
+    :param east_long: east limit of the bounding box
+    :param name: name of the spatial coverage
+    :return: a dict of spatial coverage metadata
+    """
+
     if east_long == west_long and south_lat == north_lat:
         # point
         hs_coverage_spatial = {'type': 'point', 'value': {"units": "Decimal degrees",
@@ -30,59 +41,17 @@ def get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None):
 
 
 def get_creator(czos, creator, email):
+    """
+    Assemble HydroShare Creator metadata dict
+    :param czos: czos name
+    :param creator: creator field
+    :param email: creator email
+    :return: HydroShare Creator metadata dict
+    """
 
     # Hard coded to return "Someone" for now
     hs_creator = {'organization': czos, 'name': "Someone", 'email': "xxxx@czo.org", }
     return hs_creator
-
-# "files": [
-#                 {
-#                  "file_type": "ReferencedFile",  # ReferencedFile, NetCDF, GeoRaster, GeoFeature
-#                  "path_or_url": "https://bcczo.colorado.edu/dataSets/met/entire_B1_TempRH.csv",
-#                  "file_name": "entire_B1_TempRH.csv",
-#                  "metadata": {"title": "file title",
-#                               "keywords": ["file_k1", "file_k2"],
-#                               "spatial_coverage": {
-#                                                    "type": "point",
-#                                                    "units": "Decimal degrees",
-#                                                    "east": -99.5447,
-#                                                    "north": 38.9574,
-#                                                    "projection": "WGS 84 EPSG:4326"
-#                                                   },  # "spatial_coverage"
-#                              "temporal_coverage": {"start": "2018-02-23",
-#                                                     "end": "2018-02-28"
-#                                                     },
-#                             "extra_metadata": {"file_k1": "file_v1",
-#                                                 "file_k2": "file_v2",
-#                                             },  # extra_metadata
-#
-#
-#
-#                              },  # "metadata"
-#                  },  # file 1
-#                  {
-#                     "file_type": "NetCDF",  # ReferencedFile, NetCDF, GeoRaster, GeoFeature
-#                     "path_or_url": r"C:\Users\Drew\PycharmProjects\czo\bulk-resource-creator\sample.nc",
-#                     "file_name": "sample.nc",
-#                     "metadata": {"title": "file title",
-#                                  "keywords": ["file_k1", "file_k2"],
-#                                  "spatial_coverage": {
-#                                      "type": "point",
-#                                      "units": "Decimal degrees",
-#                                      "east": -99.5447,
-#                                      "north": 38.9574,
-#                                      "projection": "WGS 84 EPSG:4326"
-#                                  },  # "spatial_coverage"
-#                                  "temporal_coverage": {"start": "2018-02-23",
-#                                                        "end": "2018-02-28"
-#                                                        },
-#                                  "extra_metadata": {"file_k1": "file_v1",
-#                                                     "file_k2": "file_v2",
-#                                                     },  # extra_metadata
-#
-#                                  },  # "metadata"
-#                  },  # file2
-#             ]
 
 
 def _whether_to_harvest_file(filename):
@@ -95,8 +64,12 @@ def _whether_to_harvest_file(filename):
 
 
 def get_files(in_str):
+    """
+    This is a generator that returns a resource file dict in each iterate
+    :param in_str: file field
+    :return: None
+    """
 
-    files_list = []
     for f_str in in_str.split("|"):
         f_info_list = f_str.split("$")
         f_location = f_info_list[0]
@@ -140,7 +113,6 @@ def get_files(in_str):
                                                         },  # extra_metadata
                                     }
 
-            #files_list.append(file_info)
             yield file_info
 
         if validators.url(f_metadata_url):
@@ -152,14 +124,16 @@ def get_files(in_str):
                          "file_name": file_name,
                          "file_type": "",
                          "metadata": {}, }
-
-            #files_list.append(file_info)
             yield file_info
-
-    #return files_list
 
 
 def _download_file(url, file_name):
+    """
+       Download a remote czo file to local
+       :param url: URL to remote CZ file
+       :param save_to: local path to store the file
+       :return: None
+    """
     save_to_base = tempfile.mkdtemp()
     save_to = os.path.join(save_to_base, file_name)
     response = requests.get(url, stream=True)
@@ -169,6 +143,14 @@ def _download_file(url, file_name):
 
 
 def get_file_id_by_name(hs, resource_id, fname):
+    """
+    This is a temporary workaround as current hs_restclient doens return id of newly created file;
+    Loop through all files in a resource and return id of a file by filename;
+    :param hs: hs obj from initialized hs_restclient
+    :param resource_id: res id
+    :param fname: the filename to search
+    :return: file id
+    """
 
     resource = hs.resource(resource_id)
     file = ""
@@ -184,3 +166,17 @@ def get_file_id_by_name(hs, resource_id, fname):
     return file_id
 
 
+def _update_core_metadata(hs_obj, res_id, metadata_dict, message=None):
+    """
+    Update core metadata for a HydroShare
+    :param hs_obj: hs obj initialized by hs_restclient
+    :param res_id: resource id
+    :param metadata_dict: metadata dict
+    :param message: logging message
+    :return:
+    """
+    science_metadata_json = hs_obj.updateScienceMetadata(res_id, metadata=metadata_dict)
+    if not message:
+        message = str(metadata_dict)
+    logging.info('{message} updated successfully'.format(message=message))
+    return science_metadata_json
