@@ -3,13 +3,19 @@ import logging
 import pandas as pd
 import json
 from hs_restclient import HydroShare, HydroShareAuthBasic
-from czo2hs_parser import get_spatial_coverage, get_creator, get_files
-from _czo import _update_core_metadata
+from _parsers import get_spatial_coverage, get_creator, get_files
+from _utils import _update_core_metadata
 
 logging.basicConfig(level=logging.INFO)
 
 
 def _create_hs_res_from_czo(czo_res_dict, index=-99):
+    """
+    Create a HydroShare resource from a CZO data row
+    :param czo_res_dict: dict of CZO data row
+    :param index: the row index
+    :return: None
+    """
 
     try:
         czo_id = czo_res_dict["czo_id"]
@@ -164,7 +170,9 @@ hs_user_pwd = "123"
 PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
 PROCESS_CZO_ID = 6524  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
 
+
 if __name__ == "__main__":
+
     # read csv file into dataframe
     czo_df = pd.read_csv("czo.csv")
 
