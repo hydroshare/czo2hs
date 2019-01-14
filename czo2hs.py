@@ -1,10 +1,8 @@
-#https://github.com/hydroshare/hydroshare/blob/develop/hs_core/hydroshare/resource.py#L779
 import logging
 import pandas as pd
 import json
 from hs_restclient import HydroShare, HydroShareAuthBasic
-from _parsers import get_spatial_coverage, get_creator, get_files
-from _utils import _update_core_metadata
+from _utils import _update_core_metadata, get_spatial_coverage, get_creator, get_files
 
 logging.basicConfig(level=logging.INFO)
 
@@ -174,7 +172,7 @@ PROCESS_CZO_ID = 6524  # the specific row by czo_id to process if PROCESS_FIRST_
 if __name__ == "__main__":
 
     # read csv file into dataframe
-    czo_df = pd.read_csv("czo.csv")
+    czo_df = pd.read_csv("data/czo.csv")
 
     if PROCESS_FIRST_N_ROWS >= 0:
         # loop through dataframe rows
