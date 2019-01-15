@@ -1,9 +1,10 @@
 import logging
-import requests
 import tempfile
 import os
-import validators
 import json
+from datetime import datetime as dt
+import requests
+import validators
 
 
 def get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None):
@@ -54,11 +55,16 @@ def get_creator(czos, creator, email):
     return hs_creator
 
 
-
 def _whether_to_harvest_file(filename):
+    """
+    check file extension and decide whether to harvest/download
+    :param filename: filename
+    :return: True: harvest/download;
+    """
 
     filename = filename.lower()
-    for ext in [".csv", ".doc", ".xls"]:
+    for ext in [".hdr", ".docx", ".csv", ".txt", ".pdf",
+                ".xlsx", ".kmz", ".PDF", ".xls"]:
         if filename.endswith(ext):
             return True
     return False
@@ -96,7 +102,7 @@ def get_files(in_str):
             else:
                 file_info = {"file_type": "ReferencedFile",
                              "path_or_url": f_url,
-                             "file_name": file_name,
+                             "file_name": f_topic,
                              "metadata": {},
                              }
 
@@ -181,3 +187,14 @@ def _update_core_metadata(hs_obj, res_id, metadata_dict, message=None):
         message = str(metadata_dict)
     logging.info('{message} updated successfully'.format(message=message))
     return science_metadata_json
+
+
+def elapsed_time(dt_start, return_type="log", prompt_str="Total Time Elapsed"):
+    dt_utcnow = dt.utcnow()
+    dt_timedelta = dt_utcnow - dt_start
+    if return_type == "log":
+        logging.info("{0}: {1}".format(prompt_str, dt_timedelta))
+    elif return_type == "str":
+        return str(dt_timedelta)
+    else:
+        return dt_timedelta

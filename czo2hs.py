@@ -1,8 +1,13 @@
 import logging
-import pandas as pd
 import json
+from datetime import datetime as dt
+
+import pandas as pd
 from hs_restclient import HydroShare, HydroShareAuthBasic
-from _utils import get_spatial_coverage, get_creator, get_files, get_file_id_by_name, _update_core_metadata
+
+from _utils import get_spatial_coverage, get_creator, \
+    get_files, get_file_id_by_name, _update_core_metadata, \
+    elapsed_time
 
 
 logging.basicConfig(level=logging.INFO)
@@ -128,6 +133,7 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
         # metadata still not working!!!! https://github.com/hydroshare/hs_restclient/issues/97
         # rights, funding_agencies, extra_metadata
 
+        file_uploaded_counter = 0
         for f in get_files(czo_files):
             file_id = None
             logging.info("Uploading file: {}".format(str(f)))
@@ -137,40 +143,44 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
                                                     name=f["file_name"],
                                                     ref_url=f["path_or_url"])
                 file_id = resp_dict["file_id"]
+                file_uploaded_counter += 1
             else:
-                # upload other files
-                # auto file type detect
+                # upload other files with auto file type detection
                 file_id = hs.addResourceFile(resource_id,
                                              f["path_or_url"])
-                # # find file id (to be replaced by new hs_restclient)
+                # find file id (to be replaced by new hs_restclient)
                 file_id = get_file_id_by_name(hs, resource_id, f["file_name"])
+                file_uploaded_counter += 1
 
             hs.resource(resource_id).files.metadata(file_id, f["metadata"])
 
         # make the resource public
-        hs.setAccessRules(resource_id, public=True)
+        if file_uploaded_counter > 0:
+            hs.setAccessRules(resource_id, public=True)
+            logging.info("Resource is made Public")
 
         # science_metadata_json = hs.getScienceMetadata(resource_id)
         # print (json.dumps(science_metadata_json, sort_keys=True, indent=4))
         logging.info("Done Row No.{row}, CZO_ID: {czo_id}".format(row=index + 1, czo_id=czo_id))
     except Exception as ex:
-        logging.error(ex)
-    finally:
-        logging.info("------------------------------\n")
+        logging.exception(ex)
 
 
 # Which HydroShare to talk to
 #hs_host_url = "dev-hs-6.cuahsi.org"
 #hs_host_url = "www.hydroshare.org"
 #TODO user friendly error when credentials are wrong or server not reachable
-hs_host_url = "localhost"
-hs_user_name = "czotest"
-hs_user_pwd = "czotest"
-PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
-PROCESS_CZO_ID = 2414  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
+hs_host_url = "127.0.0.1"
+hs_user_name = "drew"
+hs_user_pwd = "123"
+PROCESS_FIRST_N_ROWS = 10  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
+PROCESS_CZO_ID = 4608  # 2414  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
 
 
 if __name__ == "__main__":
+
+    dt_start_global = dt.utcnow()
+    logging.info("Script started at UTC {}".format(dt_start_global))
 
     # read csv file into dataframe
     czo_df = pd.read_csv("data/czo.csv")
@@ -180,12 +190,18 @@ if __name__ == "__main__":
         for index, row in czo_df.iterrows():
             if PROCESS_FIRST_N_ROWS > 0 and index > PROCESS_FIRST_N_ROWS - 1:
                 break
+            logging.info("-" * 40)
+            dt_start_resource = dt.utcnow()
+            logging.info("Start migrating one Resource at UTC {}".format(dt_start_resource))
             czo_res_dict = row.to_dict()  # convert row to dict
             _create_hs_res_from_czo(czo_res_dict, index=index)
+            elapsed_time(dt_start_resource, prompt_str="Resource Creation Time Elapsed")
+            elapsed_time(dt_start_global)
     else:
         # process a specific row by czo_id
         df_row = czo_df.loc[czo_df['czo_id'] == PROCESS_CZO_ID]
         czo_res_dict = df_row.to_dict(orient='records')[0]
         _create_hs_res_from_czo(czo_res_dict)
 
-    logging.info("All Done")
+    elapsed_time(dt_start_global)
+    logging.info("All Done at UTC {}".format(dt.utcnow()))
