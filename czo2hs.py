@@ -152,7 +152,7 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
 
         # science_metadata_json = hs.getScienceMetadata(resource_id)
         # print (json.dumps(science_metadata_json, sort_keys=True, indent=4))
-        logging.info("Done Row No.{row}, CZO_ID: {czo_id}".fromat(row=index + 1, czo_id=czo_id))
+        logging.info("Done Row No.{row}, CZO_ID: {czo_id}".format(row=index + 1, czo_id=czo_id))
     except Exception as ex:
         logging.error(ex)
     finally:
@@ -162,9 +162,10 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
 # Which HydroShare to talk to
 #hs_host_url = "dev-hs-6.cuahsi.org"
 #hs_host_url = "www.hydroshare.org"
-hs_host_url = "127.0.0.1"
-hs_user_name = "drew"
-hs_user_pwd = "123"
+#TODO user friendly error when credentials are wrong or server not reachable
+hs_host_url = "localhost"
+hs_user_name = "czotest"
+hs_user_pwd = "czotest"
 PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
 PROCESS_CZO_ID = 6524  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
 
