@@ -97,7 +97,6 @@ def _create_hs_res_from_czo(czo_res_dict, progress_dict={"error": [], "success":
                                                               'VARIABLES', 'description', 'comments', 'RELATED_DATASETS',
                                                               'date_range_comments', ])
 
-
         auth = HydroShareAuthBasic(username=hs_user_name, password=hs_user_pwd)
         if "hydroshare.org" in hs_host_url or "cuahsi.org" in hs_host_url:
             hs = HydroShare(auth=auth, hostname=hs_host_url)
@@ -174,13 +173,18 @@ def _create_hs_res_from_czo(czo_res_dict, progress_dict={"error": [], "success":
         logging.info("Done Row No.{row}, CZO_ID: {czo_id}".format(row=index + 1, czo_id=czo_id))
 
     except Exception as ex:
-        logging.error("!" * 10 + "Error" + "!"*10)
-        logging.error(type(ex))
-        logging.error(ex.__doc__)
-        logging.error(ex.message)
-        logging.exception(ex)
-        item_dict["msg"] = str(type(ex)) + str(ex) + ex.__doc__ + ex.message
+
+        ex_type = str(type(ex))
+        ex_doc = ex.__doc__
+        ex_msg = ex.message
+        item_dict["msg"] = str(type(ex)) + ex.__doc__ + ex.message + str(ex)
         progress_dict["error"].append(item_dict)
+
+        logging.error("!" * 10 + "Error" + "!"*10)
+        logging.error("type:" + ex_type)
+        logging.error("__doc__:" + ex_doc)
+        logging.error("message:" + ex_msg)
+        logging.exception(ex)
 
     finally:
         return progress_dict
@@ -209,14 +213,15 @@ hs_user_pwd = "123"
 # hs_user_name = ""
 # hs_user_pwd = ""
 
-PROCESS_FIRST_N_ROWS = 0  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
-PROCESS_CZO_ID = 4608  # 2414  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
+PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
+PROCESS_CZO_ID = 3731  # 2414  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
 
 
 if __name__ == "__main__":
 
     dt_start_global = dt.utcnow()
     logging.info("Script started at UTC {}".format(dt_start_global))
+    logging.info("Connecting to {} with account {}".format(hs_host_url, hs_user_name))
 
     # read csv file into dataframe
     czo_df = pd.read_csv("data/czo.csv")
