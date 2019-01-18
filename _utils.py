@@ -6,6 +6,8 @@ from datetime import datetime as dt
 import requests
 import validators
 
+requests.packages.urllib3.disable_warnings()
+
 
 def get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None):
     """

@@ -174,13 +174,15 @@ def _create_hs_res_from_czo(czo_res_dict, progress_dict={"error": [], "success":
         logging.info("Done Row No.{row}, CZO_ID: {czo_id}".format(row=index + 1, czo_id=czo_id))
 
     except Exception as ex:
-
-        item_dict["msg"] = str(ex)
-        progress_dict["error"].append(item_dict)
+        logging.error("!" * 10 + "Error" + "!"*10)
+        logging.error(type(ex))
+        logging.error(ex.__doc__)
+        logging.error(ex.message)
         logging.exception(ex)
+        item_dict["msg"] = str(type(ex)) + str(ex) + ex.__doc__ + ex.message
+        progress_dict["error"].append(item_dict)
 
     finally:
-
         return progress_dict
 
 
@@ -195,13 +197,13 @@ def _log_progress(progress_dict, header="Summary"):
 # TODO user friendly error when credentials are wrong or server not reachable
 
 # Which HydroShare to talk to
-hs_host_url = "dev-hs-6.cuahsi.org"
-hs_user_name = "czo"
-hs_user_pwd = "123"
-
-# hs_host_url = "127.0.0.1"
-# hs_user_name = "drew"
+# hs_host_url = "dev-hs-6.cuahsi.org"
+# hs_user_name = "czo"
 # hs_user_pwd = "123"
+
+hs_host_url = "127.0.0.1"
+hs_user_name = "drew"
+hs_user_pwd = "123"
 
 # hs_host_url = "www.hydroshare.org"
 # hs_user_name = ""
