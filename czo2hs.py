@@ -1,13 +1,25 @@
 import logging
-import pandas as pd
 import json
+from datetime import datetime as dt
+
+import pandas as pd
 from hs_restclient import HydroShare, HydroShareAuthBasic
-from _utils import _update_core_metadata, get_spatial_coverage, get_creator, get_files
 
-logging.basicConfig(level=logging.INFO)
+from _utils import get_spatial_coverage, get_creator, \
+    get_files, get_file_id_by_name, _update_core_metadata, \
+    elapsed_time
 
 
-def _create_hs_res_from_czo(czo_res_dict, index=-99):
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s",
+    handlers=[
+        logging.FileHandler("./log_{0}.log".format(dt.utcnow())),
+        logging.StreamHandler()
+    ])
+
+
+def _create_hs_res_from_czo(czo_res_dict, progress_dict={"error": [], "success": []}, index=-99, ):
     """
     Create a HydroShare resource from a CZO data row
     :param czo_res_dict: dict of CZO data row
@@ -16,7 +28,9 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
     """
 
     try:
+        item_dict = {}
         czo_id = czo_res_dict["czo_id"]
+        item_dict["czo_id"] = czo_id
         logging.info("Working on Row No.{row}, CZO_ID {czo_id}".format(row=index + 1, czo_id=czo_id))
 
         # parse file info
@@ -101,6 +115,7 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
                                         hs_res_title,
                                         extra_metadata=json.dumps(hs_extra_metadata)
                                         )
+        item_dict["res_id"] = resource_id
         logging.info('HS resource created at: {res_id}'.format(res_id=resource_id))
 
         # update Abstract/Description
@@ -127,65 +142,114 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
         # metadata still not working!!!! https://github.com/hydroshare/hs_restclient/issues/97
         # rights, funding_agencies, extra_metadata
 
+        file_uploaded_counter = 0
         for f in get_files(czo_files):
             file_id = None
+            logging.info("Uploading file: {}".format(str(f)))
             if f["file_type"] == "ReferencedFile":
                 resp_dict = hs.createReferencedFile(pid=resource_id,
                                                     path='data/contents',
                                                     name=f["file_name"],
                                                     ref_url=f["path_or_url"])
                 file_id = resp_dict["file_id"]
+                file_uploaded_counter += 1
             else:
-                # upload other files
-                # auto file type detect
+                # upload other files with auto file type detection
                 file_id = hs.addResourceFile(resource_id,
                                              f["path_or_url"])
-
-            # # find file id (to be replaced by new hs_restclient)
-            # if not file_id:
-            #     file_id = get_file_id_by_name(hs, resource_id, f["file_name"])
+                # find file id (to be replaced by new hs_restclient)
+                file_id = get_file_id_by_name(hs, resource_id, f["file_name"])
+                file_uploaded_counter += 1
 
             hs.resource(resource_id).files.metadata(file_id, f["metadata"])
 
         # make the resource public
-        hs.setAccessRules(resource_id, public=True)
+        if file_uploaded_counter > 0:
+            hs.setAccessRules(resource_id, public=True)
+            logging.info("Resource is made Public")
 
         # science_metadata_json = hs.getScienceMetadata(resource_id)
         # print (json.dumps(science_metadata_json, sort_keys=True, indent=4))
+        progress_dict["success"].append(item_dict)
         logging.info("Done Row No.{row}, CZO_ID: {czo_id}".format(row=index + 1, czo_id=czo_id))
-    except Exception as ex:
-        logging.error(ex)
-    finally:
-        logging.info("------------------------------\n")
 
+    except Exception as ex:
+        logging.error("!" * 10 + "Error" + "!"*10)
+        logging.error(type(ex))
+        logging.error(ex.__doc__)
+        logging.error(ex.message)
+        logging.exception(ex)
+        item_dict["msg"] = str(type(ex)) + str(ex) + ex.__doc__ + ex.message
+        progress_dict["error"].append(item_dict)
+
+    finally:
+        return progress_dict
+
+
+def _log_progress(progress_dict, header="Summary"):
+
+    error_counter = len(progress_dict["error"])
+    success_counter = len(progress_dict["success"])
+    logging.info("*" * 10 + "{}".format(header) + "*" * 10)
+    logging.info(
+        "Total: {}; Success: {}; Error {}".format(error_counter + success_counter, success_counter, error_counter))
+
+# TODO user friendly error when credentials are wrong or server not reachable
 
 # Which HydroShare to talk to
-#hs_host_url = "dev-hs-6.cuahsi.org"
-#hs_host_url = "www.hydroshare.org"
-#TODO user friendly error when credentials are wrong or server not reachable
-hs_host_url = "localhost"
-hs_user_name = "czotest"
-hs_user_pwd = "czotest"
-PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
-PROCESS_CZO_ID = 6524  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
+# hs_host_url = "dev-hs-6.cuahsi.org"
+# hs_user_name = "czo"
+# hs_user_pwd = "123"
+
+hs_host_url = "127.0.0.1"
+hs_user_name = "drew"
+hs_user_pwd = "123"
+
+# hs_host_url = "www.hydroshare.org"
+# hs_user_name = ""
+# hs_user_pwd = ""
+
+PROCESS_FIRST_N_ROWS = 0  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
+PROCESS_CZO_ID = 4608  # 2414  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
 
 
 if __name__ == "__main__":
 
+    dt_start_global = dt.utcnow()
+    logging.info("Script started at UTC {}".format(dt_start_global))
+
     # read csv file into dataframe
     czo_df = pd.read_csv("data/czo.csv")
+
+    progress_dict = {"error": [], "success": []}
 
     if PROCESS_FIRST_N_ROWS >= 0:
         # loop through dataframe rows
         for index, row in czo_df.iterrows():
             if PROCESS_FIRST_N_ROWS > 0 and index > PROCESS_FIRST_N_ROWS - 1:
                 break
+            logging.info("-" * 40)
+            dt_start_resource = dt.utcnow()
+            logging.info("Start migrating one Resource at UTC {}".format(dt_start_resource))
             czo_res_dict = row.to_dict()  # convert row to dict
-            _create_hs_res_from_czo(czo_res_dict, index=index)
+            _create_hs_res_from_czo(czo_res_dict, index=index, progress_dict=progress_dict)
+
+            elapsed_time(dt_start_resource, prompt_str="Resource Creation Time Elapsed")
+            elapsed_time(dt_start_global)
+            if (index+1) % 10 == 0:
+                _log_progress(progress_dict, "Progress Report")
     else:
         # process a specific row by czo_id
         df_row = czo_df.loc[czo_df['czo_id'] == PROCESS_CZO_ID]
-        czo_res_dict = df_row.to_dict(orient='records')[0]
-        _create_hs_res_from_czo(czo_res_dict)
+        results_dict = czo_res_dict = df_row.to_dict(orient='records')[0]
+        _create_hs_res_from_czo(czo_res_dict, progress_dict=progress_dict)
 
-    logging.info("All Done")
+    elapsed_time(dt_start_global)
+    _log_progress(progress_dict)
+    counter = 0
+    for error_item in progress_dict["error"]:
+        counter += 1
+        logging.info("{} CZO_ID {} RES_ID {} Error {}".format(counter,
+                                                              error_item["czo_id"],
+                                                              error_item["res_id"],
+                                                              error_item["msg"]))

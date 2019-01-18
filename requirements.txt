@@ -1,3 +1,5 @@
 requests
 pandas
 numpy
+validators
+hs_restclient

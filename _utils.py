@@ -1,8 +1,12 @@
 import logging
-import requests
 import tempfile
 import os
+import json
+from datetime import datetime as dt
+import requests
 import validators
+
+requests.packages.urllib3.disable_warnings()
 
 
 def get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None):
@@ -53,6 +57,21 @@ def get_creator(czos, creator, email):
     return hs_creator
 
 
+def _whether_to_harvest_file(filename):
+    """
+    check file extension and decide whether to harvest/download
+    :param filename: filename
+    :return: True: harvest/download;
+    """
+
+    filename = filename.lower()
+    for ext in [".hdr", ".docx", ".csv", ".txt", ".pdf",
+                ".xlsx", ".kmz", ".PDF", ".xls"]:
+        if filename.endswith(ext):
+            return True
+    return False
+
+
 def get_files(in_str):
     """
     This is a generator that returns a resource file dict in each iterate
@@ -60,7 +79,6 @@ def get_files(in_str):
     :return: None
     """
 
-    files_list = []
     for f_str in in_str.split("|"):
         f_info_list = f_str.split("$")
         f_location = f_info_list[0]
@@ -74,49 +92,87 @@ def get_files(in_str):
             file_name = f_url.split("/")[-1]
             if len(file_name) == 0:
                 file_name = f_url.split("/")[-2]
-            path_or_url = f_url
-            file_type = "ReferencedFile"
-            metadata = {"title": f_topic,
 
-                          # "spatial_coverage": {
-                          #                      "name": f_location,
-                          #                     },  # "spatial_coverage"
-                        "extra_metadata": {"private": f_private,
-                                           "data_level": f_data_level,
-                                           "metadata_url": f_metadata_url,
-                                           "url": f_url,
-                                           "location": f_location
-                                        },  # extra_metadata
-                         }
+            if _whether_to_harvest_file(file_name):
+                file_path_local = _download_file(f_url, file_name)
+                file_info = {"path_or_url": file_path_local,
+                             "file_name": file_name,
+                             "file_type": "",
+                             "metadata": {},
+                             }
 
-            file = {"file_type": file_type, "path_or_url": path_or_url, "file_name": file_name,
-                "metadata": metadata}
-            files_list.append(file)
+            else:
+                file_info = {"file_type": "ReferencedFile",
+                             "path_or_url": f_url,
+                             "file_name": f_topic,
+                             "metadata": {},
+                             }
+
+            file_info["metadata"] = {"title": f_topic,
+
+                                          # "spatial_coverage": {
+                                          #                      "name": f_location,
+                                          #                     },  # "spatial_coverage"
+                                     "extra_metadata": {"private": f_private,
+                                                           "data_level": f_data_level,
+                                                           "metadata_url": f_metadata_url,
+                                                           "url": f_url,
+                                                           "location": f_location,
+                                                           "doi": f_doi,
+                                                        },  # extra_metadata
+                                    }
+
+            yield file_info
 
         if validators.url(f_metadata_url):
             file_name = f_metadata_url.split("/")[-1]
-            if len(file_name) > 0:
-                save_to_base = tempfile.mkdtemp()
-                save_to = os.path.join(save_to_base, file_name)
-                _download_file(f_metadata_url, save_to)
-                path_or_url = save_to
-                file = {"path_or_url": path_or_url, "file_name": file_name, "file_type": "", "metadata": {},
-                        }
-                files_list.append(file)
-
-    return files_list
+            if len(file_name) == 0:
+                file_name = f_metadata_url.split("/")[-2]
+            file_path_local = _download_file(f_metadata_url, file_name)
+            file_info = {"path_or_url": file_path_local,
+                         "file_name": file_name,
+                         "file_type": "",
+                         "metadata": {}, }
+            yield file_info
 
 
-def _download_file(url, save_to):
+def _download_file(url, file_name):
     """
-    Download a remote czo file to local
-    :param url: URL to remote CZ file
-    :param save_to: local path to store the file
-    :return: None
+       Download a remote czo file to local
+       :param url: URL to remote CZ file
+       :param save_to: local path to store the file
+       :return: None
     """
+    save_to_base = tempfile.mkdtemp()
+    save_to = os.path.join(save_to_base, file_name)
     response = requests.get(url, stream=True)
     with open(save_to, 'wb') as f:
         f.write(response.content)
+    return save_to
+
+
+def get_file_id_by_name(hs, resource_id, fname):
+    """
+    This is a temporary workaround as current hs_restclient doens return id of newly created file;
+    Loop through all files in a resource and return id of a file by filename;
+    :param hs: hs obj from initialized hs_restclient
+    :param resource_id: res id
+    :param fname: the filename to search
+    :return: file id
+    """
+
+    resource = hs.resource(resource_id)
+    file = ""
+    for f in resource.files.all():
+        file += f.decode('utf8')
+    file_id = -1
+    file_json = json.loads(file)
+    for file in file_json["results"]:
+        if fname.lower() in str(file["url"]).lower():
+            file_id = file["id"]
+    if file_id == -1:
+        print("couldn't find file for {} in resource {}".format(fname, resource_id))
+    return file_id
 
 
 def _update_core_metadata(hs_obj, res_id, metadata_dict, message=None):
@@ -133,3 +189,14 @@ def _update_core_metadata(hs_obj, res_id, metadata_dict, message=None):
         message = str(metadata_dict)
     logging.info('{message} updated successfully'.format(message=message))
     return science_metadata_json
+
+
+def elapsed_time(dt_start, return_type="log", prompt_str="Total Time Elapsed"):
+    dt_utcnow = dt.utcnow()
+    dt_timedelta = dt_utcnow - dt_start
+    if return_type == "log":
+        logging.info("{0}: {1}".format(prompt_str, dt_timedelta))
+    elif return_type == "str":
+        return str(dt_timedelta)
+    else:
+        return dt_timedelta
