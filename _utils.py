@@ -200,3 +200,12 @@ def elapsed_time(dt_start, return_type="log", prompt_str="Total Time Elapsed"):
         return str(dt_timedelta)
     else:
         return dt_timedelta
+
+
+def prepare_logging_str(ex, attr, one_line=True):
+
+    logging_str = attr + ": " + str(getattr(ex, attr, "NO " + attr))
+    if one_line:
+        logging_str = logging_str.replace("\r\n", " ")
+        logging_str = logging_str.replace("\n", " ")
+    return logging_str

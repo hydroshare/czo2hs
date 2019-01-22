@@ -7,24 +7,27 @@ from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from _utils import get_spatial_coverage, get_creator, \
     get_files, get_file_id_by_name, _update_core_metadata, \
-    elapsed_time
+    elapsed_time, prepare_logging_str
 
-
+script_start_dt = dt.utcnow()
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s",
     handlers=[
-        logging.FileHandler("./log_{0}.log".format(dt.utcnow())),
+        logging.FileHandler("./log_{0}.log".format(script_start_dt)),
         logging.StreamHandler()
     ])
 
 
-def _create_hs_res_from_czo(czo_res_dict, progress_dict={"error": [], "success": []}, index=-99, ):
+def _create_hs_res_from_czo(czo_res_dict, index=-99):
     """
     Create a HydroShare resource from a CZO data row
     :param czo_res_dict: dict of CZO data row
     :param index: the row index
-    :return: None
+    :return: {"success": _success,
+              "czo_hs_id": {"czo_id": czo_id, "hs_id": resource_id} if _success else None,
+              "record": item_dict
+            }
     """
 
     try:
@@ -171,23 +174,27 @@ def _create_hs_res_from_czo(czo_res_dict, progress_dict={"error": [], "success":
         # print (json.dumps(science_metadata_json, sort_keys=True, indent=4))
         progress_dict["success"].append(item_dict)
         logging.info("Done Row No.{row}, CZO_ID: {czo_id}".format(row=index + 1, czo_id=czo_id))
+        _success = True
 
     except Exception as ex:
+        _success = False
+        logging.error("!" * 10 + "Error" + "!" * 10)
 
-        ex_type = str(type(ex))
-        ex_doc = ex.__doc__
-        ex_msg = ex.message
-        item_dict["msg"] = str(type(ex)) + ex.__doc__ + ex.message + str(ex)
+        ex_type = "type: " + str(type(ex))
+        ex_doc = prepare_logging_str(ex, "__doc__")
+        ex_msg = prepare_logging_str(ex, "message")
+        ex_str = prepare_logging_str(ex, "__str__")
+        item_dict["msg"] = ex_type + ex_doc + ex_msg + ex_str
         progress_dict["error"].append(item_dict)
 
-        logging.error("!" * 10 + "Error" + "!"*10)
-        logging.error("type:" + ex_type)
-        logging.error("__doc__:" + ex_doc)
-        logging.error("message:" + ex_msg)
+        logging.error(ex_type + ex_doc + ex_msg + ex_str)
         logging.exception(ex)
 
     finally:
-        return progress_dict
+        return {"success": _success,
+                "czo_hs_id": {"czo_id": czo_id, "hs_id": resource_id} if _success else None,
+                "record": item_dict
+                }
 
 
 def _log_progress(progress_dict, header="Summary"):
@@ -201,20 +208,20 @@ def _log_progress(progress_dict, header="Summary"):
 # TODO user friendly error when credentials are wrong or server not reachable
 
 # Which HydroShare to talk to
-# hs_host_url = "dev-hs-6.cuahsi.org"
-# hs_user_name = "czo"
-# hs_user_pwd = "123"
-
-hs_host_url = "127.0.0.1"
-hs_user_name = "drew"
+hs_host_url = "dev-hs-6.cuahsi.org"
+hs_user_name = "czo"
 hs_user_pwd = "123"
+
+# hs_host_url = "127.0.0.1"
+# hs_user_name = "drew"
+# hs_user_pwd = "123"
 
 # hs_host_url = "www.hydroshare.org"
 # hs_user_name = ""
 # hs_user_pwd = ""
 
-PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
-PROCESS_CZO_ID = 3731  # 2414  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
+PROCESS_FIRST_N_ROWS = 3  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
+PROCESS_CZO_ID = 3884  # 2414  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
 
 
 if __name__ == "__main__":
@@ -227,6 +234,7 @@ if __name__ == "__main__":
     czo_df = pd.read_csv("data/czo.csv")
 
     progress_dict = {"error": [], "success": []}
+    czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id"])
 
     if PROCESS_FIRST_N_ROWS >= 0:
         # loop through dataframe rows
@@ -237,7 +245,13 @@ if __name__ == "__main__":
             dt_start_resource = dt.utcnow()
             logging.info("Start migrating one Resource at UTC {}".format(dt_start_resource))
             czo_res_dict = row.to_dict()  # convert row to dict
-            _create_hs_res_from_czo(czo_res_dict, index=index, progress_dict=progress_dict)
+            mgr_result = _create_hs_res_from_czo(czo_res_dict, index=index)
+
+            if mgr_result["success"]:
+                progress_dict["success"].append(mgr_result["record"])
+                czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(mgr_result["czo_hs_id"], ignore_index=True)
+            else:
+                progress_dict["error"].append(mgr_result["record"])
 
             elapsed_time(dt_start_resource, prompt_str="Resource Creation Time Elapsed")
             elapsed_time(dt_start_global)
@@ -247,7 +261,7 @@ if __name__ == "__main__":
         # process a specific row by czo_id
         df_row = czo_df.loc[czo_df['czo_id'] == PROCESS_CZO_ID]
         results_dict = czo_res_dict = df_row.to_dict(orient='records')[0]
-        _create_hs_res_from_czo(czo_res_dict, progress_dict=progress_dict)
+        _create_hs_res_from_czo(czo_res_dict)
 
     elapsed_time(dt_start_global)
     _log_progress(progress_dict)
@@ -257,4 +271,6 @@ if __name__ == "__main__":
         logging.info("{} CZO_ID {} RES_ID {} Error {}".format(counter,
                                                               error_item["czo_id"],
                                                               error_item["res_id"],
-                                                              error_item["msg"]))
+                                                              error_item["msg"].replace("\n", " ")))
+    logging.info(czo_hs_id_lookup_df.to_string())
+    czo_hs_id_lookup_df.to_csv('czo_hs_id_{}.csv'.format(script_start_dt), encoding='utf-8', index=False)
