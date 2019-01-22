@@ -259,10 +259,11 @@ if __name__ == "__main__":
 
             if mgr_result["success"]:
                 progress_dict["success"].append(mgr_result["record"])
-            if mgr_result["czo_hs_id"]:
-                czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(mgr_result["czo_hs_id"], ignore_index=True)
             else:
                 progress_dict["error"].append(mgr_result["record"])
+
+            if mgr_result["czo_hs_id"]:
+                czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(mgr_result["czo_hs_id"], ignore_index=True)
 
             elapsed_time(dt_start_resource, prompt_str="Resource Creation Time Elapsed")
             elapsed_time(dt_start_global)
