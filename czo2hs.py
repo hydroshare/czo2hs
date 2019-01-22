@@ -1,4 +1,6 @@
 import logging
+import shutil
+import os
 import json
 from datetime import datetime as dt
 
@@ -117,6 +119,7 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
                                         hs_res_title,
                                         extra_metadata=json.dumps(hs_extra_metadata)
                                         )
+        czo_hs_id = {"czo_id": czo_id, "hs_id": resource_id, "success": "T"}
         item_dict["res_id"] = resource_id
         logging.info('HS resource created at: {res_id}'.format(res_id=resource_id))
 
@@ -146,24 +149,31 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
 
         file_uploaded_counter = 0
         for f in get_files(czo_files):
-            file_id = None
-            logging.info("Uploading file: {}".format(str(f)))
-            if f["file_type"] == "ReferencedFile":
-                resp_dict = hs.createReferencedFile(pid=resource_id,
-                                                    path='data/contents',
-                                                    name=f["file_name"],
-                                                    ref_url=f["path_or_url"])
-                file_id = resp_dict["file_id"]
-                file_uploaded_counter += 1
-            else:
-                # upload other files with auto file type detection
-                file_id = hs.addResourceFile(resource_id,
-                                             f["path_or_url"])
-                # find file id (to be replaced by new hs_restclient)
-                file_id = get_file_id_by_name(hs, resource_id, f["file_name"])
-                file_uploaded_counter += 1
+            # try:
+                logging.info("Uploading file: {}".format(str(f)))
+                if f["file_type"] == "ReferencedFile":
+                    resp_dict = hs.createReferencedFile(pid=resource_id,
+                                                        path='data/contents',
+                                                        name=f["file_name"],
+                                                        ref_url=f["path_or_url"])
+                    file_id = resp_dict["file_id"]
+                    file_uploaded_counter += 1
+                else:
+                    # upload other files with auto file type detection
+                    file_id = hs.addResourceFile(resource_id,
+                                                 f["path_or_url"])
+                    tmpfile_folder_path = os.path.dirname(f["path_or_url"])
+                    try:
+                        shutil.rmtree(tmpfile_folder_path)
+                    except:
+                        pass
+                    # find file id (to be replaced by new hs_restclient)
+                    file_id = get_file_id_by_name(hs, resource_id, f["file_name"])
+                    file_uploaded_counter += 1
 
-            hs.resource(resource_id).files.metadata(file_id, f["metadata"])
+                hs.resource(resource_id).files.metadata(file_id, f["metadata"])
+            # except Exception as ex_file:
+            #     logging.error(ex_file)
 
         # make the resource public
         if file_uploaded_counter > 0:
@@ -172,7 +182,7 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
 
         # science_metadata_json = hs.getScienceMetadata(resource_id)
         # print (json.dumps(science_metadata_json, sort_keys=True, indent=4))
-        progress_dict["success"].append(item_dict)
+
         logging.info("Done Row No.{row}, CZO_ID: {czo_id}".format(row=index + 1, czo_id=czo_id))
         _success = True
 
@@ -185,14 +195,14 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
         ex_msg = prepare_logging_str(ex, "message")
         ex_str = prepare_logging_str(ex, "__str__")
         item_dict["msg"] = ex_type + ex_doc + ex_msg + ex_str
-        progress_dict["error"].append(item_dict)
 
         logging.error(ex_type + ex_doc + ex_msg + ex_str)
         logging.exception(ex)
 
     finally:
+        czo_hs_id["success"] = "T" if _success else "F"
         return {"success": _success,
-                "czo_hs_id": {"czo_id": czo_id, "hs_id": resource_id} if _success else None,
+                "czo_hs_id": czo_hs_id,
                 "record": item_dict
                 }
 
@@ -208,20 +218,20 @@ def _log_progress(progress_dict, header="Summary"):
 # TODO user friendly error when credentials are wrong or server not reachable
 
 # Which HydroShare to talk to
-hs_host_url = "dev-hs-6.cuahsi.org"
-hs_user_name = "czo"
-hs_user_pwd = "123"
-
-# hs_host_url = "127.0.0.1"
-# hs_user_name = "drew"
+# hs_host_url = "dev-hs-6.cuahsi.org"
+# hs_user_name = "czo"
 # hs_user_pwd = "123"
+
+hs_host_url = "127.0.0.1"
+hs_user_name = "drew"
+hs_user_pwd = "123"
 
 # hs_host_url = "www.hydroshare.org"
 # hs_user_name = ""
 # hs_user_pwd = ""
 
-PROCESS_FIRST_N_ROWS = 3  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
-PROCESS_CZO_ID = 3884  # 2414  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
+PROCESS_FIRST_N_ROWS = 0  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
+PROCESS_CZO_ID = 2621  # 2414  # the specific row by czo_id to process if PROCESS_FIRST_N_ROWS = -1
 
 
 if __name__ == "__main__":
@@ -234,7 +244,7 @@ if __name__ == "__main__":
     czo_df = pd.read_csv("data/czo.csv")
 
     progress_dict = {"error": [], "success": []}
-    czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id"])
+    czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id", "success"])
 
     if PROCESS_FIRST_N_ROWS >= 0:
         # loop through dataframe rows
@@ -249,6 +259,7 @@ if __name__ == "__main__":
 
             if mgr_result["success"]:
                 progress_dict["success"].append(mgr_result["record"])
+            if mgr_result["czo_hs_id"]:
                 czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(mgr_result["czo_hs_id"], ignore_index=True)
             else:
                 progress_dict["error"].append(mgr_result["record"])

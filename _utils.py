@@ -5,6 +5,7 @@ import json
 from datetime import datetime as dt
 import requests
 import validators
+from urllib.parse import unquote
 
 requests.packages.urllib3.disable_warnings()
 
@@ -89,10 +90,12 @@ def get_files(in_str):
         f_doi = f_info_list[5]
         f_metadata_url = f_info_list[6]
         if validators.url(f_url):
-            file_name = f_url.split("/")[-1]
+            f_url_decoded = unquote(f_url)
+            file_name = f_url_decoded.split("/")[-1]
             if len(file_name) == 0:
-                file_name = f_url.split("/")[-2]
+                file_name = f_url_decoded.split("/")[-2]
 
+            file_name = file_name.replace(" ", "_")
             if _whether_to_harvest_file(file_name):
                 file_path_local = _download_file(f_url, file_name)
                 file_info = {"path_or_url": file_path_local,
@@ -125,9 +128,11 @@ def get_files(in_str):
             yield file_info
 
         if validators.url(f_metadata_url):
-            file_name = f_metadata_url.split("/")[-1]
+            f_metadata_url_decoded = unquote(f_metadata_url)
+            file_name = f_metadata_url_decoded.split("/")[-1]
             if len(file_name) == 0:
-                file_name = f_metadata_url.split("/")[-2]
+                file_name = f_metadata_url_decoded.split("/")[-2]
+            file_name = file_name.replace(" ", "_")
             file_path_local = _download_file(f_metadata_url, file_name)
             file_info = {"path_or_url": file_path_local,
                          "file_name": file_name,
@@ -171,7 +176,7 @@ def get_file_id_by_name(hs, resource_id, fname):
         if fname.lower() in str(file["url"]).lower():
             file_id = file["id"]
     if file_id == -1:
-        print("couldn't find file for {} in resource {}".format(fname, resource_id))
+        logging.error("Couldn't find file for {} in resource {}".format(fname, resource_id))
     return file_id
 
 
