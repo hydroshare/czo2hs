@@ -105,9 +105,10 @@ def get_files(in_str):
                              }
 
             else:
+                file_name = (f_topic + "-" + f_location).replace(" ", "_")
                 file_info = {"file_type": "ReferencedFile",
                              "path_or_url": f_url,
-                             "file_name": f_topic,
+                             "file_name": file_name,
                              "metadata": {},
                              }
 
