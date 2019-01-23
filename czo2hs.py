@@ -221,7 +221,7 @@ def _log_progress(progress_dict, header="Summary"):
         "Total: {}; Success: {}; Error {}".format(error_counter + success_counter, success_counter, error_counter))
 
 
-def _create_hs_resource_from_czo_row_dict(czo_row_dict, row_no=1, progress_report=10):
+def _create_hs_resource_from_czo_row_dict(czo_row_dict, row_no=1, progress_report=5):
     """
     Create a HS resource from a CZO row dict
     :param czo_row_dict: czo data row dict
@@ -282,14 +282,13 @@ hs_user_pwd = "123"
 # hs_user_pwd = ""
 
 PROCESS_FIRST_N_ROWS = 10  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
-CZO_ID_LIST = [2864, 2915]  # a list of czo_id if PROCESS_FIRST_N_ROWS = -1
+CZO_ID_LIST = [3884]  # a list of czo_id if PROCESS_FIRST_N_ROWS = -1
+#CZO_ID_LIST = _czo_list_from_csv()
 progress_dict = {"error": [], "success": []}
 czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id", "success"])
 
 
 if __name__ == "__main__":
-
-    CZO_ID_LIST = _czo_list_from_csv()
 
     dt_start_global = dt.utcnow()
     logging.info("Script started at UTC {}".format(dt_start_global))
@@ -300,7 +299,7 @@ if __name__ == "__main__":
 
     if PROCESS_FIRST_N_ROWS >= 0:
 
-        logging.info("Processing first {N} rows (0 - all rows)".format(N=PROCESS_FIRST_N_ROWS))
+        logging.info("Processing first {n} rows (0 - all rows)".format(n=PROCESS_FIRST_N_ROWS))
         # loop through dataframe rows
         for index, row in czo_df.iterrows():
             if PROCESS_FIRST_N_ROWS > 0 and index > PROCESS_FIRST_N_ROWS - 1:
@@ -330,5 +329,3 @@ if __name__ == "__main__":
                                                               error_item["msg"].replace("\n", " ")))
     logging.info(czo_hs_id_lookup_df.to_string())
     czo_hs_id_lookup_df.to_csv('czo_hs_id_{}.csv'.format(script_start_dt), encoding='utf-8', index=False)
-
-
