@@ -12,13 +12,29 @@ from _utils import get_spatial_coverage, get_creator, \
     elapsed_time, prepare_logging_str
 
 script_start_dt = dt.utcnow()
+script_start_dt_str = script_start_dt.strftime("%Y-%m-%d_%H-%M-%S")
+log_file_path = "./log_{0}.log".format(script_start_dt_str)
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s",
     handlers=[
-        logging.FileHandler("./log_{0}.log".format(script_start_dt)),
+        logging.FileHandler(log_file_path),
         logging.StreamHandler()
     ])
+
+
+def _get_hs_obj():
+    """
+    init hs_restclient obj using global vars
+    :return: hs_obj
+    """
+
+    auth = HydroShareAuthBasic(username=hs_user_name, password=hs_user_pwd)
+    if "hydroshare.org" in hs_host_url or "cuahsi.org" in hs_host_url:
+        hs = HydroShare(auth=auth, hostname=hs_host_url)
+    else:
+        hs = HydroShare(auth=auth, hostname=hs_host_url, port=8000, use_https=False, verify=False)
+    return hs
 
 
 def _create_hs_res_from_czo(czo_res_dict, index=-99):
@@ -101,11 +117,7 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
                                                               'VARIABLES', 'description', 'comments', 'RELATED_DATASETS',
                                                               'date_range_comments', ])
 
-        auth = HydroShareAuthBasic(username=hs_user_name, password=hs_user_pwd)
-        if "hydroshare.org" in hs_host_url or "cuahsi.org" in hs_host_url:
-            hs = HydroShare(auth=auth, hostname=hs_host_url)
-        else:
-            hs = HydroShare(auth=auth, hostname=hs_host_url, port=8000, use_https=False, verify=False)
+        hs = _get_hs_obj()
 
         # Since current HydroShare REST API and hs_restclient DO NOT return specific error message,
         # sending a Big JSON to create a complete HydroShare resource is hard to debug
@@ -269,21 +281,21 @@ def _czo_list_from_csv():
 # Global Vars
 
 # Which HydroShare to talk to
-hs_host_url = "dev-hs-6.cuahsi.org"
-hs_user_name = "drew"
-hs_user_pwd = ""
-
-# hs_host_url = "127.0.0.1"
+# hs_host_url = "dev-hs-6.cuahsi.org"
 # hs_user_name = "drew"
-# hs_user_pwd = "123"
+# hs_user_pwd = ""
+
+hs_host_url = "127.0.0.1"
+hs_user_name = "drew"
+hs_user_pwd = "123"
 
 # hs_host_url = "www.hydroshare.org"
 # hs_user_name = ""
 # hs_user_pwd = ""
 
-PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
+PROCESS_FIRST_N_ROWS = 1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
 CZO_ID_LIST = [2474]  # a list of czo_id if PROCESS_FIRST_N_ROWS = -1
-READ_CZO_ID_LIST_FROM_CSV = True
+READ_CZO_ID_LIST_FROM_CSV = False
 
 
 if READ_CZO_ID_LIST_FROM_CSV:
@@ -332,4 +344,14 @@ if __name__ == "__main__":
                                                               error_item["res_id"],
                                                               error_item["msg"].replace("\n", " ")))
     logging.info(czo_hs_id_lookup_df.to_string())
-    czo_hs_id_lookup_df.to_csv('czo_hs_id_{}.csv'.format(script_start_dt), encoding='utf-8', index=False)
+    czo_hs_id_csv_file_path = 'czo_hs_id_{}.csv'.format(script_start_dt_str)
+    czo_hs_id_lookup_df.to_csv(czo_hs_id_csv_file_path, encoding='utf-8', index=False)
+
+    # upload log file and czo_hs_id_csv to hs
+    hs = _get_hs_obj()
+    resource_id = hs.createResource("CompositeResource",
+                                    "czo2hs migration log files {}".format(script_start_dt_str),
+                                    )
+    file_id = hs.addResourceFile(resource_id, log_file_path)
+    file_id = hs.addResourceFile(resource_id, czo_hs_id_csv_file_path)
+    print("Log files uploaded to HS res at {}".format(resource_id))
