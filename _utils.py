@@ -3,8 +3,10 @@ import tempfile
 import os
 import json
 from datetime import datetime as dt
+import uuid
 import requests
 import validators
+from urllib.parse import unquote
 
 requests.packages.urllib3.disable_warnings()
 
@@ -66,10 +68,29 @@ def _whether_to_harvest_file(filename):
 
     filename = filename.lower()
     for ext in [".hdr", ".docx", ".csv", ".txt", ".pdf",
-                ".xlsx", ".kmz", ".PDF", ".xls"]:
+                ".xlsx", ".kmz", ".zip", ".xls"]:
         if filename.endswith(ext):
             return True
     return False
+
+
+def _append_rstr_to_fname(fn, rstrl=6, pre_rstr=None):
+    """
+    append a small random str to filename: myfile_{RSTR}.txt
+    :param fn: original filename
+    :param pre_rstr: a string put prior to random string: myfile_{PRE_RSTR}_{RSTR}.txt
+    :return: new filename
+    """
+    if rstrl > 32:
+        logging.WARN("Max length of random string is 32 characters")
+    rstr = uuid.uuid4().hex[:rstrl]
+
+    if isinstance(pre_rstr, str) and len(pre_rstr) > 0:
+        rstr = "{}_{}".format(pre_rstr, rstr)
+
+    file_name_base, file_name_ext = os.path.splitext(fn)
+    fn_new = "{}_{}{}".format(file_name_base, rstr, file_name_ext)
+    return fn_new
 
 
 def get_files(in_str):
@@ -79,6 +100,7 @@ def get_files(in_str):
     :return: None
     """
 
+    file_name_used_list = []
     for f_str in in_str.split("|"):
         f_info_list = f_str.split("$")
         f_location = f_info_list[0]
@@ -89,11 +111,16 @@ def get_files(in_str):
         f_doi = f_info_list[5]
         f_metadata_url = f_info_list[6]
         if validators.url(f_url):
-            file_name = f_url.split("/")[-1]
+            f_url_decoded = unquote(f_url)
+            file_name = f_url_decoded.split("/")[-1]
             if len(file_name) == 0:
-                file_name = f_url.split("/")[-2]
+                file_name = f_url_decoded.split("/")[-2]
+
+            file_name = file_name.replace(" ", "_")
 
             if _whether_to_harvest_file(file_name):
+                if file_name in file_name_used_list:
+                    file_name = _append_rstr_to_fname(file_name)
                 file_path_local = _download_file(f_url, file_name)
                 file_info = {"path_or_url": file_path_local,
                              "file_name": file_name,
@@ -102,9 +129,12 @@ def get_files(in_str):
                              }
 
             else:
+                file_name = (f_topic + "-" + f_location).replace(" ", "_")
+                if file_name in file_name_used_list:
+                    file_name = _append_rstr_to_fname(file_name)
                 file_info = {"file_type": "ReferencedFile",
                              "path_or_url": f_url,
-                             "file_name": f_topic,
+                             "file_name": file_name,
                              "metadata": {},
                              }
 
@@ -122,17 +152,24 @@ def get_files(in_str):
                                                         },  # extra_metadata
                                     }
 
+            file_name_used_list.append(file_name)
             yield file_info
 
         if validators.url(f_metadata_url):
-            file_name = f_metadata_url.split("/")[-1]
+            f_metadata_url_decoded = unquote(f_metadata_url)
+            file_name = f_metadata_url_decoded.split("/")[-1]
             if len(file_name) == 0:
-                file_name = f_metadata_url.split("/")[-2]
+                file_name = f_metadata_url_decoded.split("/")[-2]
+            file_name = file_name.replace(" ", "_")
+            if file_name in file_name_used_list:
+                file_name = _append_rstr_to_fname(file_name, pre_rstr="METADATA")
             file_path_local = _download_file(f_metadata_url, file_name)
             file_info = {"path_or_url": file_path_local,
                          "file_name": file_name,
                          "file_type": "",
                          "metadata": {}, }
+
+            file_name_used_list.append(file_name)
             yield file_info
 
 
@@ -171,7 +208,7 @@ def get_file_id_by_name(hs, resource_id, fname):
         if fname.lower() in str(file["url"]).lower():
             file_id = file["id"]
     if file_id == -1:
-        print("couldn't find file for {} in resource {}".format(fname, resource_id))
+        logging.error("Couldn't find file for {} in resource {}".format(fname, resource_id))
     return file_id
 
 
@@ -200,3 +237,12 @@ def elapsed_time(dt_start, return_type="log", prompt_str="Total Time Elapsed"):
         return str(dt_timedelta)
     else:
         return dt_timedelta
+
+
+def prepare_logging_str(ex, attr, one_line=True):
+
+    logging_str = attr + ": " + str(getattr(ex, attr, "NO " + attr))
+    if one_line:
+        logging_str = logging_str.replace("\r\n", " ")
+        logging_str = logging_str.replace("\n", " ")
+    return logging_str
