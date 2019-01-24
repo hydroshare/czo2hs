@@ -117,10 +117,11 @@ def get_files(in_str):
                 file_name = f_url_decoded.split("/")[-2]
 
             file_name = file_name.replace(" ", "_")
+
             if _whether_to_harvest_file(file_name):
-                file_path_local = _download_file(f_url, file_name)
                 if file_name in file_name_used_list:
                     file_name = _append_rstr_to_fname(file_name)
+                file_path_local = _download_file(f_url, file_name)
                 file_info = {"path_or_url": file_path_local,
                              "file_name": file_name,
                              "file_type": "",

@@ -293,9 +293,9 @@ hs_user_pwd = "123"
 # hs_user_name = ""
 # hs_user_pwd = ""
 
-PROCESS_FIRST_N_ROWS = 1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
+PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
 CZO_ID_LIST = [2474]  # a list of czo_id if PROCESS_FIRST_N_ROWS = -1
-READ_CZO_ID_LIST_FROM_CSV = False
+READ_CZO_ID_LIST_FROM_CSV = True
 
 
 if READ_CZO_ID_LIST_FROM_CSV:
