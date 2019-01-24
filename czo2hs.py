@@ -196,7 +196,7 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
         item_dict["msg"] = ex_type + ex_doc + ex_msg + ex_str
 
         logging.error(ex_type + ex_doc + ex_msg + ex_str)
-        logging.exception(ex)
+        logging.error(ex)
 
     finally:
         czo_hs_id["success"] = "T" if _success else "F"
@@ -269,21 +269,25 @@ def _czo_list_from_csv():
 # Global Vars
 
 # Which HydroShare to talk to
-# hs_host_url = "dev-hs-6.cuahsi.org"
-# hs_user_name = "czo"
-# hs_user_pwd = "123"
-
-hs_host_url = "127.0.0.1"
+hs_host_url = "dev-hs-6.cuahsi.org"
 hs_user_name = "drew"
-hs_user_pwd = "123"
+hs_user_pwd = ""
+
+# hs_host_url = "127.0.0.1"
+# hs_user_name = "drew"
+# hs_user_pwd = "123"
 
 # hs_host_url = "www.hydroshare.org"
 # hs_user_name = ""
 # hs_user_pwd = ""
 
-PROCESS_FIRST_N_ROWS = 10  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
-CZO_ID_LIST = [3884]  # a list of czo_id if PROCESS_FIRST_N_ROWS = -1
-#CZO_ID_LIST = _czo_list_from_csv()
+PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
+CZO_ID_LIST = [2474]  # a list of czo_id if PROCESS_FIRST_N_ROWS = -1
+READ_CZO_ID_LIST_FROM_CSV = True
+
+
+if READ_CZO_ID_LIST_FROM_CSV:
+    CZO_ID_LIST = _czo_list_from_csv()
 progress_dict = {"error": [], "success": []}
 czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id", "success"])
 
