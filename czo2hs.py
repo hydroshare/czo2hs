@@ -41,16 +41,27 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
     """
     Create a HydroShare resource from a CZO data row
     :param czo_res_dict: dict of CZO data row
-    :return: {"success": _success,
-              "czo_hs_id": {"czo_id": czo_id, "hs_id": resource_id} if _success else None,
-              "record": item_dict
-            }
+    :return: {"success": False,
+                 "czo_id": -1,
+                 "hs_id": -1,
+                 "ref_file_list": [],
+                 "concrete_file_list": [],
+                 "error_msg": "success",
+                 }
     """
-
+    record_dict = {"success": False,
+                 "czo_id": -1,
+                 "hs_id": -1,
+                 "czo_id": -1,
+                 "hs_id": -1,
+                 "ref_file_list": [],
+                 "concrete_file_list": [],
+                 "error_msg": "success",
+                 }
     try:
-        item_dict = {}
+
         czo_id = czo_res_dict["czo_id"]
-        item_dict["czo_id"] = czo_id
+        record_dict["czo_id"] = czo_id
         logging.info("Working on Row {index} CZO_ID {czo_id}".format(index=index, czo_id=czo_id))
 
         # parse file info
@@ -126,52 +137,56 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
 
         # create a Composite Resource with title, extra metadata
         # extra metadata is uploaded here because I haven't found a way to update it separately
-        resource_id = hs.createResource("CompositeResource",
+        hs_id = hs.createResource("CompositeResource",
                                         hs_res_title,
                                         extra_metadata=json.dumps(hs_extra_metadata)
                                         )
-        czo_hs_id = {"czo_id": czo_id, "hs_id": resource_id, "success": "T"}
-        item_dict["res_id"] = resource_id
-        logging.info('HS resource created at: {res_id}'.format(res_id=resource_id))
+        czo_hs_id = {"czo_id": czo_id, "hs_id": hs_id, "success": "T"}
+        record_dict["hs_id"] = hs_id
+        logging.info('HS resource created at: {hs_id}'.format(hs_id=hs_id))
 
         # update Abstract/Description
-        science_metadata_json = _update_core_metadata(hs, resource_id,
+        science_metadata_json = _update_core_metadata(hs, hs_id,
                                                       {"description": hs_res_abstract},
                                                       message="Abstract")
 
         # update Keywords/Subjects
-        science_metadata_json = _update_core_metadata(hs, resource_id,
+        science_metadata_json = _update_core_metadata(hs, hs_id,
                                                       {"subjects": [{"value": kw} for kw in hs_res_keywords]},
                                                       message="Keyword")
 
         # update creators
-        science_metadata_json = _update_core_metadata(hs, resource_id,
+        science_metadata_json = _update_core_metadata(hs, hs_id,
                                                       {"creators": [hs_creator]},
                                                       message="Author")
 
         # update coverage
         # spatial coverage and period coverage must be updated at the same time as updating any single one would remove the other
-        science_metadata_json = _update_core_metadata(hs, resource_id,
+        science_metadata_json = _update_core_metadata(hs, hs_id,
                                                       {'coverages': [hs_coverage_spatial, hs_coverage_period]},
                                                       message="Coverage")
 
         # metadata still not working!!!! https://github.com/hydroshare/hs_restclient/issues/97
         # rights, funding_agencies, extra_metadata
 
-        file_uploaded_counter = 0
         for f in get_files(czo_files):
-            # try:
-                logging.info("Uploading file: {}".format(str(f)))
+            if f is None:
+                continue
+            try:
+                logging.info("Creating file: {}".format(str(f)))
                 if f["file_type"] == "ReferencedFile":
-                    resp_dict = hs.createReferencedFile(pid=resource_id,
+                    resp_dict = hs.createReferencedFile(pid=hs_id,
                                                         path='data/contents',
                                                         name=f["file_name"],
                                                         ref_url=f["path_or_url"])
                     file_id = resp_dict["file_id"]
-                    file_uploaded_counter += 1
+
+                    # log ref file
+                    record_dict["ref_file_list"].append(f)
+
                 else:
                     # upload other files with auto file type detection
-                    file_id = hs.addResourceFile(resource_id,
+                    file_id = hs.addResourceFile(hs_id,
                                                  f["path_or_url"])
                     tmpfile_folder_path = os.path.dirname(f["path_or_url"])
                     try:
@@ -179,19 +194,24 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
                     except:
                         pass
                     # find file id (to be replaced by new hs_restclient)
-                    file_id = get_file_id_by_name(hs, resource_id, f["file_name"])
-                    file_uploaded_counter += 1
+                    file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
 
-                hs.resource(resource_id).files.metadata(file_id, f["metadata"])
-            # except Exception as ex_file:
-            #     logging.error(ex_file)
+                    # log concrete file
+                    record_dict["concrete_file_list"].append(f)
+
+                hs.resource(hs_id).files.metadata(file_id, f["metadata"])
+            except Exception as ex_file:
+                 logging.error(ex_file)
 
         # make the resource public
-        if file_uploaded_counter > 0:
-            hs.setAccessRules(resource_id, public=True)
+        try:
+            hs.setAccessRules(hs_id, public=True)
             logging.info("Resource is made Public")
+        except Exception:
+            logging.error("Failed to make Resource Public")
+            pass
 
-        # science_metadata_json = hs.getScienceMetadata(resource_id)
+        # science_metadata_json = hs.getScienceMetadata(hs_id)
         # print (json.dumps(science_metadata_json, sort_keys=True, indent=4))
 
         logging.info("Done with Row {index} CZO_ID: {czo_id}".format(index=index, czo_id=czo_id))
@@ -205,17 +225,14 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
         ex_doc = prepare_logging_str(ex, "__doc__")
         ex_msg = prepare_logging_str(ex, "message")
         ex_str = prepare_logging_str(ex, "__str__")
-        item_dict["msg"] = ex_type + ex_doc + ex_msg + ex_str
+        record_dict["error_msg"] = ex_type + ex_doc + ex_msg + ex_str
 
         logging.error(ex_type + ex_doc + ex_msg + ex_str)
         logging.error(ex)
 
     finally:
-        czo_hs_id["success"] = "T" if _success else "F"
-        return {"success": _success,
-                "czo_hs_id": czo_hs_id,
-                "record": item_dict
-                }
+        record_dict["success"] = _success
+        return record_dict
 
 
 def _log_progress(progress_dict, header="Summary"):
@@ -231,6 +248,19 @@ def _log_progress(progress_dict, header="Summary"):
     logging.info("*" * 10 + "{}".format(header) + "*" * 10)
     logging.info(
         "Total: {}; Success: {}; Error {}".format(error_counter + success_counter, success_counter, error_counter))
+
+
+def _log_uploaded_file_stats(record_dict):
+
+    concrete_file_num = len(record_dict["concrete_file_list"])
+    concrete_file_size_total = sum([f["file_size_mb"] for f in record_dict["concrete_file_list"]])
+    logging.info("Uploaded concrete files: {}; Size {} MB".format(concrete_file_num, concrete_file_size_total))
+
+    logging.info("Created ref files: {}".format(len(record_dict["ref_file_list"])))
+    ref_big_file_list = list(filter(lambda f: (f["big_file_flag"] == True), record_dict["ref_file_list"]))
+    logging.info("Big ref files list:".format(len(ref_big_file_list)))
+    for f_big in ref_big_file_list:
+        logging.info(f_big)
 
 
 def _create_hs_resource_from_czo_row_dict(czo_row_dict, row_no=1, progress_report=5):
@@ -251,12 +281,19 @@ def _create_hs_resource_from_czo_row_dict(czo_row_dict, row_no=1, progress_repor
     mgr_result = _create_hs_res_from_czo(czo_row_dict, index=row_no)
 
     if mgr_result["success"]:
-        progress_dict["success"].append(mgr_result["record"])
+        progress_dict["success"].append(mgr_result)
     else:
-        progress_dict["error"].append(mgr_result["record"])
+        progress_dict["error"].append(mgr_result)
 
-    if mgr_result["czo_hs_id"]:
-        czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(mgr_result["czo_hs_id"], ignore_index=True)
+    # append czo_id vs hs_id to lookup table
+    czo_hs_id_lookup_dict = {"czo_id": mgr_result["czo_id"],
+                             "hs_id": mgr_result["hs_id"],
+                             "success": mgr_result["success"]
+
+    }
+
+    czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(czo_hs_id_lookup_dict, ignore_index=True)
+    _log_uploaded_file_stats(mgr_result)
 
     elapsed_time(dt_start_resource, prompt_str="Resource Creation Time Elapsed")
     elapsed_time(dt_start_global)
@@ -281,26 +318,26 @@ def _czo_list_from_csv():
 # Global Vars
 
 # Which HydroShare to talk to
-# hs_host_url = "dev-hs-6.cuahsi.org"
-# hs_user_name = "drew"
-# hs_user_pwd = ""
-
-hs_host_url = "127.0.0.1"
+hs_host_url = "dev-hs-6.cuahsi.org"
 hs_user_name = "drew"
-hs_user_pwd = "123"
+hs_user_pwd = "123456"
+
+# hs_host_url = "127.0.0.1"
+# hs_user_name = "drew"
+# hs_user_pwd = "123"
 
 # hs_host_url = "www.hydroshare.org"
 # hs_user_name = ""
 # hs_user_pwd = ""
 
 PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
-CZO_ID_LIST = [2474]  # a list of czo_id if PROCESS_FIRST_N_ROWS = -1
+CZO_ID_LIST = [2514]  # 2407 a list of czo_id if PROCESS_FIRST_N_ROWS = -1
 READ_CZO_ID_LIST_FROM_CSV = True
 
 
-if READ_CZO_ID_LIST_FROM_CSV:
+if READ_CZO_ID_LIST_FROM_CSV and PROCESS_FIRST_N_ROWS == -1:
     CZO_ID_LIST = _czo_list_from_csv()
-progress_dict = {"error": [], "success": []}
+progress_dict = {"error": [], "success": [], "size_uploaded_mb": 0.0, "big_file_list": []}
 czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id", "success"])
 
 
@@ -339,9 +376,9 @@ if __name__ == "__main__":
     counter = 0
     for error_item in progress_dict["error"]:
         counter += 1
-        logging.info("{} CZO_ID {} RES_ID {} Error {}".format(counter,
+        logging.info("{} CZO_ID {} HS_ID {} Error {}".format(counter,
                                                               error_item["czo_id"],
-                                                              error_item["res_id"],
+                                                              error_item["hs_id"],
                                                               error_item["msg"].replace("\n", " ")))
     logging.info(czo_hs_id_lookup_df.to_string())
     czo_hs_id_csv_file_path = 'czo_hs_id_{}.csv'.format(script_start_dt_str)
@@ -349,9 +386,9 @@ if __name__ == "__main__":
 
     # upload log file and czo_hs_id_csv to hs
     hs = _get_hs_obj()
-    resource_id = hs.createResource("CompositeResource",
+    hs_id = hs.createResource("CompositeResource",
                                     "czo2hs migration log files {}".format(script_start_dt_str),
                                     )
-    file_id = hs.addResourceFile(resource_id, log_file_path)
-    file_id = hs.addResourceFile(resource_id, czo_hs_id_csv_file_path)
-    print("Log files uploaded to HS res at {}".format(resource_id))
+    file_id = hs.addResourceFile(hs_id, log_file_path)
+    file_id = hs.addResourceFile(hs_id, czo_hs_id_csv_file_path)
+    print("Log files uploaded to HS res at {}".format(hs_id))
