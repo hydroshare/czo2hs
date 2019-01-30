@@ -174,19 +174,19 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
             try:
                 logging.info("Creating file: {}".format(str(f)))
                 if f["file_type"] == "ReferencedFile":
-                    # resp_dict = hs.createReferencedFile(pid=hs_id,
-                    #                                     path='data/contents',
-                    #                                     name=f["file_name"],
-                    #                                     ref_url=f["path_or_url"])
-                    # file_id = resp_dict["file_id"]
+                    resp_dict = hs.createReferencedFile(pid=hs_id,
+                                                        path='data/contents',
+                                                        name=f["file_name"],
+                                                        ref_url=f["path_or_url"])
+                    file_id = resp_dict["file_id"]
 
                     # log ref file
                     record_dict["ref_file_list"].append(f)
 
                 else:
                     # upload other files with auto file type detection
-                    # file_id = hs.addResourceFile(hs_id,
-                    #                              f["path_or_url"])
+                    file_id = hs.addResourceFile(hs_id,
+                                                 f["path_or_url"])
                     tmpfile_folder_path = os.path.dirname(f["path_or_url"])
                     try:
                         shutil.rmtree(tmpfile_folder_path)
@@ -334,7 +334,7 @@ hs_user_pwd = "123456"
 # hs_user_name = ""
 # hs_user_pwd = ""
 
-PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
+PROCESS_FIRST_N_ROWS = 2  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
 CZO_ID_LIST = [2666]  # 2407 a list of czo_id if PROCESS_FIRST_N_ROWS = -1
 READ_CZO_ID_LIST_FROM_CSV = True
 FIRST_N_ITEM_IN_CSV = 10
