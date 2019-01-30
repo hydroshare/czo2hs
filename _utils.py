@@ -10,7 +10,7 @@ from urllib.parse import unquote
 
 requests.packages.urllib3.disable_warnings()
 
-BIG_FILE_SIZE_MB = 100
+BIG_FILE_SIZE_MB = 500
 
 
 def get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None):
