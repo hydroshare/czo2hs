@@ -5,6 +5,7 @@ import json
 from datetime import datetime as dt
 
 import pandas as pd
+from pandas.io.json import json_normalize
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from _utils import get_spatial_coverage, get_creator, \
@@ -50,8 +51,6 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
                  }
     """
     record_dict = {"success": False,
-                 "czo_id": -1,
-                 "hs_id": -1,
                  "czo_id": -1,
                  "hs_id": -1,
                  "ref_file_list": [],
@@ -175,19 +174,19 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
             try:
                 logging.info("Creating file: {}".format(str(f)))
                 if f["file_type"] == "ReferencedFile":
-                    resp_dict = hs.createReferencedFile(pid=hs_id,
-                                                        path='data/contents',
-                                                        name=f["file_name"],
-                                                        ref_url=f["path_or_url"])
-                    file_id = resp_dict["file_id"]
+                    # resp_dict = hs.createReferencedFile(pid=hs_id,
+                    #                                     path='data/contents',
+                    #                                     name=f["file_name"],
+                    #                                     ref_url=f["path_or_url"])
+                    # file_id = resp_dict["file_id"]
 
                     # log ref file
                     record_dict["ref_file_list"].append(f)
 
                 else:
                     # upload other files with auto file type detection
-                    file_id = hs.addResourceFile(hs_id,
-                                                 f["path_or_url"])
+                    # file_id = hs.addResourceFile(hs_id,
+                    #                              f["path_or_url"])
                     tmpfile_folder_path = os.path.dirname(f["path_or_url"])
                     try:
                         shutil.rmtree(tmpfile_folder_path)
@@ -201,7 +200,7 @@ def _create_hs_res_from_czo(czo_res_dict, index=-99):
 
                 hs.resource(hs_id).files.metadata(file_id, f["metadata"])
             except Exception as ex_file:
-                 logging.error(ex_file)
+                logging.error(ex_file)
 
         # make the resource public
         try:
@@ -253,7 +252,7 @@ def _log_progress(progress_dict, header="Summary"):
 def _log_uploaded_file_stats(record_dict):
 
     concrete_file_num = len(record_dict["concrete_file_list"])
-    concrete_file_size_total = sum([f["file_size_mb"] for f in record_dict["concrete_file_list"]])
+    concrete_file_size_total = sum([f["file_size_mb"] if f["file_size_mb"]>0 else 0 for f in record_dict["concrete_file_list"]])
     logging.info("Uploaded concrete files: {}; Size {} MB".format(concrete_file_num, concrete_file_size_total))
 
     logging.info("Created ref files: {}".format(len(record_dict["ref_file_list"])))
@@ -301,7 +300,7 @@ def _create_hs_resource_from_czo_row_dict(czo_row_dict, row_no=1, progress_repor
         _log_progress(progress_dict, "Progress Report")
 
 
-def _czo_list_from_csv():
+def _czo_list_from_csv(_num):
     """
     Read czo ids from a csv file
     :return: a list of czo id
@@ -309,8 +308,13 @@ def _czo_list_from_csv():
     czo_list = []
     df = pd.read_csv("data/czo_hs_id.csv")
     row_dict_list = df.loc[df['success'] == "F"].to_dict(orient='records')
+    counter = 0
     for item in row_dict_list:
+        if _num > 0 and counter >= _num:
+            break
         czo_list.append(item["czo_id"])
+        counter += 1
+
     return czo_list
 
 
@@ -331,12 +335,13 @@ hs_user_pwd = "123456"
 # hs_user_pwd = ""
 
 PROCESS_FIRST_N_ROWS = -1  # N>0: process the first N rows; N=0:all rows; N<0: a specific row
-CZO_ID_LIST = [2514]  # 2407 a list of czo_id if PROCESS_FIRST_N_ROWS = -1
+CZO_ID_LIST = [2666]  # 2407 a list of czo_id if PROCESS_FIRST_N_ROWS = -1
 READ_CZO_ID_LIST_FROM_CSV = True
+FIRST_N_ITEM_IN_CSV = 10
 
 
 if READ_CZO_ID_LIST_FROM_CSV and PROCESS_FIRST_N_ROWS == -1:
-    CZO_ID_LIST = _czo_list_from_csv()
+    CZO_ID_LIST = _czo_list_from_csv(FIRST_N_ITEM_IN_CSV)
 progress_dict = {"error": [], "success": [], "size_uploaded_mb": 0.0, "big_file_list": []}
 czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id", "success"])
 
@@ -373,13 +378,28 @@ if __name__ == "__main__":
 
     elapsed_time(dt_start_global)
     _log_progress(progress_dict)
+
+    success_error = progress_dict["success"] + progress_dict["error"]
+
+    # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.json.json_normalize.html
+    df_ref_file_list = json_normalize(success_error, "ref_file_list", ["czo_id", "hs_id"], record_prefix="ref_")
+    df_ref_file_list_big_file_filter = df_ref_file_list[(df_ref_file_list.ref_big_file_flag == True) & (df_ref_file_list.ref_file_size_mb > 0)]
+    # print(df_ref_file_list.to_string())
+    print(df_ref_file_list_big_file_filter.to_string())
+    print(df_ref_file_list_big_file_filter.sum(axis=0, skipna=True))
+
+    df_concrete_file_list = json_normalize(success_error, "concrete_file_list", ["czo_id", "hs_id"], record_prefix="concrete_")
+    df_concrete_file_list_filter = df_concrete_file_list[df_concrete_file_list.concrete_file_size_mb > 0]
+    # print(df_concrete_file_list.to_string())
+    print(df_concrete_file_list_filter.sum(axis=0, skipna=True))
+
     counter = 0
     for error_item in progress_dict["error"]:
         counter += 1
         logging.info("{} CZO_ID {} HS_ID {} Error {}".format(counter,
                                                               error_item["czo_id"],
                                                               error_item["hs_id"],
-                                                              error_item["msg"].replace("\n", " ")))
+                                                              error_item["error_msg"].replace("\n", " ")))
     logging.info(czo_hs_id_lookup_df.to_string())
     czo_hs_id_csv_file_path = 'czo_hs_id_{}.csv'.format(script_start_dt_str)
     czo_hs_id_lookup_df.to_csv(czo_hs_id_csv_file_path, encoding='utf-8', index=False)

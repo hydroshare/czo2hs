@@ -70,7 +70,7 @@ def _whether_to_harvest_file(filename):
 
     filename = filename.lower()
     for ext in [".hdr", ".docx", ".csv", ".txt", ".pdf",
-                ".xlsx", ".kmz", ".zip", ".xls"]:
+                ".xlsx", ".kmz", ".zip", ".xls", ".7z", ".kmz"]:
         if filename.endswith(ext):
             return True
     return False
