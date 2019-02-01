@@ -150,7 +150,7 @@ def _handle_duplicated_file_name(file_name, file_name_used_dict, split_ext=True)
     return file_name_new
 
 
-def _extract_fileinfo_from_url(f_url, file_name_used_dict=None, ref_file_name=None, invalid_url_warning=True):
+def _extract_fileinfo_from_url(f_url, file_name_used_dict=None, ref_file_name=None, invalid_url_warning=False):
 
     if not validators.url(f_url):
         if invalid_url_warning:
@@ -214,7 +214,7 @@ def _extract_fileinfo_from_url(f_url, file_name_used_dict=None, ref_file_name=No
     return file_info
 
 
-def get_files(in_str):
+def get_files(in_str, record_dict=None):
     """
     This is a generator that returns a resource file dict in each iterate
     :param in_str: file field
@@ -223,39 +223,47 @@ def get_files(in_str):
 
     file_name_used_dict = {}
     for f_str in in_str.split("|"):
-        f_info_list = f_str.split("$")
-        f_location = f_info_list[0]
-        f_topic = f_info_list[1]
-        f_url = f_info_list[2]
-        f_data_level = f_info_list[3]
-        f_private = f_info_list[4]
-        f_doi = f_info_list[5]
-        f_metadata_url = f_info_list[6]
+        try:
+            f_info_list = f_str.split("$")
+            f_location = f_info_list[0]
+            f_topic = f_info_list[1]
+            f_url = f_info_list[2]
+            f_data_level = f_info_list[3]
+            f_private = f_info_list[4]
+            f_doi = f_info_list[5]
+            f_metadata_url = f_info_list[6]
 
-        ref_file_name = "REF_" + f_topic + "-" + f_location
-        file_info = _extract_fileinfo_from_url(f_url,
-                                               file_name_used_dict,
-                                               ref_file_name=ref_file_name)
-        file_info["metadata"] = {"title": f_topic,
+            ref_file_name = "REF_" + f_topic + "-" + f_location
+            file_info = _extract_fileinfo_from_url(f_url,
+                                                   file_name_used_dict,
+                                                   ref_file_name=ref_file_name)
+            file_info["metadata"] = {"title": f_topic,
 
-                                          # "spatial_coverage": {
-                                          #                      "name": f_location,
-                                          #                     },  # "spatial_coverage"
-                                     "extra_metadata": {"private": f_private,
-                                                           "data_level": f_data_level,
-                                                           "metadata_url": f_metadata_url,
-                                                           "url": f_url,
-                                                           "location": f_location,
-                                                           "doi": f_doi,
-                                                        },  # extra_metadata
-                                }
-        yield file_info
+                                              # "spatial_coverage": {
+                                              #                      "name": f_location,
+                                              #                     },  # "spatial_coverage"
+                                         "extra_metadata": {"private": f_private,
+                                                               "data_level": f_data_level,
+                                                               "metadata_url": f_metadata_url,
+                                                               "url": f_url,
+                                                               "location": f_location,
+                                                               "doi": f_doi,
+                                                            },  # extra_metadata
+                                    }
+            yield file_info
+        except Exception as ex:
+            _log_exception(ex, record_dict=record_dict)
+            yield None
 
-        metadata_file_info = _extract_fileinfo_from_url(f_metadata_url,
-                                                        file_name_used_dict,
-                                                        ref_file_name=ref_file_name + "_metadata",
-                                                        invalid_url_warning=False)
-        yield metadata_file_info
+        try:
+            metadata_file_info = _extract_fileinfo_from_url(f_metadata_url,
+                                                            file_name_used_dict,
+                                                            ref_file_name=ref_file_name + "_metadata",
+                                                            invalid_url_warning=False)
+            yield metadata_file_info
+        except Exception as ex:
+            _log_exception(ex, record_dict=record_dict)
+            yield None
 
 
 def _download_file(url, file_name):
@@ -298,7 +306,7 @@ def get_file_id_by_name(hs, resource_id, fname):
     return file_id
 
 
-def _update_core_metadata(hs_obj, hs_id, metadata_dict, message=None):
+def _update_core_metadata(hs_obj, hs_id, metadata_dict, message=None, record_dict=None):
     """
        Update core metadata for a HydroShare
        :param hs_obj: hs obj initialized by hs_restclient
@@ -307,11 +315,20 @@ def _update_core_metadata(hs_obj, hs_id, metadata_dict, message=None):
        :param message: logging message
        :return:
     """
-    science_metadata_json = hs_obj.updateScienceMetadata(hs_id, metadata=metadata_dict)
-    if not message:
-        message = str(metadata_dict)
-    logging.info('{message} updated successfully'.format(message=message))
-    return science_metadata_json
+    result = True
+    science_metadata_json = None
+    try:
+        science_metadata_json = hs_obj.updateScienceMetadata(hs_id, metadata=metadata_dict)
+        if not message:
+            message = str(metadata_dict)
+        logging.info('{message} updated successfully'.format(message=message))
+        result = science_metadata_json
+    except Exception as ex:
+        logging.error('Failed to update {message}'.format(message=message))
+        result = False
+        _log_exception(ex, record_dict)
+    finally:
+        return result, science_metadata_json
 
 
 def elapsed_time(dt_start, return_type="log", prompt_str="Total Time Elapsed"):
@@ -332,3 +349,18 @@ def prepare_logging_str(ex, attr, one_line=True):
         logging_str = logging_str.replace("\r\n", " ")
         logging_str = logging_str.replace("\n", " ")
     return logging_str
+
+
+def _log_exception(ex, record_dict=None):
+
+    logging.error("!" * 10 + "Error" + "!" * 10)
+
+    ex_type = "type: " + str(type(ex))
+    ex_doc = prepare_logging_str(ex, "__doc__")
+    ex_msg = prepare_logging_str(ex, "message")
+    ex_str = prepare_logging_str(ex, "__str__")
+    if record_dict is not None:
+        record_dict["error_msg"] = ex_type + ex_doc + ex_msg + ex_str
+
+    logging.error(ex_type + ex_doc + ex_msg + ex_str)
+    logging.error(ex)
