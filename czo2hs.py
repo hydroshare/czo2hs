@@ -23,11 +23,17 @@ logging.basicConfig(
 
 # hs accounts
 # Need to pre-create HS accounts for all CZOs
-hs_url = "dev-hs-6.cuahsi.org"
+#hs_url = "dev-hs-6.cuahsi.org"
+hs_url = "127.0.0.1"
 czo_account_info_dict = {
     "default": {"uname": "czo", "pwd": "123", "hs_url": hs_url},
     "national": {"uname": "czo_national", "pwd": "123", "hs_url": hs_url},
     "boulder": {"uname": "czo_boulder", "pwd": "123", "hs_url": hs_url},
+    "eel": {"uname": "czo_eel", "pwd": "123", "hs_url": hs_url},
+    "catalina-jemez": {"uname": "czo_catalina-jemez", "pwd": "123", "hs_url": hs_url},
+    "reynolds": {"uname": "czo_reynolds", "pwd": "123", "hs_url": hs_url},
+    "luquillo": {"uname": "czo_luquillo", "pwd": "123", "hs_url": hs_url},
+
 }
 CZO_HS_Account_Obj = CZO_HS_Account(czo_account_info_dict)
 
