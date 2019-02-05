@@ -27,12 +27,12 @@ logging.basicConfig(
 hs_url = "127.0.0.1"
 czo_account_info_dict = {
     "default": {"uname": "czo", "pwd": "123", "hs_url": hs_url},
-    "national": {"uname": "czo_national", "pwd": "123", "hs_url": hs_url},
-    "boulder": {"uname": "czo_boulder", "pwd": "123", "hs_url": hs_url},
-    "eel": {"uname": "czo_eel", "pwd": "123", "hs_url": hs_url},
-    "catalina-jemez": {"uname": "czo_catalina-jemez", "pwd": "123", "hs_url": hs_url},
-    "reynolds": {"uname": "czo_reynolds", "pwd": "123", "hs_url": hs_url},
-    "luquillo": {"uname": "czo_luquillo", "pwd": "123", "hs_url": hs_url},
+    # "national": {"uname": "czo_national", "pwd": "123", "hs_url": hs_url},
+    # "boulder": {"uname": "czo_boulder", "pwd": "123", "hs_url": hs_url},
+    # "eel": {"uname": "czo_eel", "pwd": "123", "hs_url": hs_url},
+    # "catalina-jemez": {"uname": "czo_catalina-jemez", "pwd": "123", "hs_url": hs_url},
+    # "reynolds": {"uname": "czo_reynolds", "pwd": "123", "hs_url": hs_url},
+    # "luquillo": {"uname": "czo_luquillo", "pwd": "123", "hs_url": hs_url},
 
 }
 CZO_HS_Account_Obj = CZO_HS_Account(czo_account_info_dict)
@@ -40,8 +40,8 @@ CZO_HS_Account_Obj = CZO_HS_Account(czo_account_info_dict)
 
 # What CZO data to migrate
 PROCESS_FIRST_N_ROWS = 0  # N>0: process the first N rows in file "czo.csv"; N=0:all rows; N<0: a specific list of czo_id see CZO_ID_LIST
-CZO_ID_LIST = [5486]  # a list of czo_id if PROCESS_FIRST_N_ROWS < 0
-READ_CZO_ID_LIST_FROM_CSV = True  # replace CZO_ID_LIST by reading a lsit of czo_id from file "czo_hs_id.csv"
+CZO_ID_LIST = [5496]  # a list of czo_id if PROCESS_FIRST_N_ROWS < 0
+READ_CZO_ID_LIST_FROM_CSV = False  # replace CZO_ID_LIST by reading a lsit of czo_id from file "czo_hs_id.csv"
 FIRST_N_ITEM_IN_CSV = 0  # process the first N items in CZO_ID_LIST; 0-all items;
 if READ_CZO_ID_LIST_FROM_CSV and PROCESS_FIRST_N_ROWS == -1:
     CZO_ID_LIST = _get_czo_list_from_csv(FIRST_N_ITEM_IN_CSV)
