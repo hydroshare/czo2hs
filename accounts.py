@@ -1,4 +1,5 @@
 import logging
+
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 
@@ -27,7 +28,7 @@ class HSAccount(object):
             logging.error(ex)
 
 
-class CZO_HS_Account(object):
+class CZOHSAccount(object):
 
     _czo_hs_dict = dict()
 
