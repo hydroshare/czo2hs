@@ -97,9 +97,11 @@ def retry_func(fun, args=None, kwargs=None, max_tries=4, interval_sec=5, increas
            func_result = fun(*pass_on_args, **pass_on_kwargs)
            return func_result
         except Exception as ex:
-            logging.warning("Failed to call {}, retrying {}/{}".format(str(fun), str(i+1), str(max_tries-1)))
             if i == max_tries - 1:
                 raise ex
+            else:
+                logging.warning("Failed to call {}, retrying {}/{}".format(str(fun), str(i+1), str(max_tries-1)))
+
             if increase_interval:
                 time.sleep(interval_sec*(i+1))
             else:
@@ -462,6 +464,16 @@ def _get_hs_obj(hs_user_name, hs_user_pwd, hs_host_url):
     return hs
 
 
+def _extract_value_from_df_row_dict(row_dict, key, required=True):
+
+    v = str(row_dict.get(key))
+    if len(v) > 0 and v.lower() not in ["nan", "na", "n/a", r"n\a", "none"]:
+        return v
+    if required:
+        raise Exception("Failed to parse key {} from {}".format(key, str(row_dict)))
+    return None
+
+
 def _create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99,):
     """
     Create a HydroShare resource from a CZO data row
@@ -484,40 +496,99 @@ def _create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99,):
 
     _success = False
     try:
-        czo_id = czo_res_dict["czo_id"]
+
+        ## parse resource-level metadata
+        # parse czo_id
+        czo_id = _extract_value_from_df_row_dict(czo_res_dict, "czo_id")
         record_dict["czo_id"] = czo_id
         logging.info("Working on Row {index} CZO_ID {czo_id}".format(index=index, czo_id=czo_id))
+
+        # parse CZOS
+        czos = _extract_value_from_df_row_dict(czo_res_dict, "CZOS")
+        czos_list = czos.split('|')
+        czo_primary = czos_list[0]
+
+        # parse title, subtitle, description, comments
+        title = _extract_value_from_df_row_dict(czo_res_dict, "title")
+        subtitle = _extract_value_from_df_row_dict(czo_res_dict, "subtitle", required=False)
+        description = _extract_value_from_df_row_dict(czo_res_dict, "description")
+        comments = _extract_value_from_df_row_dict(czo_res_dict, "comments", required=False)
+
+        # parse FIELD_AREAS, location
+        field_areas = _extract_value_from_df_row_dict(czo_res_dict, "FIELD_AREAS")
+        field_areas_list = field_areas.split('|')
+        location = _extract_value_from_df_row_dict(czo_res_dict, "location")
+
+        # parse VARIABLES
+        variables = _extract_value_from_df_row_dict(czo_res_dict, "VARIABLES")
+        variables_list = variables.split('|')
+
+        # parse date_start, date_end, date_range_comments
+        date_start = _extract_value_from_df_row_dict(czo_res_dict, "date_start")
+        date_end = _extract_value_from_df_row_dict(czo_res_dict, "date_end", required=False)
+        date_range_comments = _extract_value_from_df_row_dict(czo_res_dict, "date_range_comments", required=False)
+
+        # parse bouding box
+        east_long = _extract_value_from_df_row_dict(czo_res_dict, "east_long")
+        west_long = _extract_value_from_df_row_dict(czo_res_dict, "west_long")
+        south_lat = _extract_value_from_df_row_dict(czo_res_dict, "south_lat")
+        north_lat = _extract_value_from_df_row_dict(czo_res_dict, "north_lat")
 
         # parse file info
         czo_files = czo_res_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
 
-        # CZO Name
-        czos = czo_res_dict["CZOS"]
-        czo_primary = czos.split('|')[0]
+        # parse citation, data_doi
+        citation = _extract_value_from_df_row_dict(czo_res_dict, "citation", required=False)
+        dataset_doi = _extract_value_from_df_row_dict(czo_res_dict, "dataset_doi", required=False)
+
+        # parse TOPICS, KEYWORDS
+        topics = _extract_value_from_df_row_dict(czo_res_dict, "TOPICS")
+        topics_list = topics.split('|')
+        keywords = _extract_value_from_df_row_dict(czo_res_dict, "KEYWORDS", required=False)
+        keywords_list = keywords.split('|') if keywords is not None else []
+
+        # parse DISCIPLINES
+        disciplines = _extract_value_from_df_row_dict(czo_res_dict, "DISCIPLINES", required=False)
+        disciplines_list = disciplines.split('|') if disciplines is not None else []
+
+        # parse sub_topic
+        sub_topic = _extract_value_from_df_row_dict(czo_res_dict, "sub_topic", required=False)
+
+        # parse EXTERNAL_LINKS-url$link_text,PUBLICATIONS_OF_THIS_DATA, RELATED_DATASETS
+        external_links = _extract_value_from_df_row_dict(czo_res_dict, "EXTERNAL_LINKS-url$link_text", required=False)
+        publications_of_this_data = _extract_value_from_df_row_dict(czo_res_dict, "PUBLICATIONS_OF_THIS_DATA",
+                                                                    required=False)
+        publications_using_this_data = _extract_value_from_df_row_dict(czo_res_dict, "PUBLICATIONS_USING_THIS_DATA",
+                                                                    required=False)
+        related_datasets = _extract_value_from_df_row_dict(czo_res_dict, "RELATED_DATASETS", required=False)
+        related_datasets_list = related_datasets.split('|') if related_datasets is not None else []
+
+
+        ## end parse resource-level metadata
+
         # hs title
-        hs_res_title = czos + ":" + czo_res_dict["title"]
+        hs_res_title = title
 
         # hs abstract
-        hs_res_abstract = "{czos} \n\n" \
-                          "{subtitle} \n\n" \
-                          "[Description]\n {description} \n\n" \
-                          "[Comments]\n {comments} \n\n" \
-                          "[Variables]\n {VARIABLES} \n\n".format(czos=czos,
-                                                                  subtitle=czo_res_dict["subtitle"],
-                                                                  description=czo_res_dict["description"],
-                                                                  comments=czo_res_dict["comments"],
-                                                                  VARIABLES=czo_res_dict["VARIABLES"], )
-        # if date_range_comments exists, append to hs abstract
-        date_range_comments = czo_res_dict["date_range_comments"]
-        if isinstance(date_range_comments, str) and len(date_range_comments) > 0:
-            hs_res_abstract = hs_res_abstract + "[Date Range Comments] \n {date_range_comments}\n\n" \
-                .format(date_range_comments=date_range_comments)
+        hs_res_abstract = "{title}".format(title=title)
+        if subtitle is not None:
+            hs_res_abstract += "\n\n{subtitle}".format(subtitle=subtitle)
+        hs_res_abstract += "\n\nCZO: {czos_list}".format(czos_list=", ".join(czos_list))
+        hs_res_abstract += "\n\nField Area: {field_areas_list}".format(field_areas_list=", ".join(field_areas_list))
+        hs_res_abstract += "\n\nLocation: {location}".format(location=location)
+        hs_res_abstract += "\n\nStart Date: {date_start}".format(date_start=date_start)
+        hs_res_abstract += "\nEnd Date: {date_end}".format(date_end=date_end if date_end is not None else "")
+        if date_range_comments is not None:
+            hs_res_abstract += "\nDate Range Comments: {date_range_comments}".format(date_range_comments=date_range_comments)
+        hs_res_abstract += "\n\nDescription: {description}".format(description=description)
+        if citation is not None:
+            hs_res_abstract += "\n\nCitation: {citation}".format(citation=citation)
+        if dataset_doi is not None:
+                hs_res_abstract += "\n\nDataset DOI: {dataset_doi}".format(dataset_doi=dataset_doi)
         # hs abstract end
 
-        # hs keywords
-        hs_res_keywords = []
-        for item in ("VARIABLES", "TOPICS", "KEYWORDS", "CZOS"):
-            hs_res_keywords += czo_res_dict[item].split("|")
+        # hs keywords - czos, FIELD_AREAS, TOPICS, VARIABLES, Keyword?????
+        hs_res_keywords = [] + czos_list + field_areas_list + topics_list + keywords_list
         hs_res_keywords = map(str.lower, hs_res_keywords)
         hs_res_keywords = set(hs_res_keywords)
         if "" in hs_res_keywords:
@@ -525,33 +596,50 @@ def _create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99,):
         # hs keywords end
 
         # hs creator/author
-        contact_email = czo_res_dict["contact"]
-        creator_name = czo_res_dict["creator"]
-        hs_creator = _get_creator(czos, creator_name, contact_email)
+        # hard coded
+        hs_creator = _get_creator(czo_primary, "", "")
         # hs creator/author end
 
         # hs coverage
-        # temporal
-        date_start = czo_res_dict["date_start"]
-        date_end = czo_res_dict["date_end"]
-        # spatial
-        east_long = czo_res_dict["east_long"]
-        west_long = czo_res_dict["west_long"]
-        south_lat = czo_res_dict["south_lat"]
-        north_lat = czo_res_dict["north_lat"]
-        field_areas = czo_res_dict["FIELD_AREAS"]
-        location = czo_res_dict["location"]
+        coverage_name = ", ". join([", ". join(field_areas_list), location])
         hs_coverage_spatial = _get_spatial_coverage(north_lat, west_long, south_lat, east_long,
-                                                   name=field_areas + "-" + location)
-        hs_coverage_period = {'type': 'period', 'value': {'start': date_start, 'end': date_end, }}
+                                                   name=coverage_name)
+        hs_coverage_period = {'type': 'period', 'value': {'start': date_start, 'end': date_end if date_end is not None else "1/1/2099", }}
         # hs coverage end
 
         # hs res level extended metadata
-        hs_extra_metadata = dict(
-            (str(name), str(czo_res_dict[name])) for name in ['czo_id', 'subtitle', 'CZOS', 'FIELD_AREAS',
-                                                              'location', 'TOPICS', 'sub_topic', 'KEYWORDS',
-                                                              'VARIABLES', 'description', 'comments', 'RELATED_DATASETS',
-                                                              'date_range_comments', ])
+        hs_extra_metadata = dict(czo_id=czo_id,
+                                 czos=", ".join(czos_list),
+                                 field_areas=", ".join(field_areas_list),
+                                 location=location,
+                                 topics=", ".join(topics_list),
+                                 description=description,
+                                 variables=", ".join(variables_list),
+                                )
+        if subtitle is not None:
+            hs_extra_metadata["subtitle"] = subtitle
+        if disciplines is not None:
+            hs_extra_metadata["disciplines"] = ", ".join(disciplines_list)
+        if sub_topic is not None:
+            hs_extra_metadata["sub_topic"] = sub_topic
+        if date_range_comments is not None:
+            hs_extra_metadata["date_range_comments"] = date_range_comments
+        if keywords is not None:
+            hs_extra_metadata["keywords"] = ", ".join(keywords_list)
+        if citation is not None:
+            hs_extra_metadata["citation"] = citation
+        if comments is not None:
+            hs_extra_metadata["comments"] = comments
+        if external_links is not None:
+            hs_extra_metadata["external_links"] = external_links
+        if publications_of_this_data is not None:
+            hs_extra_metadata["publications_of_this_data"] = publications_of_this_data
+        if publications_using_this_data is not None:
+            hs_extra_metadata["publications_using_this_data"] = publications_using_this_data
+        if related_datasets is not None:
+            hs_extra_metadata["related_datasets"] = ", ".join(related_datasets_list)
+
+
         hs = czo_hs_account_obj.get_hs_by_czo(czo_primary)
 
         # Since current HydroShare REST API and hs_restclient DO NOT return specific error message,
@@ -597,56 +685,56 @@ def _create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99,):
         # rights, funding_agencies, extra_metadata
 
         _success_file = True
-        for f in _get_files(czo_files, record_dict=record_dict):
-            if f == 1:
-                _success_file = False
-                continue
-            elif f == 2:
-                continue
-            elif f is None:
-                continue
-            try:
-                logging.info("Creating file: {}".format(str(f)))
-                if f["file_type"] == "ReferencedFile":
-                    # resp_dict = hs.createReferencedFile(pid=hs_id,
-                    #                                     path='data/contents',
-                    #                                     name=f["file_name"],
-                    #                                     ref_url=f["path_or_url"])
-                    kw = {"pid": hs_id, "path": "data/contents", "name": f['file_name'], "ref_url": f['path_or_url']}
-                    resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
-                    file_id = resp_dict["file_id"]
-
-                    # log ref file
-                    record_dict["ref_file_list"].append(f)
-
-                else:
-                    # upload other files with auto file type detection
-                    file_id = hs.addResourceFile(hs_id,
-                                                 f["path_or_url"])
-                    tmpfile_folder_path = os.path.dirname(f["path_or_url"])
-                    try:
-                        shutil.rmtree(tmpfile_folder_path)
-                    except:
-                        pass
-                    # find file id (to be replaced by new hs_restclient)
-                    file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
-
-                    # log concrete file
-                    record_dict["concrete_file_list"].append(f)
-
-                hs.resource(hs_id).files.metadata(file_id, f["metadata"])
-            except Exception as ex_file:
-                _success_file = False
-                extra_msg = "Failed upload file to HS {}: ".format(json.dumps(f))
-                _log_exception(ex_file, record_dict=record_dict, extra_msg=extra_msg)
-
-        # make the resource public
-        try:
-            hs.setAccessRules(hs_id, public=True)
-            logging.info("Resource is made Public")
-        except Exception:
-            logging.error("Failed to make Resource Public")
-            pass
+        # for f in _get_files(czo_files, record_dict=record_dict):
+        #     if f == 1:
+        #         _success_file = False
+        #         continue
+        #     elif f == 2:
+        #         continue
+        #     elif f is None:
+        #         continue
+        #     try:
+        #         logging.info("Creating file: {}".format(str(f)))
+        #         if f["file_type"] == "ReferencedFile":
+        #             # resp_dict = hs.createReferencedFile(pid=hs_id,
+        #             #                                     path='data/contents',
+        #             #                                     name=f["file_name"],
+        #             #                                     ref_url=f["path_or_url"])
+        #             kw = {"pid": hs_id, "path": "data/contents", "name": f['file_name'], "ref_url": f['path_or_url']}
+        #             resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
+        #             file_id = resp_dict["file_id"]
+        #
+        #             # log ref file
+        #             record_dict["ref_file_list"].append(f)
+        #
+        #         else:
+        #             # upload other files with auto file type detection
+        #             file_id = hs.addResourceFile(hs_id,
+        #                                          f["path_or_url"])
+        #             tmpfile_folder_path = os.path.dirname(f["path_or_url"])
+        #             try:
+        #                 shutil.rmtree(tmpfile_folder_path)
+        #             except:
+        #                 pass
+        #             # find file id (to be replaced by new hs_restclient)
+        #             file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
+        #
+        #             # log concrete file
+        #             record_dict["concrete_file_list"].append(f)
+        #
+        #         hs.resource(hs_id).files.metadata(file_id, f["metadata"])
+        #     except Exception as ex_file:
+        #         _success_file = False
+        #         extra_msg = "Failed upload file to HS {}: ".format(json.dumps(f))
+        #         _log_exception(ex_file, record_dict=record_dict, extra_msg=extra_msg)
+        #
+        # # make the resource public
+        # try:
+        #     hs.setAccessRules(hs_id, public=True)
+        #     logging.info("Resource is made Public")
+        # except Exception:
+        #     logging.error("Failed to make Resource Public")
+        #     pass
 
         # science_metadata_json = hs.getScienceMetadata(hs_id)
         # print (json.dumps(science_metadata_json, sort_keys=True, indent=4))
