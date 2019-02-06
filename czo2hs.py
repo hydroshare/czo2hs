@@ -160,7 +160,7 @@ if __name__ == "__main__":
                                                               "|".join([err_msg.replace("\n", " ") for err_msg in error_item["error_msg_list"]])))
     logging.info("*" * 20 + "CZO_ID <---> HS_ID Lookup Table" + "*" * 20)
     logging.info(czo_hs_id_lookup_df.to_string())
-    czo_hs_id_csv_file_path = 'czo_hs_id_{}.csv'.format(start_time)
+    czo_hs_id_csv_file_path = os.path.join(logdir, 'czo_hs_id_{}.csv'.format(start_time))
     logging.info("*" * 20 + "Saving Lookup Table to {}".format(czo_hs_id_csv_file_path) + "*" * 20)
 
     czo_hs_id_lookup_df.to_csv(czo_hs_id_csv_file_path, encoding='utf-8', index=False)
