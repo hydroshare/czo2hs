@@ -685,56 +685,56 @@ def _create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99,):
         # rights, funding_agencies, extra_metadata
 
         _success_file = True
-        # for f in _get_files(czo_files, record_dict=record_dict):
-        #     if f == 1:
-        #         _success_file = False
-        #         continue
-        #     elif f == 2:
-        #         continue
-        #     elif f is None:
-        #         continue
-        #     try:
-        #         logging.info("Creating file: {}".format(str(f)))
-        #         if f["file_type"] == "ReferencedFile":
-        #             # resp_dict = hs.createReferencedFile(pid=hs_id,
-        #             #                                     path='data/contents',
-        #             #                                     name=f["file_name"],
-        #             #                                     ref_url=f["path_or_url"])
-        #             kw = {"pid": hs_id, "path": "data/contents", "name": f['file_name'], "ref_url": f['path_or_url']}
-        #             resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
-        #             file_id = resp_dict["file_id"]
-        #
-        #             # log ref file
-        #             record_dict["ref_file_list"].append(f)
-        #
-        #         else:
-        #             # upload other files with auto file type detection
-        #             file_id = hs.addResourceFile(hs_id,
-        #                                          f["path_or_url"])
-        #             tmpfile_folder_path = os.path.dirname(f["path_or_url"])
-        #             try:
-        #                 shutil.rmtree(tmpfile_folder_path)
-        #             except:
-        #                 pass
-        #             # find file id (to be replaced by new hs_restclient)
-        #             file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
-        #
-        #             # log concrete file
-        #             record_dict["concrete_file_list"].append(f)
-        #
-        #         hs.resource(hs_id).files.metadata(file_id, f["metadata"])
-        #     except Exception as ex_file:
-        #         _success_file = False
-        #         extra_msg = "Failed upload file to HS {}: ".format(json.dumps(f))
-        #         _log_exception(ex_file, record_dict=record_dict, extra_msg=extra_msg)
-        #
-        # # make the resource public
-        # try:
-        #     hs.setAccessRules(hs_id, public=True)
-        #     logging.info("Resource is made Public")
-        # except Exception:
-        #     logging.error("Failed to make Resource Public")
-        #     pass
+        for f in _get_files(czo_files, record_dict=record_dict):
+            if f == 1:
+                _success_file = False
+                continue
+            elif f == 2:
+                continue
+            elif f is None:
+                continue
+            try:
+                logging.info("Creating file: {}".format(str(f)))
+                if f["file_type"] == "ReferencedFile":
+                    # resp_dict = hs.createReferencedFile(pid=hs_id,
+                    #                                     path='data/contents',
+                    #                                     name=f["file_name"],
+                    #                                     ref_url=f["path_or_url"])
+                    kw = {"pid": hs_id, "path": "data/contents", "name": f['file_name'], "ref_url": f['path_or_url']}
+                    resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
+                    file_id = resp_dict["file_id"]
+
+                    # log ref file
+                    record_dict["ref_file_list"].append(f)
+
+                else:
+                    # upload other files with auto file type detection
+                    file_id = hs.addResourceFile(hs_id,
+                                                 f["path_or_url"])
+                    tmpfile_folder_path = os.path.dirname(f["path_or_url"])
+                    try:
+                        shutil.rmtree(tmpfile_folder_path)
+                    except:
+                        pass
+                    # find file id (to be replaced by new hs_restclient)
+                    file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
+
+                    # log concrete file
+                    record_dict["concrete_file_list"].append(f)
+
+                hs.resource(hs_id).files.metadata(file_id, f["metadata"])
+            except Exception as ex_file:
+                _success_file = False
+                extra_msg = "Failed upload file to HS {}: ".format(json.dumps(f))
+                _log_exception(ex_file, record_dict=record_dict, extra_msg=extra_msg)
+
+        # make the resource public
+        try:
+            hs.setAccessRules(hs_id, public=True)
+            logging.info("Resource is made Public")
+        except Exception:
+            logging.error("Failed to make Resource Public")
+            pass
 
         # science_metadata_json = hs.getScienceMetadata(hs_id)
         # print (json.dumps(science_metadata_json, sort_keys=True, indent=4))
