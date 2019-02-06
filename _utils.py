@@ -2,6 +2,7 @@ import shutil
 import logging
 import tempfile
 import os
+import time
 import json
 from datetime import datetime as dt
 import uuid
@@ -73,7 +74,7 @@ def _whether_to_harvest_file(filename):
 
     filename = filename.lower()
     for ext in [".hdr", ".docx", ".csv", ".txt", ".pdf",
-                ".xlsx", ".kmz", ".zip", ".xls", ".7z", ".kmz"]:
+                ".xlsx", ".kmz", ".zip", ".xls", ".7z", ".kmz", ".dat", ".rdb"]:
         if filename.endswith(ext):
             return True
     return False
@@ -86,13 +87,33 @@ def _is_big_file(f_size_mb):
     return False
 
 
+def retry_func(fun, args=None, kwargs=None, max_tries=4, interval_sec=5, increase_interval=True):
+
+    pass_on_args = args if args else []
+    pass_on_kwargs = kwargs if kwargs else {}
+
+    for i in range(max_tries):
+        try:
+           func_result = fun(*pass_on_args, **pass_on_kwargs)
+           return func_result
+        except Exception as ex:
+            logging.warning("Failed to call {}, retrying {}/{}".format(str(fun), str(i+1), str(max_tries-1)))
+            if i == max_tries - 1:
+                raise ex
+            if increase_interval:
+                time.sleep(interval_sec*(i+1))
+            else:
+                time.sleep(interval_sec)
+            continue
+
+
 def _check_file_size_MB(url):
 
     #res = requests.get(url, stream=True, allow_redirects=True)
     res = requests.head(url, allow_redirects=True)
     f_size_str = res.headers.get('content-length')
     if f_size_str is None:
-        logging.warning("Cannot detect file size in HTTP header {}".format(url))
+        logging.warning("Can't detect file size in HTTP header {}".format(url))
         return -999
     f_size_byte = int(f_size_str)
     f_size_mb = f_size_byte / 1024.0 / 1024.0
@@ -159,7 +180,7 @@ def _extract_fileinfo_from_url(f_url, file_name_used_dict=None, ref_file_name=No
 
     if not validators.url(f_url):
         if invalid_url_warning:
-            raise Exception("Not a valid URL {}".format(f_url))
+            raise Exception("Not a valid URL: {}".format(f_url))
         else:
             return file_info
 
@@ -180,7 +201,7 @@ def _extract_fileinfo_from_url(f_url, file_name_used_dict=None, ref_file_name=No
     big_file_flag = False
     file_size_mb = -1
     if harvestable_file_flag:
-        file_size_mb = _check_file_size_MB(f_url)
+        file_size_mb = retry_func(_check_file_size_MB, args=[f_url])
         big_file_flag = _is_big_file(file_size_mb)
         if big_file_flag:
             logging.warning("{} MB big file detected at {}".format(int(file_size_mb), f_url))
@@ -189,7 +210,7 @@ def _extract_fileinfo_from_url(f_url, file_name_used_dict=None, ref_file_name=No
 
         file_name = _handle_duplicated_file_name(file_name, file_name_used_dict)
 
-        file_path_local = _download_file(f_url, file_name)
+        file_path_local = retry_func(_download_file, args=[f_url, file_name])
         file_info = {"file_type": "",
                      "path_or_url": file_path_local,
                      "file_name": file_name,
@@ -587,10 +608,12 @@ def _create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99,):
             try:
                 logging.info("Creating file: {}".format(str(f)))
                 if f["file_type"] == "ReferencedFile":
-                    resp_dict = hs.createReferencedFile(pid=hs_id,
-                                                        path='data/contents',
-                                                        name=f["file_name"],
-                                                        ref_url=f["path_or_url"])
+                    # resp_dict = hs.createReferencedFile(pid=hs_id,
+                    #                                     path='data/contents',
+                    #                                     name=f["file_name"],
+                    #                                     ref_url=f["path_or_url"])
+                    kw = {"pid": hs_id, "path": "data/contents", "name": f['file_name'], "ref_url": f['path_or_url']}
+                    resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
                     file_id = resp_dict["file_id"]
 
                     # log ref file

@@ -40,7 +40,7 @@ CZO_HS_Account_Obj = CZO_HS_Account(czo_account_info_dict)
 
 # What CZO data to migrate
 PROCESS_FIRST_N_ROWS = 0  # N>0: process the first N rows in file "czo.csv"; N=0:all rows; N<0: a specific list of czo_id see CZO_ID_LIST
-CZO_ID_LIST = [5496]  # a list of czo_id if PROCESS_FIRST_N_ROWS < 0
+CZO_ID_LIST = [5139]  # a list of czo_id if PROCESS_FIRST_N_ROWS < 0
 READ_CZO_ID_LIST_FROM_CSV = False  # replace CZO_ID_LIST by reading a lsit of czo_id from file "czo_hs_id.csv"
 FIRST_N_ITEM_IN_CSV = 0  # process the first N items in CZO_ID_LIST; 0-all items;
 if READ_CZO_ID_LIST_FROM_CSV and PROCESS_FIRST_N_ROWS == -1:
@@ -49,8 +49,7 @@ progress_dict = {"error": [], "success": [], "size_uploaded_mb": 0.0, "big_file_
 czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id", "success"])
 
 
-def migrate_czo_row(czo_row_dict, progress_dict,
-                    czo_hs_id_lookup_df, row_no=1, progress_report=5):
+def migrate_czo_row(czo_row_dict, row_no=1, progress_report=5):
     """
     Create a HS resource from a CZO row dict
     :param czo_row_dict: czo data row dict
@@ -58,6 +57,7 @@ def migrate_czo_row(czo_row_dict, progress_dict,
     :param progress_report: print out progress report every N rows
     :return: None    """
 
+    global czo_hs_id_lookup_df, progress_dict, CZO_HS_Account_Obj
 
     logging.info("=" * 80)
     dt_start_resource = dt.utcnow()
@@ -102,7 +102,7 @@ if __name__ == "__main__":
             if PROCESS_FIRST_N_ROWS > 0 and index > PROCESS_FIRST_N_ROWS - 1:
                 break
             czo_row_dict = row.to_dict()  # convert csv row to dict
-            migrate_czo_row(czo_row_dict, progress_dict, czo_hs_id_lookup_df, row_no=index+1)
+            migrate_czo_row(czo_row_dict, row_no=index+1)
     else:
         logging.info("Processing on specific {total_rows} czo_ids".format(total_rows=len(CZO_ID_LIST)))
         logging.info(CZO_ID_LIST)
@@ -112,7 +112,7 @@ if __name__ == "__main__":
             # process a specific row by czo_id
             df_row = czo_df.loc[czo_df['czo_id'] == cur_czo_id]
             czo_row_dict = czo_res_dict = df_row.to_dict(orient='records')[0]  # convert csv row to dict
-            migrate_czo_row(czo_row_dict, progress_dict, czo_hs_id_lookup_df, row_no=counter)
+            migrate_czo_row(czo_row_dict, row_no=counter)
 
     _elapsed_time(dt_start_global)
     _log_progress(progress_dict)
@@ -121,18 +121,21 @@ if __name__ == "__main__":
 
     # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.json.json_normalize.html
     df_ref_file_list = json_normalize(success_error, "ref_file_list", ["czo_id", "hs_id"], record_prefix="ref_")
-    if not df_ref_file_list.empty:
+    if (not df_ref_file_list.empty) and df_ref_file_list.shape[0] > 0:
+        logging.info("*" * 20 + "Summary on Big Ref Files" + "*" * 20)
         df_ref_file_list_big_file_filter = df_ref_file_list[(df_ref_file_list.ref_big_file_flag == True) & (df_ref_file_list.ref_file_size_mb > 0)]
         # print(df_ref_file_list.to_string())
         logging.info(df_ref_file_list_big_file_filter.to_string())
         logging.info(df_ref_file_list_big_file_filter.sum(axis=0, skipna=True))
 
     df_concrete_file_list = json_normalize(success_error, "concrete_file_list", ["czo_id", "hs_id"], record_prefix="concrete_")
-    if not df_concrete_file_list.empty:
+    if (not df_concrete_file_list.empty) and df_concrete_file_list.shape[0] > 0:
+        logging.info("*" * 20 + "Summary on Migrated Concrete Files" + "*" * 20)
         df_concrete_file_list_filter = df_concrete_file_list[df_concrete_file_list.concrete_file_size_mb > 0]
         # print(df_concrete_file_list.to_string())
         logging.info(df_concrete_file_list_filter.sum(axis=0, skipna=True))
 
+    logging.info("*" * 20 + "Migration Errors" + "*" * 20)
     counter = 0
     for error_item in progress_dict["error"]:
         counter += 1
@@ -140,11 +143,14 @@ if __name__ == "__main__":
                                                               error_item["czo_id"],
                                                               error_item["hs_id"],
                                                               "|".join([err_msg.replace("\n", " ") for err_msg in error_item["error_msg_list"]])))
+    logging.info("*" * 20 + "CZO_ID <---> HS_ID Lookup Table" + "*" * 20)
     logging.info(czo_hs_id_lookup_df.to_string())
     czo_hs_id_csv_file_path = 'czo_hs_id_{}.csv'.format(script_start_dt_str)
+    logging.info("*" * 20 + "Saving Lookup Table to {}".format(czo_hs_id_csv_file_path) + "*" * 20)
     czo_hs_id_lookup_df.to_csv(czo_hs_id_csv_file_path, encoding='utf-8', index=False)
 
     # upload log file and czo_hs_id_csv to hs
+    logging.info("*"*20 + "Uploading log file to HS" + "*"*20)
     hs = CZO_HS_Account_Obj.get_hs_by_czo("default")
     hs_id = hs.createResource("CompositeResource",
                              "czo2hs migration log files {}".format(script_start_dt_str),
