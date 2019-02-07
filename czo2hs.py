@@ -16,7 +16,7 @@ def logging_init(_log_file_name):
     Configure environment and logging settings
     :return:
     """
-    _log_dir = os.path.basename(_log_file_name)
+    _log_dir = os.path.dirname(_log_file_name)
     if not os.path.exists(_log_dir):
         os.makedirs(_log_dir)
 
