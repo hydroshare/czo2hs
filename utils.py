@@ -13,7 +13,7 @@ import requests
 import validators
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
-from settings import BIG_FILE_SIZE_MB
+from settings import logger, BIG_FILE_SIZE_MB
 
 requests.packages.urllib3.disable_warnings()
 
@@ -296,6 +296,56 @@ def _get_files(in_str, record_dict=None):
             extra_msg = "Failed to parse metadata file from component {}".format(f_str)
             _log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
             yield 1
+
+
+def safe_get(url, timeout=10):
+    """
+    Attempts to retrieve resource at url
+    :param url: url
+    :param timeout: timeout
+    :return:
+    """
+    r = {"url_asked": url, "status_code": 400, "error": "", "text": "", "history": ""}
+    try:
+        req = requests.get(url, headers=headers, timeout=timeout)
+        r['requested'] = url
+        r['status_code'] = req.status_code
+        r['history'] = str(req.history)
+        r['text'] = req.text
+        r['url'] = req.url
+    except requests.exceptions.ConnectTimeout as e:
+        logger.debug("ConnectTimeout %s", url)  # probing for links manually generates lots of errors
+        r['error'] = str(e)
+    except requests.packages.urllib3.exceptions.ConnectTimeoutError as e:
+        logger.debug("ConnectTimeoutError %s", url)
+        r['error'] = str(e)
+    except requests.packages.urllib3.exceptions.MaxRetryError as e:
+        logger.debug("MaxRetryError %s", url)
+        r['error'] = str(e)
+    except requests.packages.urllib3.exceptions.ReadTimeoutError as e:
+        logger.debug("ReadTimeoutError %s")
+        r['error'] = str(e)
+    except ConnectionError as e:
+        logger.debug("ConnectionError %s", url)
+        r['error'] = str(e)
+    except requests.exceptions.SSLError as e:
+        logger.debug("SSLError %s", url)
+        r['error'] = str(e)
+    except requests.exceptions.ConnectionError as e:
+        logger.debug("ConnectError %s", url)
+        r['error'] = str(e)
+    except requests.exceptions.ReadTimeout as e:
+        logger.debug("ReadTimeout %s", url)
+        r['error'] = str(e)
+    except requests.exceptions.TooManyRedirects as e:
+        logger.debug("TooManyRedirects %s", url)
+        r['error'] = e
+    except Exception as e:
+        logger.debug("Unhandled exception %s", url)
+        r['error'] = str(e)
+    finally:
+        return r
+
 
 
 def _download_file(url, file_name):
