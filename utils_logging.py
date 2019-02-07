@@ -2,13 +2,13 @@ from datetime import datetime as dt
 import logging
 
 
-def text_emphasis(text):
+def text_emphasis(text, char="*", num_char=20):
     """
     Add formatting emphasis to text with asterisks
     :param text: str
     :return: str
     """
-    return "*" * 20 + str(text) + "*" * 20
+    return char * num_char + str(text) + char * num_char
 
 
 def elapsed_time(dt_start, return_type="log", prompt_str="Total Time Elapsed"):
@@ -31,7 +31,7 @@ def prepare_logging_str(ex, attr, one_line=True):
 
 
 def _log_exception(ex, record_dict=None, extra_msg=""):
-    logging.error("!" * 10 + "Error" + "!" * 10)
+    logging.error(text_emphasis("Error", char='!', num_char=10))
 
     ex_type = "type: " + str(type(ex))
     ex_doc = prepare_logging_str(ex, "__doc__")
@@ -43,10 +43,10 @@ def _log_exception(ex, record_dict=None, extra_msg=""):
     logging.error(extra_msg)
     logging.error(ex_type + ex_doc + ex_msg + ex_str)
     logging.error(ex)
-    logging.error("!" * 25)
+    logging.error(text_emphasis("", char='!', num_char=13))
 
 
-def log_progress(progress_dict, header="Summary"):
+def log_progress(progress_dict, header="Summary", start_time=None):
     """
     Write progress report to screen and logging file
     :param progress_dict: a dict contains progress info
@@ -56,10 +56,13 @@ def log_progress(progress_dict, header="Summary"):
 
     error_counter = len(progress_dict["error"])
     success_counter = len(progress_dict["success"])
-    logging.info("*" * 10 + "{}".format(header) + "*" * 10)
+    logging.info(text_emphasis("{}".format(header)))
     logging.info("Total: {}; Success: {}; Error {}".format(error_counter + success_counter,
                                                            success_counter,
                                                            error_counter))
+
+    if isinstance(start_time, dt):
+        elapsed_time(start_time)
 
 
 def log_uploaded_file_stats(record_dict):
