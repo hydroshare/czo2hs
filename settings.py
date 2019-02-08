@@ -10,7 +10,7 @@ BIG_FILE_SIZE_MB = 500
 
 LOG_DIR = "./log"
 
-HS_URL = "localhost:8000"  # dev-hs-6.cuahsi.org
+HS_URL = "localhost"  # dev-hs-6.cuahsi.org
 
 CZO_ACCOUNTS = {
     "default": {"uname": "czo", "pwd": "123", "hs_url": HS_URL},
