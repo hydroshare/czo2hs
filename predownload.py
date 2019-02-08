@@ -3,37 +3,48 @@ import os
 import uuid
 import logging
 from datetime import datetime as dt
+import hashlib
 
+import requests
 import pandas as pd
 import validators
 
 from utils import safe_get, retry_func
 
+MB_TO_BYTE = 1024 * 1024
+
+
+def _hash_string(_str):
+
+    hash_object = hashlib.md5(_str.encode())
+    return hash_object.hexdigest()
+
 
 def _download(url, save_to_path):
 
-    response = safe_get(url, stream=True)
-    if len(response["error"]) > 0:
-        raise Exception(response["error"])
+    response = requests.get(url, stream=True, verify=False)
 
-    with open(save_to_path, 'wb') as f:
-        f.write(response["content"])
+    with open(save_to_path, 'wb') as fd:
+        for chunk in response.iter_content(chunk_size=5*MB_TO_BYTE):
+            fd.write(chunk)
+
     return os.path.getsize(save_to_path)
 
 
-def _save_to_file(url, prefix="tmp"):
+def _save_to_file(url):
     if not validators.url(url):
         return
+    url_hash = _hash_string(url)
+    if url_hash not in url_file_dict:
 
-    rand_name = uuid.uuid4().hex[:6]
-    fn = "{prefix}_{rand_name}".format(prefix=prefix, rand_name=rand_name)
-    f_path = os.path.join(output_dir, fn)
-    if url not in url_file_dict:
+        fn = "{fname}".format(fname=url_hash)
+        f_path = os.path.join(output_dir, fn)
 
+        logging.info("{}".format(url))
         size = retry_func(_download, args=[url, f_path])
-        f_dict = {"path": f_path, "size": size, "url": url}
-        logging.info("{}".format(f_dict))
-        url_file_dict[url] = f_dict
+        f_dict = {"url_md5": url_hash, "path": f_path, "size": size, "url": url}
+        logging.info("Saved to {f_path}: {size_mb:0.1f} MB".format(f_path=f_path, size_mb=float(size)/MB_TO_BYTE))
+        url_file_dict[url_hash] = f_dict
 
 
 def download_czo(czo_id):
@@ -47,12 +58,12 @@ def download_czo(czo_id):
             f_metadata_url = f_info_list[6]
 
             try:
-                _save_to_file(f_url, "f")
+                _save_to_file(f_url)
             except Exception as ex:
                 logging.error(ex)
 
             try:
-                _save_to_file(f_metadata_url, "meta")
+                _save_to_file(f_metadata_url)
             except Exception as ex:
                 logging.error(ex)
 
@@ -96,15 +107,15 @@ if __name__ == "__main__":
     # read in czo.csv
     czo_df = pd.read_csv("data/czo.csv")
     czo_id_list = get_czo_id_list()
+    #czo_id_list = [2612]
 
     url_file_dict = dict()
-    # N = len(czo_id_list)
-    N = 2
+    N = len(czo_id_list)
+    #N = 2
     for i in range(N):
         czo_id = czo_id_list[i]
         logging.info("Downloading files for czo_id {} ({}/{})".format(czo_id, i+1, N))
         download_czo(czo_id)
-        print(url_file_dict)
     file_info_list = list(url_file_dict.values())
 
     df_lookup = pd.DataFrame(file_info_list)

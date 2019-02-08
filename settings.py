@@ -9,4 +9,4 @@ headers = {
 
 BIG_FILE_SIZE_MB = 500
 
-LOG_DIR = "./log"
+LOG_DIR = "./logs"
