@@ -8,7 +8,7 @@ headers = {
 
 BIG_FILE_SIZE_MB = 500
 
-LOG_DIR = "./log"
+LOG_DIR = "./logs"
 
 HS_URL = "localhost"  # dev-hs-6.cuahsi.org
 
