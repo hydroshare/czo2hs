@@ -12,7 +12,7 @@ import validators
 from utils import retry_func
 
 MB_TO_BYTE = 1024 * 1024
-N_PROCESS = 1
+N_PROCESS = 4
 
 
 def _hash_string(_str):
@@ -118,7 +118,7 @@ if __name__ == "__main__":
     #     logging.info("Downloading files for czo_id {} ({}/{})".format(czo_id, i+1, N))
     #     download_czo(czo_id)
 
-    czo_id_list_subset = czo_id_list[:]
+    czo_id_list_subset = czo_id_list[:10]
 
     with Manager() as manager:
 
@@ -132,6 +132,6 @@ if __name__ == "__main__":
 
         df_lookup.to_csv(os.path.join(output_dir, "./log/lookup_{}.csv".format(start_time_str)), index=False)
         logging.info("Total number {}; Total size (MB): {}".format(df_lookup["size"].count(),
-                                                                    df_lookup["size"].sum()/1024.0/1024.0))
+                                                                   df_lookup["size"].sum()/MB_TO_BYTE))
 
     logging.info("Done")
