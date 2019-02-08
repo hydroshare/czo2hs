@@ -1,5 +1,5 @@
-from datetime import datetime as dt
 import logging
+from datetime import datetime as dt
 
 
 def text_emphasis(text, char="*", num_char=20):
@@ -30,7 +30,7 @@ def prepare_logging_str(ex, attr, one_line=True):
     return logging_str
 
 
-def _log_exception(ex, record_dict=None, extra_msg=""):
+def log_exception(ex, record_dict=None, extra_msg=""):
     logging.error(text_emphasis("Error", char='!', num_char=10))
 
     ex_type = "type: " + str(type(ex))

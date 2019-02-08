@@ -14,7 +14,7 @@ import validators
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from settings import logger, headers, BIG_FILE_SIZE_MB
-from utils_logging import _log_exception
+from utils_logging import log_exception
 
 requests.packages.urllib3.disable_warnings()
 
@@ -281,7 +281,7 @@ def _get_files(in_str, record_dict=None):
             yield file_info
         except Exception as ex:
             extra_msg = "Failed to parse resource file from component {}".format(f_str)
-            _log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+            log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
             yield 1
 
         try:
@@ -295,7 +295,7 @@ def _get_files(in_str, record_dict=None):
             yield metadata_file_info
         except Exception as ex:
             extra_msg = "Failed to parse metadata file from component {}".format(f_str)
-            _log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+            log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
             yield 1
 
 
@@ -411,7 +411,7 @@ def _update_core_metadata(hs_obj, hs_id, metadata_dict, message=None, record_dic
     except Exception as ex:
         extra_msg = 'Failed to update {message}: {metadata}'.format(message=message, metadata=metadata_dict)
         result = False
-        _log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+        log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
     finally:
         return result, science_metadata_json
 
@@ -709,7 +709,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
             except Exception as ex_file:
                 _success_file = False
                 extra_msg = "Failed upload file to HS {}: ".format(json.dumps(f))
-                _log_exception(ex_file, record_dict=record_dict, extra_msg=extra_msg)
+                log_exception(ex_file, record_dict=record_dict, extra_msg=extra_msg)
 
         # # make the resource public
         try:
@@ -729,7 +729,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
     except Exception as ex:
         _success = False
         extra_msg = "Failed to migrate CZO dict {}: ".format(json.dumps(czo_res_dict))
-        _log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+        log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
 
     finally:
         record_dict["success"] = _success

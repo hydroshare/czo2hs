@@ -9,7 +9,7 @@ from accounts import CZOHSAccount
 from utils import create_hs_res_from_czo_row, get_czo_list_from_csv
 
 from utils_logging import text_emphasis, elapsed_time, log_progress, log_uploaded_file_stats
-from settings import LOG_DIR
+from settings import LOG_DIR, CZO_ACCOUNTS
 
 
 def logging_init(_log_file_name):
@@ -74,20 +74,8 @@ if __name__ == "__main__":
     logging_init(log_file_path)
     logging.info("Script started at UTC {}".format(start_time.strftime("%Y-%m-%d_%H-%M-%S")))
 
-    # Need to pre-create HS accounts for all CZOs
-    # hs_url = "dev-hs-6.cuahsi.org"
-    hs_url = "localhost"
 
-    czo_account_info_dict = {
-        "default": {"uname": "czo", "pwd": "123", "hs_url": hs_url},
-        # "national": {"uname": "czo_national", "pwd": "123", "hs_url": hs_url},
-        # "boulder": {"uname": "czo_boulder", "pwd": "123", "hs_url": hs_url},
-        # "eel": {"uname": "czo_eel", "pwd": "123", "hs_url": hs_url},
-        # "catalina-jemez": {"uname": "czo_catalina-jemez", "pwd": "123", "hs_url": hs_url},
-        # "reynolds": {"uname": "czo_reynolds", "pwd": "123", "hs_url": hs_url},
-        # "luquillo": {"uname": "czo_luquillo", "pwd": "123", "hs_url": hs_url},
-    }
-    CZO_HS_Account_Obj = CZOHSAccount(czo_account_info_dict)
+    CZO_HS_Account_Obj = CZOHSAccount(CZO_ACCOUNTS)
 
     # What CZO data to migrate
     PROCESS_FIRST_N_ROWS = 0  # N>0: process the first N rows in file "czo.csv"; N=0:all rows; N<0: a specific list of czo_id see CZO_ID_LIST
@@ -101,10 +89,6 @@ if __name__ == "__main__":
 
     # read csv file into dataframe
     czo_df = pd.read_csv("data/czo.csv")
-
-    # print("Processing rows {} to {}".format(ROW_START, ROW_FINISH))
-    # for k, czid in enumerate(range(ROW_FINISH - ROW_START + 1)):
-    #     print(ROW_START + k)
 
     if PROCESS_FIRST_N_ROWS >= 0:
 
