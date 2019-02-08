@@ -31,14 +31,12 @@ def logging_init(_log_file_name):
 
 
 def migrate_czo_row(czo_row_dict, row_no=1):
-
     """
     Create a HS resource from a CZO row dict
     :param czo_row_dict: czo data row dict
     :param row_no: row number
     :return: None
     """
-
     logging.info(text_emphasis("", char='=', num_char=40))
     dt_start_resource = dt.utcnow()
     logging.info("Start migrating one Resource at UTC {}".format(dt_start_resource))
@@ -56,7 +54,6 @@ def migrate_czo_row(czo_row_dict, row_no=1):
                              "success": mgr_record_dict["success"]
                              }
 
-    # this only works in this way.....
     global czo_hs_id_lookup_df
     czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(czo_hs_id_lookup_dict, ignore_index=True)
 
@@ -84,29 +81,39 @@ if __name__ == "__main__":
     if READ_CZO_ID_LIST_FROM_CSV and PROCESS_FIRST_N_ROWS == -1:
         CZO_ID_LIST = get_czo_list_from_csv(FIRST_N_ITEM_IN_CSV)
     progress_dict = {"error": [], "success": [], "size_uploaded_mb": 0.0, "big_file_list": []}
+
     czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id", "success"])
 
-    # read csv file into dataframe
-    czo_df = pd.read_csv("data/czo.csv")
+    # TODO investigate nans in dataframe probably just empty values
+    czo_data = pd.read_csv("data/czo.csv")
 
     if PROCESS_FIRST_N_ROWS >= 0:
 
         logging.info("Processing on first {n} rows (0 - all rows)".format(n=PROCESS_FIRST_N_ROWS))
-        for index, row in czo_df.iterrows():
+        for index, row in czo_data.iterrows():
             if PROCESS_FIRST_N_ROWS > 0 and index > PROCESS_FIRST_N_ROWS - 1:
                 break
             czo_row_dict = row.to_dict()
+
+            # TODO write directly to csv incrementally instead of storing in dataframe then dumping at end
+            # TODO be aware of results_file in the paragraph at the end of this script
+            # import csv
+            #
+            # with open('eggs.csv', 'wb') as csvfile:
+            #     spamwriter = csv.writer(csvfile, delimiter=' ',
+            #                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            #
+            #     spamwriter.writerow(['Spam'] * 5 + ['Baked Beans'])
+            #     spamwriter.writerow(['Spam', 'Lovely Spam', 'Wonderful Spam'])
+
             migrate_czo_row(czo_row_dict, row_no=index + 1)
     else:
         logging.info("Processing on specific {total_rows} czo_ids".format(total_rows=len(CZO_ID_LIST)))
         logging.info(CZO_ID_LIST)
-        counter = 0
-        for cur_czo_id in CZO_ID_LIST:
-            counter += 1
-            # process a specific row by czo_id
-            df_row = czo_df.loc[czo_df['czo_id'] == cur_czo_id]
+        for k, cur_czo_id in enumerate(CZO_ID_LIST):
+            df_row = czo_data.loc[czo_data['czo_id'] == cur_czo_id]
             czo_row_dict = czo_res_dict = df_row.to_dict(orient='records')[0]  # convert csv row to dict
-            migrate_czo_row(czo_row_dict, row_no=counter)
+            migrate_czo_row(czo_row_dict, row_no=k+1)
 
     log_progress(progress_dict, start_time=start_time)
 

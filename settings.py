@@ -14,10 +14,10 @@ HS_URL = "localhost"  # dev-hs-6.cuahsi.org
 
 CZO_ACCOUNTS = {
     "default": {"uname": "czo", "pwd": "123", "hs_url": HS_URL},
-    "national": {"uname": "czo_national", "pwd": "123", "hs_url": HS_URL},
-    "boulder": {"uname": "czo_boulder", "pwd": "123", "hs_url": HS_URL},
-    "eel": {"uname": "czo_eel", "pwd": "123", "hs_url": HS_URL},
-    "catalina-jemez": {"uname": "czo_catalina-jemez", "pwd": "123", "hs_url": HS_URL},
-    "reynolds": {"uname": "czo_reynolds", "pwd": "123", "hs_url": HS_URL},
-    "luquillo": {"uname": "czo_luquillo", "pwd": "123", "hs_url": HS_URL},
+    # "national": {"uname": "czo_national", "pwd": "123", "hs_url": HS_URL},
+    # "boulder": {"uname": "czo_boulder", "pwd": "123", "hs_url": HS_URL},
+    # "eel": {"uname": "czo_eel", "pwd": "123", "hs_url": HS_URL},
+    # "catalina-jemez": {"uname": "czo_catalina-jemez", "pwd": "123", "hs_url": HS_URL},
+    # "reynolds": {"uname": "czo_reynolds", "pwd": "123", "hs_url": HS_URL},
+    # "luquillo": {"uname": "czo_luquillo", "pwd": "123", "hs_url": HS_URL},
 }
