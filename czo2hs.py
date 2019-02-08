@@ -9,36 +9,37 @@ from accounts import CZOHSAccount
 from utils import create_hs_res_from_czo_row, get_czo_list_from_csv
 
 from utils_logging import text_emphasis, elapsed_time, log_progress, log_uploaded_file_stats
+from settings import LOG_DIR
 
 
-def logging_init(_logdir, _log_file_name):
+def logging_init(_log_file_name):
     """
     Configure environment and logging settings
     :return:
     """
-    if not os.path.exists(_logdir):
-        os.makedirs(_logdir)
+    _log_dir = os.path.dirname(_log_file_name)
+    if not os.path.exists(_log_dir):
+        os.makedirs(_log_dir)
 
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s",
+        format="%(asctime)s [%(levelname)-5.5s]  %(message)s",
         handlers=[
-            logging.FileHandler(os.path.join(_logdir, _log_file_name)),
+            logging.FileHandler(_log_file_name),
             logging.StreamHandler()
         ])
 
 
-def migrate_czo_row(czo_row_dict, row_no=1, progress_report=5):
+def migrate_czo_row(czo_row_dict, row_no=1):
 
     """
     Create a HS resource from a CZO row dict
     :param czo_row_dict: czo data row dict
     :param row_no: row number
-    :param progress_report: print out progress report every N rows
     :return: None
     """
 
-    logging.info("=" * 80)
+    logging.info(text_emphasis("", char='=', num_char=40))
     dt_start_resource = dt.utcnow()
     logging.info("Start migrating one Resource at UTC {}".format(dt_start_resource))
 
@@ -60,18 +61,18 @@ def migrate_czo_row(czo_row_dict, row_no=1, progress_report=5):
     czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(czo_hs_id_lookup_dict, ignore_index=True)
 
     log_uploaded_file_stats(mgr_record_dict)
+
     elapsed_time(dt_start_resource, prompt_str="Resource Creation Time Elapsed")
-    elapsed_time(start_time)
-    if row_no % progress_report == 0:
-        log_progress(progress_dict, "Progress Report")
+    log_progress(progress_dict, "Progress Report", start_time=start_time)
 
 
 if __name__ == "__main__":
+
     start_time = dt.utcnow()
-    logdir = "./logs"
     log_file_name = "log_{}.log".format(start_time.strftime("%Y-%m-%d_%H-%M-%S"))
-    logging_init(logdir, log_file_name)
-    logging.info("Script started at UTC {}".format(start_time))
+    log_file_path = os.path.join(LOG_DIR, log_file_name)
+    logging_init(log_file_path)
+    logging.info("Script started at UTC {}".format(start_time.strftime("%Y-%m-%d_%H-%M-%S")))
 
     # Need to pre-create HS accounts for all CZOs
     # hs_url = "dev-hs-6.cuahsi.org"
@@ -124,8 +125,7 @@ if __name__ == "__main__":
             czo_row_dict = czo_res_dict = df_row.to_dict(orient='records')[0]  # convert csv row to dict
             migrate_czo_row(czo_row_dict, row_no=counter)
 
-    elapsed_time(start_time)
-    log_progress(progress_dict)
+    log_progress(progress_dict, start_time=start_time)
 
     success_error = progress_dict["success"] + progress_dict["error"]
 
@@ -157,17 +157,17 @@ if __name__ == "__main__":
                                                                        error_item["error_msg_list"]])))
     logging.info(text_emphasis("CZO_ID <---> HS_ID Lookup Table"))
     logging.info(czo_hs_id_lookup_df.to_string())
-    results_file = os.path.join(logdir, 'czo_hs_id_{}.csv'.format(start_time))
-    logging.info("*" * 20 + "Saving Lookup Table to {}".format(results_file) + "*" * 20)
+    results_file = os.path.join(LOG_DIR, 'lookup_{}.csv'.format(start_time.strftime("%Y-%m-%d_%H-%M-%S")))
+    logging.info(text_emphasis("Saving Lookup Table to {}".format(results_file)))
 
     czo_hs_id_lookup_df.to_csv(results_file, encoding='utf-8', index=False)
 
     # upload log file and results file to hydroshare
-    logging.info("*"*20 + "Uploading log file to HS" + "*"*20)
+    logging.info(text_emphasis("Uploading log file to HS"))
     hs = CZO_HS_Account_Obj.get_hs_by_czo("default")
     hs_id = hs.createResource("CompositeResource",
-                              "czo2hs migration log files {}".format(start_time),
+                              "czo2hs migration log files {}".format(start_time.strftime("%Y-%m-%d_%H-%M-%S")),
                               )
-    file_id = hs.addResourceFile(hs_id, os.path.join(logdir, log_file_name))
+    file_id = hs.addResourceFile(hs_id, log_file_path)
     file_id = hs.addResourceFile(hs_id, results_file)
     print("Log files uploaded to HS res at {}".format(hs_id))

@@ -1,6 +1,6 @@
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+#logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
 headers = {
@@ -8,3 +8,5 @@ headers = {
 }
 
 BIG_FILE_SIZE_MB = 500
+
+LOG_DIR = "./log"

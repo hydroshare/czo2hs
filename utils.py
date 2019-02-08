@@ -299,7 +299,7 @@ def _get_files(in_str, record_dict=None):
             yield 1
 
 
-def safe_get(url, timeout=10):
+def safe_get(url, timeout=10, headers={}, stream=False, verify=True):
     """
     Attempts to retrieve resource at url
     :param url: url
@@ -308,12 +308,13 @@ def safe_get(url, timeout=10):
     """
     r = {"url_asked": url, "status_code": 400, "error": "", "text": "", "history": ""}
     try:
-        req = requests.get(url, headers=headers, timeout=timeout)
+        req = requests.get(url, headers=headers, timeout=timeout, stream=stream, verify=verify)
         r['requested'] = url
         r['status_code'] = req.status_code
         r['history'] = str(req.history)
         r['text'] = req.text
         r['url'] = req.url
+        r['content'] = req.content
     except requests.exceptions.ConnectTimeout as e:
         logger.debug("ConnectTimeout %s", url)  # probing for links manually generates lots of errors
         r['error'] = str(e)
