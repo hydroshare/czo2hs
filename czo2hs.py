@@ -9,6 +9,7 @@ from accounts import CZOHSAccount
 from utils import create_hs_res_from_czo_row, get_czo_list_from_csv
 
 from utils_logging import text_emphasis, elapsed_time, log_progress, log_uploaded_file_stats
+from settings import LOG_DIR
 
 
 def logging_init(_log_file_name):
@@ -68,12 +69,10 @@ def migrate_czo_row(czo_row_dict, row_no=1):
 if __name__ == "__main__":
 
     start_time = dt.utcnow()
-    start_time_str = start_time.strftime("%Y-%m-%d_%H-%M-%S")
-    logdir = "./logs"
-    log_file_name = "log_{}.log".format(start_time_str)
-    log_file_path = os.path.join(logdir, log_file_name)
+    log_file_name = "log_{}.log".format(start_time.strftime("%Y-%m-%d_%H-%M-%S"))
+    log_file_path = os.path.join(LOG_DIR, log_file_name)
     logging_init(log_file_path)
-    logging.info("Script started at UTC {}".format(start_time_str))
+    logging.info("Script started at UTC {}".format(start_time.strftime("%Y-%m-%d_%H-%M-%S")))
 
     # Need to pre-create HS accounts for all CZOs
     # hs_url = "dev-hs-6.cuahsi.org"
@@ -158,17 +157,17 @@ if __name__ == "__main__":
                                                                        error_item["error_msg_list"]])))
     logging.info(text_emphasis("CZO_ID <---> HS_ID Lookup Table"))
     logging.info(czo_hs_id_lookup_df.to_string())
-    czo_hs_id_lookup_csv_path = os.path.join(logdir, 'czo_hs_id_{}.csv'.format(start_time_str))
-    logging.info(text_emphasis("Saving Lookup Table to {}".format(czo_hs_id_lookup_csv_path)))
+    results_file = os.path.join(LOG_DIR, 'lookup_{}.csv'.format(start_time.strftime("%Y-%m-%d_%H-%M-%S")))
+    logging.info(text_emphasis("Saving Lookup Table to {}".format(results_file)))
 
-    czo_hs_id_lookup_df.to_csv(czo_hs_id_lookup_csv_path, encoding='utf-8', index=False)
+    czo_hs_id_lookup_df.to_csv(results_file, encoding='utf-8', index=False)
 
     # upload log file and results file to hydroshare
     logging.info(text_emphasis("Uploading log file to HS"))
     hs = CZO_HS_Account_Obj.get_hs_by_czo("default")
     hs_id = hs.createResource("CompositeResource",
-                              "czo2hs migration log files {}".format(start_time_str),
+                              "czo2hs migration log files {}".format(start_time.strftime("%Y-%m-%d_%H-%M-%S")),
                               )
     file_id = hs.addResourceFile(hs_id, log_file_path)
-    file_id = hs.addResourceFile(hs_id, czo_hs_id_lookup_csv_path)
+    file_id = hs.addResourceFile(hs_id, results_file)
     print("Log files uploaded to HS res at {}".format(hs_id))
