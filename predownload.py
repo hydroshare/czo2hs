@@ -1,17 +1,18 @@
 # This is a standalone script to prototype the pre-downloading feature
 import os
-import uuid
 import logging
 from datetime import datetime as dt
 import hashlib
+from multiprocessing import Process, Manager, Pool
 
 import requests
 import pandas as pd
 import validators
 
-from utils import safe_get, retry_func
+from utils import retry_func
 
 MB_TO_BYTE = 1024 * 1024
+N_PROCESS = 1
 
 
 def _hash_string(_str):
@@ -48,7 +49,7 @@ def _save_to_file(url):
 
 
 def download_czo(czo_id):
-
+        logging.info("Downloading files for czo_id {}".format(czo_id))
         row_dict = _extract_data_row_as_dict(czo_id)
         files = row_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
 
@@ -98,7 +99,7 @@ if __name__ == "__main__":
 
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s [%(levelname)-5.5s]  %(message)s",
+        format="%(processName)s %(asctime)s [%(levelname)-5.5s]  %(message)s",
         handlers=[
             logging.FileHandler(os.path.join(output_dir, "./log/log_{}.log".format(start_time_str))),
             logging.StreamHandler()
@@ -109,19 +110,28 @@ if __name__ == "__main__":
     czo_id_list = get_czo_id_list()
     #czo_id_list = [2612]
 
-    url_file_dict = dict()
+    #url_file_dict = dict()
     N = len(czo_id_list)
-    #N = 2
-    for i in range(N):
-        czo_id = czo_id_list[i]
-        logging.info("Downloading files for czo_id {} ({}/{})".format(czo_id, i+1, N))
-        download_czo(czo_id)
-    file_info_list = list(url_file_dict.values())
 
-    df_lookup = pd.DataFrame(file_info_list)
+    # for i in range(N):
+    #     czo_id = czo_id_list[i]
+    #     logging.info("Downloading files for czo_id {} ({}/{})".format(czo_id, i+1, N))
+    #     download_czo(czo_id)
 
-    df_lookup.to_csv(os.path.join(output_dir, "./log/lookup_{}.csv".format(start_time_str)), index=False)
-    logging.info("Total number {}; Total size (MB): {}".format(df_lookup["size"].count(),
-                                                                df_lookup["size"].sum()/1024.0/1024.0))
+    czo_id_list_subset = czo_id_list[:]
+
+    with Manager() as manager:
+
+        url_file_dict = manager.dict()
+        with Pool(N_PROCESS) as p:
+            p.map(download_czo, czo_id_list_subset)
+
+        file_info_list = list(url_file_dict.values())
+
+        df_lookup = pd.DataFrame(file_info_list)
+
+        df_lookup.to_csv(os.path.join(output_dir, "./log/lookup_{}.csv".format(start_time_str)), index=False)
+        logging.info("Total number {}; Total size (MB): {}".format(df_lookup["size"].count(),
+                                                                    df_lookup["size"].sum()/1024.0/1024.0))
 
     logging.info("Done")
