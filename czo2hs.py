@@ -74,7 +74,6 @@ if __name__ == "__main__":
     logging_init(log_file_path)
     logging.info("Script started at UTC {}".format(start_time.strftime("%Y-%m-%d_%H-%M-%S")))
 
-
     CZO_HS_Account_Obj = CZOHSAccount(CZO_ACCOUNTS)
 
     # What CZO data to migrate
