@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime as dt
 
 
 def text_emphasis(text, char="*", num_char=20):
@@ -11,15 +10,14 @@ def text_emphasis(text, char="*", num_char=20):
     return char * num_char + str(text) + char * num_char
 
 
-def elapsed_time(dt_start, return_type="log", prompt_str="Total Time Elapsed"):
-    dt_utcnow = dt.utcnow()
-    dt_timedelta = dt_utcnow - dt_start
-    if return_type == "log":
-        logging.info("{0}: {1}".format(prompt_str, dt_timedelta))
-    elif return_type == "str":
-        return str(dt_timedelta)
-    else:
-        return dt_timedelta
+def elapsed_time(start, finish):
+    """
+    TODO docstring
+    :param start:
+    :param finish:
+    :return:
+    """
+    return "Time - {:.0f} sec | {:.2f} min".format(finish - start, (finish - start) / 60)
 
 
 def prepare_logging_str(ex, attr, one_line=True):
@@ -44,25 +42,6 @@ def log_exception(ex, record_dict=None, extra_msg=""):
     logging.error(ex_type + ex_doc + ex_msg + ex_str)
     logging.error(ex)
     logging.error(text_emphasis("", char='!', num_char=13))
-
-
-def log_progress(progress_dict, header="Summary", start_time=None):
-    """
-    Write progress report to screen and logging file
-    :param progress_dict: a dict contains progress info
-    :param header: the header to print
-    :return: None
-    """
-
-    error_counter = len(progress_dict["error"])
-    success_counter = len(progress_dict["success"])
-    logging.info(text_emphasis("{}".format(header)))
-    logging.info("Total: {}; Success: {}; Error {}".format(error_counter + success_counter,
-                                                           success_counter,
-                                                           error_counter))
-
-    if isinstance(start_time, dt):
-        elapsed_time(start_time)
 
 
 def log_uploaded_file_stats(record_dict):

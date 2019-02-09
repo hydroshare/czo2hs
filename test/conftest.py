@@ -1,3 +1,7 @@
+"""
+This is unused sample conftest code to stub out where the real fixtures will go
+https://docs.pytest.org/en/latest/fixture.html
+"""
 import pytest
 
 
