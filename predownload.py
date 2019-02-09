@@ -3,7 +3,7 @@ import os
 import logging
 from datetime import datetime as dt
 import hashlib
-from multiprocessing import Process, Manager, Pool
+from multiprocessing import Manager, Pool
 
 import requests
 import pandas as pd
@@ -67,6 +67,8 @@ def download_czo(czo_id):
                 _save_to_file(f_metadata_url)
             except Exception as ex:
                 logging.error(ex)
+        czo_id_done.append(czo_id)
+        logging.info("Finished czo_ids: {}/{}".format(len(czo_id_done), len(czo_id_list_subset)))
 
 
 def get_czo_id_list():
@@ -110,9 +112,9 @@ if __name__ == "__main__":
     czo_id_list = get_czo_id_list()
     #czo_id_list = [2612]
 
-    #url_file_dict = dict()
     N = len(czo_id_list)
 
+    # url_file_dict = dict()
     # for i in range(N):
     #     czo_id = czo_id_list[i]
     #     logging.info("Downloading files for czo_id {} ({}/{})".format(czo_id, i+1, N))
@@ -123,6 +125,7 @@ if __name__ == "__main__":
     with Manager() as manager:
 
         url_file_dict = manager.dict()
+        czo_id_done = manager.list()
         with Pool(N_PROCESS) as p:
             p.map(download_czo, czo_id_list_subset)
 
