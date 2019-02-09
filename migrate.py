@@ -6,8 +6,8 @@ import pandas as pd
 from pandas.io.json import json_normalize
 
 from accounts import CZOHSAccount
+from api_helpers import create_hs_res_from_czo_row, get_czo_list_from_csv
 from settings import LOG_DIR, CZO_ACCOUNTS, READ_CZO_ID_LIST_FROM_CSV, PROCESS_FIRST_N_ROWS, FIRST_N_ITEM_IN_CSV
-from utils import create_hs_res_from_czo_row, get_czo_list_from_csv
 from utils_logging import text_emphasis, elapsed_time, log_uploaded_file_stats
 
 
@@ -37,32 +37,32 @@ def migrate_czo_row(czo_row_dict, czo_accounts, row_no=1):
     :param row_no: row number
     :return: None
     """
-    global progress_dict
+    global error_status
     _start = time.time()
     logging.info(text_emphasis("", char='=', num_char=40))
-    logging.info("Start migrating one Resource at UTC {}".format(start_time.asctime()))
 
     mgr_record_dict = create_hs_res_from_czo_row(czo_row_dict, czo_accounts, index=row_no)
 
     if mgr_record_dict["success"]:
-        progress_dict["success"].append(mgr_record_dict)
+        error_status["success"].append(mgr_record_dict)
     else:
-        progress_dict["error"].append(mgr_record_dict)
+        error_status["error"].append(mgr_record_dict)
 
-    # append czo_id vs hs_id to lookup table
     czo_hs_id_lookup_dict = {"czo_id": mgr_record_dict["czo_id"],
                              "hs_id": mgr_record_dict["hs_id"],
                              "success": mgr_record_dict["success"]
                              }
 
     log_uploaded_file_stats(mgr_record_dict)
-    logging.info(elapsed_time(_start, time.time()))
-    logging.info("Success: {} | Error {}".format(len(progress_dict["success"]), len(progress_dict["error"])))
+    logging.info("{} - Success: {} - Error {}".format(elapsed_time(_start, time.time()),
+                                                      len(error_status["success"]), len(error_status["error"])))
     return czo_hs_id_lookup_dict
 
 
 def main():
     log_file_path = logging_init()
+    logging.info("Start migrating at {}".format(start_time.asctime()))
+
     czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
 
     czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id", "success"])
@@ -79,25 +79,26 @@ def main():
             break
         czo_row_dict = row.to_dict()
 
-        result = migrate_czo_row(czo_row_dict,czo_accounts, row_no=index + 1)
+        result = migrate_czo_row(czo_row_dict, czo_accounts, row_no=index + 1)
 
         czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(result, ignore_index=True)
         print(czo_hs_id_lookup_df)
 
-
-    success_error = progress_dict["success"] + progress_dict["error"]
+    success_error = error_status["success"] + error_status["error"]
 
     # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.json.json_normalize.html
     df_ref_file_list = json_normalize(success_error, "ref_file_list", ["czo_id", "hs_id"], record_prefix="ref_")
 
     if (not df_ref_file_list.empty) and df_ref_file_list.shape[0] > 0:
         logging.info(text_emphasis("Summary on Big Ref Files"))
-        df_ref_file_list_big_file_filter = df_ref_file_list[(df_ref_file_list.ref_big_file_flag == True) & (df_ref_file_list.ref_file_size_mb > 0)]
+        df_ref_file_list_big_file_filter = df_ref_file_list[
+            (df_ref_file_list.ref_big_file_flag == True) & (df_ref_file_list.ref_file_size_mb > 0)]
 
         logging.info(df_ref_file_list_big_file_filter.to_string())
         logging.info(df_ref_file_list_big_file_filter.sum(axis=0, skipna=True))
 
-    df_concrete_file_list = json_normalize(success_error, "concrete_file_list", ["czo_id", "hs_id"], record_prefix="concrete_")
+    df_concrete_file_list = json_normalize(success_error, "concrete_file_list", ["czo_id", "hs_id"],
+                                           record_prefix="concrete_")
     if (not df_concrete_file_list.empty) and df_concrete_file_list.shape[0] > 0:
         logging.info(text_emphasis("Summary on Migrated Concrete Files"))
 
@@ -105,7 +106,7 @@ def main():
         logging.info(df_concrete_file_list_filter.sum(axis=0, skipna=True))
 
     logging.info(text_emphasis("Migration Errors"))
-    for k, error_item in enumerate(progress_dict["error"]):
+    for k, error_item in enumerate(error_status["error"]):
         logging.info("{} CZO_ID {} HS_ID {} Error {}".format(k + 1,
                                                              error_item["czo_id"],
                                                              error_item["hs_id"],
@@ -129,9 +130,10 @@ def main():
 
 
 if __name__ == "__main__":
+    # TODO inspect file_naming, util, migrate, api_operations for import best practices and move functions around as necessary
     start_time = time
     start = start_time.time()
-    progress_dict = {"error": [], "success": [], "size_uploaded_mb": 0.0, "big_file_list": []}
+    error_status = {"error": [], "success": [], "size_uploaded_mb": 0.0, "big_file_list": []}
     try:
         main()
     except KeyboardInterrupt:

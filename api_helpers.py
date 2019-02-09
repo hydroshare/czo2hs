@@ -1,21 +1,17 @@
+import json
 import logging
 import os
-import time
-import json
-import tempfile
-import uuid
 import shutil
-
-from urllib.parse import unquote
 
 import pandas as pd
 import requests
-import validators
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
-from settings import logger, headers, BIG_FILE_SIZE_MB
+from file_ops import extract_fileinfo_from_url, retry_func
+from settings import logger
 from utils_logging import log_exception
 
+# TODO move to settings and test
 requests.packages.urllib3.disable_warnings()
 
 
@@ -67,180 +63,7 @@ def _get_creator(czos, creator, email):
     return hs_creator
 
 
-def _whether_to_harvest_file(filename):
-    """
-    check file extension and decide whether to harvest/download
-    :param filename: filename
-    :return: True: harvest/download;
-    """
-
-    filename = filename.lower()
-    for ext in [".hdr", ".docx", ".csv", ".txt", ".pdf",
-                ".xlsx", ".kmz", ".zip", ".xls", ".7z", ".kmz", ".dat", ".rdb"]:
-        if filename.endswith(ext):
-            return True
-    return False
-
-
-def _is_big_file(f_size_mb):
-    if f_size_mb > BIG_FILE_SIZE_MB:
-        return True
-    return False
-
-
-def retry_func(fun, args=None, kwargs=None, max_tries=4, interval_sec=5, increase_interval=True):
-
-    pass_on_args = args if args else []
-    pass_on_kwargs = kwargs if kwargs else {}
-
-    for i in range(max_tries):
-        try:
-            func_result = fun(*pass_on_args, **pass_on_kwargs)
-            return func_result
-        except Exception as ex:
-            if i == max_tries - 1:
-                raise ex
-            else:
-                logging.warning("Failed to call {}, retrying {}/{}".format(str(fun), str(i+1), str(max_tries-1)))
-
-            if increase_interval:
-                time.sleep(interval_sec*(i+1))
-            else:
-                time.sleep(interval_sec)
-            continue
-
-
-def _check_file_size_MB(url):
-    # res = requests.get(url, stream=True, allow_redirects=True)
-    res = requests.head(url, allow_redirects=True)
-    f_size_str = res.headers.get('content-length')
-    if f_size_str is None:
-        logging.warning("Can't detect file size in HTTP header {}".format(url))
-        return -999
-    f_size_byte = int(f_size_str)
-    f_size_mb = f_size_byte / 1024.0 / 1024.0
-    return f_size_mb
-
-
-def _append_rstr_to_fname(fn, split_ext=True, rstrl=6, pre_rstr=None):
-    """
-    append a small random str to filename: myfile_{RSTR}.txt
-    :param fn: original filename
-    :param split_ext: True - insert string before ext; False: append str to end
-    :param pre_rstr: a string put prior to random string: myfile_{PRE_RSTR}_{RSTR}.txt
-    :return: new filename
-    """
-    if rstrl > 32:
-        logging.warning("Max length of random string is 32 characters")
-    rstr = uuid.uuid4().hex[:rstrl]
-
-    if isinstance(pre_rstr, str) and len(pre_rstr) > 0:
-        rstr = "{}_{}".format(pre_rstr, rstr)
-
-    if split_ext:
-        file_name_base, file_name_ext = os.path.splitext(fn)
-        fn_new = "{}_{}{}".format(file_name_base, rstr, file_name_ext)
-    else:
-        fn_new = "{}_{}".format(fn, rstr)
-    return fn_new
-
-
-def _append_suffix_str_to_fname(fn, suffix_str, split_ext=True):
-    """
-    append a small random str to filename: myfile_{RSTR}.txt
-    :param fn: original filename
-    :param split_ext: True - insert string before ext; False: append str to end
-    :param suffix_str: suffix string
-    :return: new filename
-    """
-    suffix_str = str(suffix_str)
-    if split_ext:
-        file_name_base, file_name_ext = os.path.splitext(fn)
-        fn_new = "{}_{}{}".format(file_name_base, suffix_str, file_name_ext)
-    else:
-        fn_new = "{}_{}".format(fn, suffix_str)
-    return fn_new
-
-
-def _handle_duplicated_file_name(file_name, file_name_used_dict, split_ext=True):
-    file_name_new = file_name
-    if file_name in file_name_used_dict:
-        file_suffix_int = file_name_used_dict[file_name]
-        file_suffix_int_new = file_suffix_int + 1
-        file_name_new = _append_suffix_str_to_fname(file_name, file_suffix_int_new, split_ext=split_ext)
-        file_name_used_dict[file_name] = file_suffix_int_new
-    else:
-        file_name_used_dict[file_name] = 0
-
-    return file_name_new
-
-
-def _extract_fileinfo_from_url(f_url, file_name_used_dict=None, ref_file_name=None, invalid_url_warning=False):
-    file_info = None
-
-    if not validators.url(f_url):
-        if invalid_url_warning:
-            raise Exception("Not a valid URL: {}".format(f_url))
-        else:
-            return file_info
-
-    if file_name_used_dict is None:
-        file_name_used_dict = {}
-
-    if ref_file_name is None or len(ref_file_name) == 0:
-        ref_file_name = "ref_file_{}".format(uuid.uuid4().hex[:6])
-
-    f_url_decoded = unquote(f_url)
-    file_name = f_url_decoded.split("/")[-1]
-    if len(file_name) == 0:
-        file_name = f_url_decoded.split("/")[-2]
-
-    file_name = file_name.replace(" ", "_")
-
-    harvestable_file_flag = _whether_to_harvest_file(file_name)
-    big_file_flag = False
-    file_size_mb = -1
-    if harvestable_file_flag:
-        file_size_mb = retry_func(_check_file_size_MB, args=[f_url])
-        big_file_flag = _is_big_file(file_size_mb)
-        if big_file_flag:
-            logging.warning("{} MB big file detected at {}".format(int(file_size_mb), f_url))
-
-    if harvestable_file_flag and not big_file_flag:
-
-        file_name = _handle_duplicated_file_name(file_name, file_name_used_dict)
-
-        file_path_local = retry_func(_download_file, args=[f_url, file_name])
-        file_info = {"file_type": "",
-                     "path_or_url": file_path_local,
-                     "file_name": file_name,
-                     "big_file_flag": False,
-                     }
-
-    else:  # Referenced File Type
-        if not harvestable_file_flag:
-            # url doesnt explicitly point to a file name
-            file_name = ref_file_name.replace(" ", "_").replace(",", "_").replace("/", "_").replace("\\", "_")
-            file_name = _handle_duplicated_file_name(file_name, file_name_used_dict, split_ext=False)
-        else:
-            # for harvestable but too big file
-            file_name = _handle_duplicated_file_name(file_name, file_name_used_dict)
-            big_file_flag = True
-
-        file_info = {"file_type": "ReferencedFile",
-                     "path_or_url": f_url,
-                     "file_name": file_name,
-                     "big_file_flag": big_file_flag,
-                     }
-
-    file_info["file_size_mb"] = file_size_mb
-    file_info["original_url"] = f_url
-    file_info["metadata"] = {}
-
-    return file_info
-
-
-def _get_files(in_str, record_dict=None):
+def get_files(in_str, record_dict=None):
     """
     This is a generator that returns a resource file dict in each iterate
     :param in_str: file field
@@ -260,10 +83,10 @@ def _get_files(in_str, record_dict=None):
             f_metadata_url = f_info_list[6]
 
             ref_file_name = "REF_" + f_topic + "-" + f_location
-            file_info = _extract_fileinfo_from_url(f_url,
-                                                   file_name_used_dict,
-                                                   ref_file_name=ref_file_name,
-                                                   invalid_url_warning=True)
+            file_info = extract_fileinfo_from_url(f_url,
+                                                  file_name_used_dict,
+                                                  ref_file_name=ref_file_name,
+                                                  invalid_url_warning=True)
 
             file_info["metadata"] = {"title": f_topic,
 
@@ -285,10 +108,10 @@ def _get_files(in_str, record_dict=None):
             yield 1
 
         try:
-            metadata_file_info = _extract_fileinfo_from_url(f_metadata_url,
-                                                            file_name_used_dict,
-                                                            ref_file_name=ref_file_name + "_metadata",
-                                                            invalid_url_warning=False)
+            metadata_file_info = extract_fileinfo_from_url(f_metadata_url,
+                                                           file_name_used_dict,
+                                                           ref_file_name=ref_file_name + "_metadata",
+                                                           invalid_url_warning=False)
             if metadata_file_info is None:
                 yield 2
 
@@ -347,24 +170,6 @@ def safe_get(url, timeout=10, headers={}, stream=False, verify=True):
         r['error'] = str(e)
     finally:
         return r
-
-
-
-def _download_file(url, file_name):
-    """
-       Download a remote czo file to local
-       :param url: URL to remote CZ file
-       :param save_to: local path to store the file
-       :return: None
-    """
-    # TODO try catch and log
-    # TODO handle for rate limiting
-    save_to_base = tempfile.mkdtemp()
-    save_to = os.path.join(save_to_base, file_name)
-    response = requests.get(url, stream=True)
-    with open(save_to, 'wb') as f:
-        f.write(response.content)
-    return save_to
 
 
 def get_file_id_by_name(hs, resource_id, fname):
@@ -449,7 +254,6 @@ def _get_hs_obj(hs_user_name, hs_user_pwd, hs_host_url):
 
 
 def _extract_value_from_df_row_dict(row_dict, key, required=True):
-
     v = str(row_dict.get(key))
     if len(v) > 0 and v.lower() not in ["nan", "na", "n/a", r"n\a", "none"]:
         return v
@@ -460,6 +264,7 @@ def _extract_value_from_df_row_dict(row_dict, key, required=True):
 
 def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
     """
+    TODO break this function up into more functions
     Create a HydroShare resource from a CZO data row
     :param czo_res_dict: dict of CZO data row
     :return: {"success": False,
@@ -543,7 +348,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         publications_of_this_data = _extract_value_from_df_row_dict(czo_res_dict, "PUBLICATIONS_OF_THIS_DATA",
                                                                     required=False)
         publications_using_this_data = _extract_value_from_df_row_dict(czo_res_dict, "PUBLICATIONS_USING_THIS_DATA",
-                                                                    required=False)
+                                                                       required=False)
         related_datasets = _extract_value_from_df_row_dict(czo_res_dict, "RELATED_DATASETS", required=False)
         related_datasets_list = related_datasets.split('|') if related_datasets is not None else []
 
@@ -562,12 +367,13 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         hs_res_abstract += "\n\nStart Date: {date_start}".format(date_start=date_start)
         hs_res_abstract += "\nEnd Date: {date_end}".format(date_end=date_end if date_end is not None else "")
         if date_range_comments is not None:
-            hs_res_abstract += "\nDate Range Comments: {date_range_comments}".format(date_range_comments=date_range_comments)
+            hs_res_abstract += "\nDate Range Comments: {date_range_comments}".format(
+                date_range_comments=date_range_comments)
         hs_res_abstract += "\n\nDescription: {description}".format(description=description)
         if citation is not None:
             hs_res_abstract += "\n\nCitation: {citation}".format(citation=citation)
         if dataset_doi is not None:
-                hs_res_abstract += "\n\nDataset DOI: {dataset_doi}".format(dataset_doi=dataset_doi)
+            hs_res_abstract += "\n\nDataset DOI: {dataset_doi}".format(dataset_doi=dataset_doi)
         # hs abstract end
 
         # hs keywords - czos, FIELD_AREAS, TOPICS, VARIABLES, Keyword?????
@@ -584,10 +390,11 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # hs creator/author end
 
         # hs coverage
-        coverage_name = ", ". join([", ". join(field_areas_list), location])
+        coverage_name = ", ".join([", ".join(field_areas_list), location])
         hs_coverage_spatial = _get_spatial_coverage(north_lat, west_long, south_lat, east_long,
-                                                   name=coverage_name)
-        hs_coverage_period = {'type': 'period', 'value': {'start': date_start, 'end': date_end if date_end is not None else "1/1/2099", }}
+                                                    name=coverage_name)
+        hs_coverage_period = {'type': 'period',
+                              'value': {'start': date_start, 'end': date_end if date_end is not None else "1/1/2099", }}
         # hs coverage end
 
         # hs res level extended metadata
@@ -598,7 +405,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                                  topics=", ".join(topics_list),
                                  description=description,
                                  variables=", ".join(variables_list),
-                                )
+                                 )
         if subtitle is not None:
             hs_extra_metadata["subtitle"] = subtitle
         if disciplines is not None:
@@ -621,7 +428,6 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
             hs_extra_metadata["publications_using_this_data"] = publications_using_this_data
         if related_datasets is not None:
             hs_extra_metadata["related_datasets"] = ", ".join(related_datasets_list)
-
 
         hs = czo_hs_account_obj.get_hs_by_czo(czo_primary)
 
@@ -668,7 +474,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # rights, funding_agencies, extra_metadata
 
         _success_file = True
-        for f in _get_files(czo_files, record_dict=record_dict):
+        for f in get_files(czo_files, record_dict=record_dict):
             if f == 1:
                 _success_file = False
                 continue
