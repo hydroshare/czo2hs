@@ -67,22 +67,19 @@ def main():
 
     czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id", "success"])
 
-    if READ_CZO_ID_LIST_FROM_CSV and PROCESS_FIRST_N_ROWS == -1:
-        CZO_ID_LIST = get_czo_list_from_csv(FIRST_N_ITEM_IN_CSV)
+    STOP_AFTER = 5  # max number of rows to process; if you do anything higher than 399 that implies all, since there's only 399 total
 
     # TODO investigate nans in dataframe probably just empty values
     czo_data = pd.read_csv("data/czo.csv")
 
     logging.info("Processing on first {n} rows (0 - all rows)".format(n=PROCESS_FIRST_N_ROWS))
-    for index, row in czo_data.iterrows():
-        if PROCESS_FIRST_N_ROWS > 0 and index > PROCESS_FIRST_N_ROWS - 1:
-            break
+    for k, row in czo_data.iterrows():
         czo_row_dict = row.to_dict()
-
-        result = migrate_czo_row(czo_row_dict, czo_accounts, row_no=index + 1)
-
+        result = migrate_czo_row(czo_row_dict, czo_accounts, row_no=k + 1)
         czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(result, ignore_index=True)
         print(czo_hs_id_lookup_df)
+        if k == STOP_AFTER - 1:
+            break
 
     success_error = error_status["success"] + error_status["error"]
 
@@ -131,6 +128,10 @@ def main():
 
 if __name__ == "__main__":
     # TODO inspect file_naming, util, migrate, api_operations for import best practices and move functions around as necessary
+    # TODO instead of logging success for each step, such as Abstract/Keyword/Author updated successfully, make that silent/implicit and ensure that a failure is logged for any failures
+    # TODO store time taken in each progress
+    # TODO display final progress report
+    # TODO match lookup_date.csv name to the log name (store the time.time() and reuse)
     start_time = time
     start = start_time.time()
     error_status = {"error": [], "success": [], "size_uploaded_mb": 0.0, "big_file_list": []}
