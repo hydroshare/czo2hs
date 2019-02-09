@@ -23,7 +23,10 @@ CZO_ACCOUNTS = {
 }
 
 # What CZO data to migrate
-PROCESS_FIRST_N_ROWS = 0  # N>0: process the first N rows in file "czo.csv"; N=0:all rows; N<0: a specific list of czo_id see CZO_ID_LIST
+# PROCESS_FIRST_N_ROWS = 0  # N>0: process the first N rows in file "czo.csv"; N=0:all rows; N<0: a specific list of czo_id see CZO_ID_LIST
 
-READ_CZO_ID_LIST_FROM_CSV = False  # replace CZO_ID_LIST by reading a lsit of czo_id from file "czo_hs_id.csv"
-FIRST_N_ITEM_IN_CSV = 0  # process the first N items in CZO_ID_LIST; 0-all items;
+# READ_CZO_ID_LIST_FROM_CSV = False  # replace CZO_ID_LIST by reading a lsit of czo_id from file "czo_hs_id.csv"
+# FIRST_N_ITEM_IN_CSV = 0  # process the first N items in CZO_ID_LIST; 0-all items;
+
+STOP_AFTER = 2  # max number of rows to process; if you do anything higher than 399 that implies all, since there's only 399 total
+

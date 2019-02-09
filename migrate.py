@@ -6,8 +6,8 @@ import pandas as pd
 from pandas.io.json import json_normalize
 
 from accounts import CZOHSAccount
-from api_helpers import create_hs_res_from_czo_row, get_czo_list_from_csv
-from settings import LOG_DIR, CZO_ACCOUNTS, READ_CZO_ID_LIST_FROM_CSV, PROCESS_FIRST_N_ROWS, FIRST_N_ITEM_IN_CSV
+from api_helpers import create_hs_res_from_czo_row
+from settings import LOG_DIR, CZO_ACCOUNTS, STOP_AFTER
 from utils_logging import text_emphasis, elapsed_time, log_uploaded_file_stats
 
 
@@ -34,6 +34,7 @@ def migrate_czo_row(czo_row_dict, czo_accounts, row_no=1):
     """
     Create a HS resource from a CZO row dict
     :param czo_row_dict: czo data row dict
+    :param czo_accounts:
     :param row_no: row number
     :return: None
     """
@@ -59,30 +60,13 @@ def migrate_czo_row(czo_row_dict, czo_accounts, row_no=1):
     return czo_hs_id_lookup_dict
 
 
-def main():
-    log_file_path = logging_init()
-    logging.info("Start migrating at {}".format(start_time.asctime()))
-
-    czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
-
-    czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id", "success"])
-
-    STOP_AFTER = 5  # max number of rows to process; if you do anything higher than 399 that implies all, since there's only 399 total
-
-    # TODO investigate nans in dataframe probably just empty values
-    czo_data = pd.read_csv("data/czo.csv")
-
-    logging.info("Processing on first {n} rows (0 - all rows)".format(n=PROCESS_FIRST_N_ROWS))
-    for k, row in czo_data.iterrows():
-        czo_row_dict = row.to_dict()
-        result = migrate_czo_row(czo_row_dict, czo_accounts, row_no=k + 1)
-        czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(result, ignore_index=True)
-        print(czo_hs_id_lookup_df)
-        if k == STOP_AFTER - 1:
-            break
-
-    success_error = error_status["success"] + error_status["error"]
-
+def output_status(success_error, czo_accounts):
+    """
+    Parse and log the status
+    :param: success_error:
+    :param: czo_accounts:
+    :return:
+    """
     # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.json.json_normalize.html
     df_ref_file_list = json_normalize(success_error, "ref_file_list", ["czo_id", "hs_id"], record_prefix="ref_")
 
@@ -104,26 +88,50 @@ def main():
 
     logging.info(text_emphasis("Migration Errors"))
     for k, error_item in enumerate(error_status["error"]):
+
+        # TODO split into a variable pre-assignment and make more readable
         logging.info("{} CZO_ID {} HS_ID {} Error {}".format(k + 1,
                                                              error_item["czo_id"],
                                                              error_item["hs_id"],
                                                              "|".join([err_msg.replace("\n", " ") for err_msg in
                                                                        error_item["error_msg_list"]])))
+    return czo_accounts.get_hs_by_czo("default")
+
+
+def main():
+    log_file_path = logging_init()
+    logging.info("Start migrating at {}".format(start_time.asctime()))
+
+    czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
+    czo_hs_id_lookup_df = pd.DataFrame(columns=["czo_id", "hs_id", "success"])
+    czo_data = pd.read_csv("data/czo.csv")  # TODO investigate nans in dataframe probably just empty values
+
+    logging.info("Processing on first {} rows (or 399 whichever is less)".format(STOP_AFTER))
+    for k, row in czo_data.iterrows():
+        czo_row_dict = row.to_dict()
+        result = migrate_czo_row(czo_row_dict, czo_accounts, row_no=k + 1)
+        czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(result, ignore_index=True)
+        print(czo_hs_id_lookup_df)
+        if k == STOP_AFTER - 1:
+            break
+
+    success_error = error_status["success"] + error_status["error"]
+    hs = output_status(success_error, czo_accounts)
+
     logging.info(text_emphasis("CZO_ID <---> HS_ID Lookup Table"))
     logging.info(czo_hs_id_lookup_df.to_string())
+
     results_file = os.path.join(LOG_DIR, 'lookup_{}.csv'.format(start_time.strftime("%Y-%m-%d_%H-%M-%S")))
     logging.info(text_emphasis("Saving Lookup Table to {}".format(results_file)))
-
     czo_hs_id_lookup_df.to_csv(results_file, encoding='utf-8', index=False)
 
     logging.info(text_emphasis("Uploading log file to HS"))
-    hs = czo_accounts.get_hs_by_czo("default")
     hs_id = hs.createResource("CompositeResource",
-                              "czo2hs migration log files {}".format(start_time.strftime("%Y-%m-%d_%H-%M-%S")),
-                              )
-    file_id = hs.addResourceFile(hs_id, log_file_path)
-    # file_id = hs.addResourceFile(hs_id, results_file)
-    print("Log files uploaded to HS res at {}".format(hs_id))
+                              "czo2hs migration log files {}".format(start_time.strftime("%Y-%m-%d_%H-%M-%S")),)
+    hs.addResourceFile(hs_id, log_file_path)
+    hs.addResourceFile(hs_id, results_file)
+
+    print("Migration log files uploaded to HydroShare with ID {}".format(hs_id))
 
 
 if __name__ == "__main__":
