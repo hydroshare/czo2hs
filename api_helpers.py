@@ -15,40 +15,6 @@ from utils_logging import log_exception
 requests.packages.urllib3.disable_warnings()
 
 
-def _get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None):
-    """
-    Assemble HydroShare spatial coverage metadata dict
-    :param north_lat: north limit of the bounding box
-    :param west_long: west limit of the bounding box
-    :param south_lat: south limit of the bounding box
-    :param east_long: east limit of the bounding box
-    :param name: name of the spatial coverage
-    :return: a dict of spatial coverage metadata
-    """
-
-    if east_long == west_long and south_lat == north_lat:
-        # point
-        hs_coverage_spatial = {'type': 'point', 'value': {"units": "Decimal degrees",
-                                                          "north": north_lat,
-                                                          "east": east_long,
-                                                          "projection": "WGS 84 EPSG:4326"
-                                                          }
-                               }
-    else:  # box
-        hs_coverage_spatial = {'type': 'box', 'value': {"units": "Decimal degrees",
-                                                        "eastlimit": east_long,
-                                                        "northlimit": north_lat,
-                                                        "southlimit": south_lat,
-                                                        "westlimit": west_long,
-                                                        "projection": "WGS 84 EPSG:4326"
-                                                        }
-                               }
-    if name and len(name) > 0:
-        hs_coverage_spatial["value"]["name"] = name
-
-    return hs_coverage_spatial
-
-
 def _get_creator(czos, creator, email):
     """
     Assemble HydroShare Creator metadata dict
@@ -57,7 +23,6 @@ def _get_creator(czos, creator, email):
     :param email: creator email
     :return: HydroShare Creator metadata dict
     """
-
     # Hard coded to return "Someone" for now
     hs_creator = {'organization': czos, 'name': "Someone", 'email': "xxxx@czo.org", }
     return hs_creator
@@ -69,7 +34,6 @@ def get_files(in_str, record_dict=None):
     :param in_str: file field
     :return: None
     """
-
     file_name_used_dict = {}
     for f_str in in_str.split("|"):
         try:
@@ -181,7 +145,6 @@ def get_file_id_by_name(hs, resource_id, fname):
     :param fname: the filename to search
     :return: file id
     """
-
     resource = hs.resource(resource_id)
     file = ""
     for f in resource.files.all():
@@ -244,7 +207,6 @@ def _get_hs_obj(hs_user_name, hs_user_pwd, hs_host_url):
     init hs_restclient obj using global vars
     :return: hs_obj
     """
-
     auth = HydroShareAuthBasic(username=hs_user_name, password=hs_user_pwd)
     if "hydroshare.org" in hs_host_url or "cuahsi.org" in hs_host_url:
         hs = HydroShare(auth=auth, hostname=hs_host_url)
@@ -262,9 +224,42 @@ def _extract_value_from_df_row_dict(row_dict, key, required=True):
     return None
 
 
+def _get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None):
+    """
+    Assemble HydroShare spatial coverage metadata dict
+    :param north_lat: north limit of the bounding box
+    :param west_long: west limit of the bounding box
+    :param south_lat: south limit of the bounding box
+    :param east_long: east limit of the bounding box
+    :param name: name of the spatial coverage
+    :return: a dict of spatial coverage metadata
+    """
+    if east_long == west_long and south_lat == north_lat:
+        # point
+        hs_coverage_spatial = {'type': 'point', 'value': {"units": "Decimal degrees",
+                                                          "north": north_lat,
+                                                          "east": east_long,
+                                                          "projection": "WGS 84 EPSG:4326"
+                                                          }
+                               }
+    else:  # box
+        hs_coverage_spatial = {'type': 'box', 'value': {"units": "Decimal degrees",
+                                                        "eastlimit": east_long,
+                                                        "northlimit": north_lat,
+                                                        "southlimit": south_lat,
+                                                        "westlimit": west_long,
+                                                        "projection": "WGS 84 EPSG:4326"
+                                                        }
+                               }
+    if name and len(name) > 0:
+        hs_coverage_spatial["value"]["name"] = name
+
+    return hs_coverage_spatial
+
+
 def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
     """
-    TODO break this function up into more functions
+    TODO break this function up into more functions for readability and modularity
     Create a HydroShare resource from a CZO data row
     :param czo_res_dict: dict of CZO data row
     :return: {"success": False,
@@ -285,8 +280,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
     _success = False
     try:
-
-        ## parse resource-level metadata
+        # parse resource-level metadata
         # parse czo_id
         czo_id = _extract_value_from_df_row_dict(czo_res_dict, "czo_id")
         record_dict["czo_id"] = czo_id
@@ -352,7 +346,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         related_datasets = _extract_value_from_df_row_dict(czo_res_dict, "RELATED_DATASETS", required=False)
         related_datasets_list = related_datasets.split('|') if related_datasets is not None else []
 
-        ## end parse resource-level metadata
+        # end parse resource-level metadata
 
         # hs title
         hs_res_title = title
@@ -517,7 +511,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                 extra_msg = "Failed upload file to HS {}: ".format(json.dumps(f))
                 log_exception(ex_file, record_dict=record_dict, extra_msg=extra_msg)
 
-        # # make the resource public
+        # make the resource public
         try:
             hs.setAccessRules(hs_id, public=True)
             logging.info("Resource is made Public")
