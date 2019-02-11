@@ -8,7 +8,7 @@ import requests
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from file_ops import extract_fileinfo_from_url, retry_func
-from settings import logger, USE_PREDOWNLOAD
+from settings import logger, headers
 from utils_logging import log_exception
 
 # TODO move to settings and test
@@ -86,7 +86,7 @@ def get_files(in_str, record_dict=None):
             yield 1
 
 
-def safe_get(url, timeout=10, headers={}, stream=False, verify=True):
+def safe_get(url, timeout=10, headers=headers, stream=False, verify=True):
     """
     Attempts to retrieve resource at url
     :param url: url
@@ -95,6 +95,7 @@ def safe_get(url, timeout=10, headers={}, stream=False, verify=True):
     """
     r = {"url_asked": url, "status_code": 400, "error": "", "text": "", "history": ""}
     try:
+        # sending headers is very important or in some cases requests.get() wont download the actual file content/binary
         req = requests.get(url, headers=headers, timeout=timeout, stream=stream, verify=verify)
         r['requested'] = url
         r['status_code'] = req.status_code
@@ -488,7 +489,10 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                     #                                     path='data/contents',
                     #                                     name=f["file_name"],
                     #                                     ref_url=f["path_or_url"])
-                    kw = {"pid": hs_id, "path": "data/contents", "name": f['file_name'], "ref_url": f['path_or_url']}
+
+                    ## HS 1.18:  "path": "data/contents"
+                    ## HS 1.19:  "path": ""
+                    kw = {"pid": hs_id, "path": "", "name": f['file_name'], "ref_url": f['path_or_url']}
                     resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
                     file_id = resp_dict["file_id"]
 

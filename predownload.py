@@ -10,7 +10,9 @@ import pandas as pd
 import validators
 
 from util import retry_func
+from settings import headers
 
+requests.packages.urllib3.disable_warnings()
 MB_TO_BYTE = 1024 * 1024
 N_PROCESS = 4
 
@@ -23,7 +25,8 @@ def _hash_string(_str):
 
 def _download(url, save_to_path):
 
-    response = requests.get(url, stream=True, verify=False)
+    # sending headers is very important or in some cases requests.get() wont download the actual file content/binary
+    response = requests.get(url, stream=True, verify=False, headers=headers)
 
     with open(save_to_path, 'wb') as fd:
         for chunk in response.iter_content(chunk_size=5*MB_TO_BYTE):
@@ -113,7 +116,7 @@ if __name__ == "__main__":
     # read in czo.csv
     czo_df = pd.read_csv("./data/czo.csv")
     czo_id_list = get_czo_id_list()
-    #czo_id_list = [2612]
+    czo_id_list = [2464]
 
     N = len(czo_id_list)
 

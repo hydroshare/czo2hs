@@ -8,7 +8,7 @@ from urllib.parse import unquote
 import requests
 import validators
 
-from settings import BIG_FILE_SIZE_MB, MB_TO_BYTE, USE_PREDOWNLOAD, PREDOWNLOAD_DICT
+from settings import BIG_FILE_SIZE_MB, MB_TO_BYTE, USE_PREDOWNLOAD, PREDOWNLOAD_DICT, headers
 from util import retry_func
 
 
@@ -19,8 +19,8 @@ def check_file_size_mb(url):
         if f_size_byte is not None:
             return f_size_byte / MB_TO_BYTE
 
-    # res = requests.get(url, stream=True, allow_redirects=True)
-    res = requests.head(url, allow_redirects=True)
+    # sending headers is very important or in some cases requests.get() wont download the actual file content/binary
+    res = requests.head(url, allow_redirects=True, headers=headers)
     f_size_str = res.headers.get('content-length')
     if f_size_str is None:
         logging.warning("Can't detect file size in HTTP header {}".format(url))
@@ -48,10 +48,11 @@ def download_file(url, file_name):
         if f_path is not None:
             f_path = os.path.abspath(f_path)
             os.symlink(f_path, save_to)  # target must be a absolute path
-            logging.debug("Using local cache {} --> {}".format(save_to, f_path))
+            logging.info("Using local cache {} --> {}".format(save_to, f_path))
             return save_to
 
-    response = requests.get(url, stream=True)
+    # sending headers is very important or in some cases requests.get() wont download the actual file content/binary
+    response = requests.get(url, stream=True, headers=headers)
     with open(save_to, 'wb') as f:
         f.write(response.content)
     return save_to

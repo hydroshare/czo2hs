@@ -34,12 +34,11 @@ headers = {
 }
 
 USE_PREDOWNLOAD = False
-PREDOWNLOAD_CSV = ""
+PREDOWNLOAD_CSV_PATH = ""
 if USE_PREDOWNLOAD:
     import pandas as pd
-    predownload_df = pd.read_csv(PREDOWNLOAD_CSV,
+    predownload_df = pd.read_csv(PREDOWNLOAD_CSV_PATH,
                                  index_col="url_md5")
     PREDOWNLOAD_DICT = predownload_df.to_dict('index')
 
 MB_TO_BYTE = 1024 * 1024
-
