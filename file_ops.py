@@ -2,24 +2,31 @@ import logging
 import os
 import tempfile
 import uuid
+import hashlib
 from urllib.parse import unquote
 
 import requests
 import validators
 
-from settings import BIG_FILE_SIZE_MB
+from settings import BIG_FILE_SIZE_MB, MB_TO_BYTE, USE_PREDOWNLOAD, PREDOWNLOAD_DICT
 from util import retry_func
 
 
 def check_file_size_mb(url):
+
+    if USE_PREDOWNLOAD:
+        _, f_size_byte = _get_predownload_file(url)
+        if f_size_byte is not None:
+            return f_size_byte / MB_TO_BYTE
+
     # res = requests.get(url, stream=True, allow_redirects=True)
     res = requests.head(url, allow_redirects=True)
     f_size_str = res.headers.get('content-length')
     if f_size_str is None:
         logging.warning("Can't detect file size in HTTP header {}".format(url))
         return -999
-    f_size_byte = int(f_size_str)
-    f_size_mb = f_size_byte / 1024.0 / 1024.0
+    f_size_byte = float(f_size_str)
+    f_size_mb = f_size_byte / MB_TO_BYTE
     return f_size_mb
 
 
@@ -32,8 +39,18 @@ def download_file(url, file_name):
     """
     # TODO try catch and log
     # TODO handle for rate limiting
+
     save_to_base = tempfile.mkdtemp()
     save_to = os.path.join(save_to_base, file_name)
+
+    if USE_PREDOWNLOAD:
+        f_path, _ = _get_predownload_file(url)
+        if f_path is not None:
+            f_path = os.path.abspath(f_path)
+            os.symlink(f_path, save_to)  # target must be a absolute path
+            logging.debug("Using local cache {} --> {}".format(save_to, f_path))
+            return save_to
+
     response = requests.get(url, stream=True)
     with open(save_to, 'wb') as f:
         f.write(response.content)
@@ -176,3 +193,16 @@ def _handle_duplicated_file_name(file_name, file_name_used_dict, split_ext=True)
         file_name_used_dict[file_name] = 0
 
     return file_name_new
+
+
+def _hash_string(_str):
+        hash_object = hashlib.md5(_str.encode())
+        return hash_object.hexdigest()
+
+
+def _get_predownload_file(url, predownload_dict=PREDOWNLOAD_DICT):
+    key = _hash_string(url)
+    if key in predownload_dict:
+        file_info = predownload_dict[key]
+        return file_info["path"], file_info["size"]
+    return None, None

@@ -8,7 +8,7 @@ import requests
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from file_ops import extract_fileinfo_from_url, retry_func
-from settings import logger
+from settings import logger, USE_PREDOWNLOAD
 from utils_logging import log_exception
 
 # TODO move to settings and test
@@ -502,7 +502,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                     tmpfile_folder_path = os.path.dirname(f["path_or_url"])
                     try:
                         shutil.rmtree(tmpfile_folder_path)
-                    except:
+                    except Exception:
                         pass
                     # find file id (to be replaced by new hs_restclient)
                     file_id = get_file_id_by_name(hs, hs_id, f["file_name"])

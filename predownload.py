@@ -9,7 +9,7 @@ import requests
 import pandas as pd
 import validators
 
-from utils import retry_func
+from util import retry_func
 
 MB_TO_BYTE = 1024 * 1024
 N_PROCESS = 4
@@ -97,6 +97,9 @@ if __name__ == "__main__":
 
     # prepare output dir
     base_dir = "./tmp"
+    if not os.path.isabs(base_dir):
+        base_dir = os.path.abspath(base_dir)
+
     output_dir = create_output_dir()
 
     logging.basicConfig(
@@ -108,7 +111,7 @@ if __name__ == "__main__":
         ])
 
     # read in czo.csv
-    czo_df = pd.read_csv("data/czo.csv")
+    czo_df = pd.read_csv("./data/czo.csv")
     czo_id_list = get_czo_id_list()
     #czo_id_list = [2612]
 

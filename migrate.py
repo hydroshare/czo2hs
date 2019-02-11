@@ -143,7 +143,7 @@ def main():
     czo_hs_id_lookup_df.to_csv(results_file, encoding='utf-8', index=False)
 
     hs_id = hs.createResource("CompositeResource",
-                              "czo2hs migration log files {}".format(start_time.strftime(timestamp_suffix)),)
+                              "czo2hs migration log files {}".format(timestamp_suffix),)
     hs.addResourceFile(hs_id, log_file_path)
     hs.addResourceFile(hs_id, results_file)
 

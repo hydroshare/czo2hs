@@ -9,7 +9,7 @@ CZO_ID_LIST_TO_MIGRATE = []
 
 # only work when CZO_ID_LIST_TO_MIGRATE is empty or NONE
 START_ROW_INDEX = 0  # start row index in CZO_DATA_CSV
-END_ROW_INDEX = 2  # end row index in CZO_DATA_CSV -- max 399
+END_ROW_INDEX = 399  # end row index in CZO_DATA_CSV -- max 399
 
 
 LOG_DIR = "./logs"
@@ -32,3 +32,14 @@ BIG_FILE_SIZE_MB = 500
 headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
 }
+
+USE_PREDOWNLOAD = False
+PREDOWNLOAD_CSV = ""
+if USE_PREDOWNLOAD:
+    import pandas as pd
+    predownload_df = pd.read_csv(PREDOWNLOAD_CSV,
+                                 index_col="url_md5")
+    PREDOWNLOAD_DICT = predownload_df.to_dict('index')
+
+MB_TO_BYTE = 1024 * 1024
+
