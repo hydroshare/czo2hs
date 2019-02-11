@@ -116,17 +116,8 @@ if __name__ == "__main__":
     # read in czo.csv
     czo_df = pd.read_csv("./data/czo.csv")
     czo_id_list = get_czo_id_list()
-    czo_id_list = [2464]
-
-    N = len(czo_id_list)
-
-    # url_file_dict = dict()
-    # for i in range(N):
-    #     czo_id = czo_id_list[i]
-    #     logging.info("Downloading files for czo_id {} ({}/{})".format(czo_id, i+1, N))
-    #     download_czo(czo_id)
-
-    czo_id_list_subset = czo_id_list[:10]
+    #czo_id_list = [2464]
+    czo_id_list_subset = czo_id_list[:]
 
     with Manager() as manager:
 
