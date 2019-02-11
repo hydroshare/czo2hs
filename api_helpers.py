@@ -8,7 +8,7 @@ import requests
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from file_ops import extract_fileinfo_from_url, retry_func
-from settings import logger, headers
+from settings import logger, headers, HYDROSHARE_VERISON
 from utils_logging import log_exception
 
 # TODO move to settings and test
@@ -485,14 +485,13 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
             try:
                 logging.info("Creating file: {}".format(str(f)))
                 if f["file_type"] == "ReferencedFile":
-                    # resp_dict = hs.createReferencedFile(pid=hs_id,
-                    #                                     path='data/contents',
-                    #                                     name=f["file_name"],
-                    #                                     ref_url=f["path_or_url"])
 
-                    ## HS 1.18:  "path": "data/contents"
-                    ## HS 1.19:  "path": ""
-                    kw = {"pid": hs_id, "path": "", "name": f['file_name'], "ref_url": f['path_or_url']}
+                    if HYDROSHARE_VERISON >= 1.19:
+                        path_value = ""
+                    else:
+                        path_value = "data/contents"
+
+                    kw = {"pid": hs_id, "path": path_value, "name": f['file_name'], "ref_url": f['path_or_url']}
                     resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
                     file_id = resp_dict["file_id"]
 

@@ -10,10 +10,9 @@ import pandas as pd
 import validators
 
 from util import retry_func
-from settings import headers
+from settings import headers, MB_TO_BYTE
 
 requests.packages.urllib3.disable_warnings()
-MB_TO_BYTE = 1024 * 1024
 N_PROCESS = 4
 
 
@@ -47,7 +46,7 @@ def _save_to_file(url):
         logging.info("{}".format(url))
         size = retry_func(_download, args=[url, f_path])
         f_dict = {"url_md5": url_hash, "path": f_path, "size": size, "url": url}
-        logging.info("Saved to {f_path}: {size_mb:0.1f} MB".format(f_path=f_path, size_mb=float(size)/MB_TO_BYTE))
+        logging.info("Saved to {f_path}: {size_mb:0.4f} MB".format(f_path=f_path, size_mb=float(size)/MB_TO_BYTE))
         url_file_dict[url_hash] = f_dict
 
 
@@ -109,7 +108,7 @@ if __name__ == "__main__":
         level=logging.INFO,
         format="%(processName)s %(asctime)s [%(levelname)-5.5s]  %(message)s",
         handlers=[
-            logging.FileHandler(os.path.join(output_dir, "./log/log_{}.log".format(start_time_str))),
+            logging.FileHandler(os.path.join(output_dir, "./logs/log_{}.log".format(start_time_str))),
             logging.StreamHandler()
         ])
 

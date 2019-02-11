@@ -33,12 +33,9 @@ headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
 }
 
-USE_PREDOWNLOAD = False
-PREDOWNLOAD_CSV_PATH = ""
-if USE_PREDOWNLOAD:
-    import pandas as pd
-    predownload_df = pd.read_csv(PREDOWNLOAD_CSV_PATH,
-                                 index_col="url_md5")
-    PREDOWNLOAD_DICT = predownload_df.to_dict('index')
+USE_CACHED_FILES = False
+CACHED_FILE_DIR = "/czo/2019-02-11_23-09-15"
 
 MB_TO_BYTE = 1024 * 1024
+
+HYDROSHARE_VERISON = 1.18

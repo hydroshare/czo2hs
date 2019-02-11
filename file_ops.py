@@ -8,14 +8,14 @@ from urllib.parse import unquote
 import requests
 import validators
 
-from settings import BIG_FILE_SIZE_MB, MB_TO_BYTE, USE_PREDOWNLOAD, PREDOWNLOAD_DICT, headers
+from settings import BIG_FILE_SIZE_MB, MB_TO_BYTE, headers, USE_CACHED_FILES, CACHED_FILE_DIR
 from util import retry_func
 
 
 def check_file_size_mb(url):
 
-    if USE_PREDOWNLOAD:
-        _, f_size_byte = _get_predownload_file(url)
+    if USE_CACHED_FILES:
+        _, f_size_byte = _get_cached_file(url)
         if f_size_byte is not None:
             return f_size_byte / MB_TO_BYTE
 
@@ -43,8 +43,8 @@ def download_file(url, file_name):
     save_to_base = tempfile.mkdtemp()
     save_to = os.path.join(save_to_base, file_name)
 
-    if USE_PREDOWNLOAD:
-        f_path, _ = _get_predownload_file(url)
+    if USE_CACHED_FILES:
+        f_path, _ = _get_cached_file(url)
         if f_path is not None:
             f_path = os.path.abspath(f_path)
             os.symlink(f_path, save_to)  # target must be a absolute path
@@ -201,9 +201,10 @@ def _hash_string(_str):
         return hash_object.hexdigest()
 
 
-def _get_predownload_file(url, predownload_dict=PREDOWNLOAD_DICT):
-    key = _hash_string(url)
-    if key in predownload_dict:
-        file_info = predownload_dict[key]
-        return file_info["path"], file_info["size"]
+def _get_cached_file(url, base_dir=CACHED_FILE_DIR):
+    hashkey = _hash_string(url)
+    f_path = os.path.join(base_dir, hashkey)
+    if os.path.isfile(f_path):
+        f_size = os.path.getsize(f_path)
+        return f_path, f_size
     return None, None
