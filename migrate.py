@@ -150,11 +150,11 @@ if __name__ == "__main__":
     # TODO deal with emphasis asterisk text header log messages differently
     # TODO evaluate async (celery or asyncio) for API calls and why termiate needs to be hit twice
     start_time = time
+    start = time.time()
     error_status = {"error": [], "success": [], "size_uploaded_mb": 0.0, "big_file_list": []}
     try:
         main()
     except KeyboardInterrupt:
         print("\nExit ok")
     finally:
-        finish_time = time.time()
-        logging.info("Total Migration {}".format(elapsed_time(start_time.time(), finish_time)))
+        logging.info("Total Migration {}".format(elapsed_time(start, time.time())))
