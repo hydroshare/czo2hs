@@ -276,6 +276,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                    "ref_file_list": [],
                    "concrete_file_list": [],
                    "error_msg_list": [],
+                   "primary_owner": None,
                    }
 
     _success = False
@@ -284,12 +285,15 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # parse czo_id
         czo_id = _extract_value_from_df_row_dict(czo_res_dict, "czo_id")
         record_dict["czo_id"] = czo_id
-        logging.info("Working on Row {index} CZO_ID {czo_id}".format(index=index, czo_id=czo_id))
+        logging.info("Working on NO.{index} CZO_ID {czo_id}".format(index=index, czo_id=czo_id))
 
         # parse CZOS
         czos = _extract_value_from_df_row_dict(czo_res_dict, "CZOS")
         czos_list = czos.split('|')
         czo_primary = czos_list[0]
+        if len(czos_list) > 1:
+            czo_primary = "national"  # cross-czo res goes to national account
+            logging.info("Cross-CZO resource to be created by National account: {}".format(czos_list))
 
         # parse title, subtitle, description, comments
         title = _extract_value_from_df_row_dict(czo_res_dict, "title")
@@ -437,6 +441,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                                   extra_metadata=json.dumps(hs_extra_metadata)
                                   )
         record_dict["hs_id"] = hs_id
+        record_dict["primary_owner"] = hs.auth.username  # export owner of this hs res
         logging.info('HS resource created at: {hs_id}'.format(hs_id=hs_id))
 
         # update Abstract/Description
@@ -521,7 +526,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # science_metadata_json = hs.getScienceMetadata(hs_id)
         # print (json.dumps(science_metadata_json, sort_keys=True, indent=4))
 
-        logging.info("Done with Row {index} CZO_ID: {czo_id}".format(index=index, czo_id=czo_id))
+        logging.info("Done with NO.{index} CZO_ID: {czo_id}".format(index=index, czo_id=czo_id))
         if _success_abstract and _success_keyword and \
                 _success_coverage and _success_creator and _success_file:
             _success = True
