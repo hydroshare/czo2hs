@@ -3,18 +3,19 @@ import os
 import logging
 from datetime import datetime as dt
 import hashlib
-from multiprocessing import Manager, Pool
+import multiprocessing
+from multiprocessing import Manager, Queue, Process
 
 import requests
 import pandas as pd
+import numpy as np
 import validators
 
 from util import retry_func
 from settings import headers, MB_TO_BYTE
 
 requests.packages.urllib3.disable_warnings()
-N_PROCESS = 4
-
+N_PROCESS = multiprocessing.cpu_count()
 
 def _hash_string(_str):
 
@@ -34,7 +35,7 @@ def _download(url, save_to_path):
     return os.path.getsize(save_to_path)
 
 
-def _save_to_file(url):
+def _save_to_file(url, url_file_dict):
     if not validators.url(url):
         return
     url_hash = _hash_string(url)
@@ -50,27 +51,34 @@ def _save_to_file(url):
         url_file_dict[url_hash] = f_dict
 
 
-def download_czo(czo_id):
-        logging.info("Downloading files for czo_id {}".format(czo_id))
-        row_dict = _extract_data_row_as_dict(czo_id)
-        files = row_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
+def download_czo(czo_id_queue, url_file_dict, czo_id_done):
 
-        for f_str in files.split("|"):
-            f_info_list = f_str.split("$")
-            f_url = f_info_list[2]
-            f_metadata_url = f_info_list[6]
+        while True:
+            czo_id = czo_id_queue.get()
 
-            try:
-                _save_to_file(f_url)
-            except Exception as ex:
-                logging.error(ex)
+            if czo_id == -1:
+                break
+            logging.info("Downloading files for czo_id {}".format(czo_id))
+            row_dict = _extract_data_row_as_dict(czo_id)
+            files = row_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
 
-            try:
-                _save_to_file(f_metadata_url)
-            except Exception as ex:
-                logging.error(ex)
-        czo_id_done.append(czo_id)
-        logging.info("Finished czo_ids: {}/{}".format(len(czo_id_done), len(czo_id_list_subset)))
+            for f_str in files.split("|"):
+                f_info_list = f_str.split("$")
+                f_url = f_info_list[2]
+                f_metadata_url = f_info_list[6]
+
+                try:
+                    _save_to_file(f_url, url_file_dict)
+                except Exception as ex:
+                    logging.error(ex)
+
+                try:
+                    _save_to_file(f_metadata_url, url_file_dict)
+                except Exception as ex:
+                    logging.error(ex)
+            czo_id_done.append(czo_id)
+            logging.info("Finished czo_ids: {}/{}".format(len(czo_id_done), len(czo_id_list_subset)-N_PROCESS))
+            czo_id_queue.task_done()
 
 
 def get_czo_id_list():
@@ -79,7 +87,7 @@ def get_czo_id_list():
 
 def create_output_dir():
 
-    log_dir = os.path.join(base_dir, start_time_str, "log")
+    log_dir = os.path.join(base_dir, start_time_str, "logs")
 
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
@@ -117,20 +125,31 @@ if __name__ == "__main__":
     czo_id_list = get_czo_id_list()
     #czo_id_list = [2464]
     czo_id_list_subset = czo_id_list[:]
+    czo_id_list_subset = np.append(czo_id_list_subset, [-1] * N_PROCESS)
 
     with Manager() as manager:
 
         url_file_dict = manager.dict()
+        czo_id_queue = manager.Queue()
+        _ = list(map(czo_id_queue.put,  czo_id_list_subset))
         czo_id_done = manager.list()
-        with Pool(N_PROCESS) as p:
-            p.map(download_czo, czo_id_list_subset)
+
+        processes = []
+
+        for i in range(N_PROCESS):
+            proc = Process(target=download_czo, args=(czo_id_queue, url_file_dict, czo_id_done))
+            processes.append(proc)
+            proc.start()
+
+        for proc in processes:
+            proc.join()
 
         file_info_list = list(url_file_dict.values())
 
         df_lookup = pd.DataFrame(file_info_list)
 
-        df_lookup.to_csv(os.path.join(output_dir, "./log/lookup_{}.csv".format(start_time_str)), index=False)
+        df_lookup.to_csv(os.path.join(output_dir, "./logs/lookup_{}.csv".format(start_time_str)), index=False)
         logging.info("Total number {}; Total size (MB): {}".format(df_lookup["size"].count(),
                                                                    df_lookup["size"].sum()/MB_TO_BYTE))
 
-    logging.info("Done")
+    logging.info("Done in {}".format(dt.utcnow() - start_time))
