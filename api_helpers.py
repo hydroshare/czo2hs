@@ -486,10 +486,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                 logging.info("Creating file: {}".format(str(f)))
                 if f["file_type"] == "ReferencedFile":
 
-                    if HYDROSHARE_VERISON >= 1.19:
-                        path_value = ""
-                    else:
-                        path_value = "data/contents"
+                    path_value = "" if HYDROSHARE_VERISON >= 1.19 else "data/contents"
 
                     kw = {"pid": hs_id, "path": path_value, "name": f['file_name'], "ref_url": f['path_or_url']}
                     resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
