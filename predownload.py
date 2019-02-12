@@ -1,60 +1,84 @@
 # This is a standalone script to prototype the pre-downloading feature
 import os
-import uuid
 import logging
 from datetime import datetime as dt
+import hashlib
+import multiprocessing
+from multiprocessing import Manager, Queue, Process
 
+import requests
 import pandas as pd
+import numpy as np
 import validators
 
-from utils import safe_get, retry_func
+from util import retry_func
+from settings import headers, MB_TO_BYTE
+
+requests.packages.urllib3.disable_warnings()
+N_PROCESS = multiprocessing.cpu_count()
+
+def _hash_string(_str):
+
+    hash_object = hashlib.md5(_str.encode())
+    return hash_object.hexdigest()
 
 
 def _download(url, save_to_path):
 
-    response = safe_get(url, stream=True)
-    if len(response["error"]) > 0:
-        raise Exception(response["error"])
+    # sending headers is very important or in some cases requests.get() wont download the actual file content/binary
+    response = requests.get(url, stream=True, verify=False, headers=headers)
 
-    with open(save_to_path, 'wb') as f:
-        f.write(response["content"])
+    with open(save_to_path, 'wb') as fd:
+        for chunk in response.iter_content(chunk_size=5*MB_TO_BYTE):
+            fd.write(chunk)
+
     return os.path.getsize(save_to_path)
 
 
-def _save_to_file(url, prefix="tmp"):
+def _save_to_file(url, url_file_dict):
     if not validators.url(url):
         return
+    url_hash = _hash_string(url)
+    if url_hash not in url_file_dict:
 
-    rand_name = uuid.uuid4().hex[:6]
-    fn = "{prefix}_{rand_name}".format(prefix=prefix, rand_name=rand_name)
-    f_path = os.path.join(output_dir, fn)
-    if url not in url_file_dict:
+        fn = "{fname}".format(fname=url_hash)
+        f_path = os.path.join(output_dir, fn)
 
+        logging.info("{}".format(url))
         size = retry_func(_download, args=[url, f_path])
-        f_dict = {"path": f_path, "size": size, "url": url}
-        logging.info("{}".format(f_dict))
-        url_file_dict[url] = f_dict
+        f_dict = {"url_md5": url_hash, "path": f_path, "size": size, "url": url}
+        logging.info("Saved to {f_path}: {size_mb:0.4f} MB".format(f_path=f_path, size_mb=float(size)/MB_TO_BYTE))
+        url_file_dict[url_hash] = f_dict
 
 
-def download_czo(czo_id):
+def download_czo(czo_id_queue, url_file_dict, czo_id_done):
 
-        row_dict = _extract_data_row_as_dict(czo_id)
-        files = row_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
+        while True:
+            czo_id = czo_id_queue.get()
 
-        for f_str in files.split("|"):
-            f_info_list = f_str.split("$")
-            f_url = f_info_list[2]
-            f_metadata_url = f_info_list[6]
+            if czo_id == -1:
+                break
+            logging.info("Downloading files for czo_id {}".format(czo_id))
+            row_dict = _extract_data_row_as_dict(czo_id)
+            files = row_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
 
-            try:
-                _save_to_file(f_url, "f")
-            except Exception as ex:
-                logging.error(ex)
+            for f_str in files.split("|"):
+                f_info_list = f_str.split("$")
+                f_url = f_info_list[2]
+                f_metadata_url = f_info_list[6]
 
-            try:
-                _save_to_file(f_metadata_url, "meta")
-            except Exception as ex:
-                logging.error(ex)
+                try:
+                    _save_to_file(f_url, url_file_dict)
+                except Exception as ex:
+                    logging.error(ex)
+
+                try:
+                    _save_to_file(f_metadata_url, url_file_dict)
+                except Exception as ex:
+                    logging.error(ex)
+            czo_id_done.append(czo_id)
+            logging.info("Finished czo_ids: {}/{}".format(len(czo_id_done), len(czo_id_list_subset)-N_PROCESS))
+            czo_id_queue.task_done()
 
 
 def get_czo_id_list():
@@ -63,7 +87,7 @@ def get_czo_id_list():
 
 def create_output_dir():
 
-    log_dir = os.path.join(base_dir, start_time_str, "log")
+    log_dir = os.path.join(base_dir, start_time_str, "logs")
 
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
@@ -83,34 +107,49 @@ if __name__ == "__main__":
 
     # prepare output dir
     base_dir = "./tmp"
+    if not os.path.isabs(base_dir):
+        base_dir = os.path.abspath(base_dir)
+
     output_dir = create_output_dir()
 
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s [%(levelname)-5.5s]  %(message)s",
+        format="%(processName)s %(asctime)s [%(levelname)-5.5s]  %(message)s",
         handlers=[
-            logging.FileHandler(os.path.join(output_dir, "./log/log_{}.log".format(start_time_str))),
+            logging.FileHandler(os.path.join(output_dir, "./logs/log_{}.log".format(start_time_str))),
             logging.StreamHandler()
         ])
 
     # read in czo.csv
-    czo_df = pd.read_csv("data/czo.csv")
+    czo_df = pd.read_csv("./data/czo.csv")
     czo_id_list = get_czo_id_list()
+    #czo_id_list = [2464]
+    czo_id_list_subset = czo_id_list[:]
+    czo_id_list_subset = np.append(czo_id_list_subset, [-1] * N_PROCESS)
 
-    url_file_dict = dict()
-    # N = len(czo_id_list)
-    N = 2
-    for i in range(N):
-        czo_id = czo_id_list[i]
-        logging.info("Downloading files for czo_id {} ({}/{})".format(czo_id, i+1, N))
-        download_czo(czo_id)
-        print(url_file_dict)
-    file_info_list = list(url_file_dict.values())
+    with Manager() as manager:
 
-    df_lookup = pd.DataFrame(file_info_list)
+        url_file_dict = manager.dict()
+        czo_id_queue = manager.Queue()
+        _ = list(map(czo_id_queue.put,  czo_id_list_subset))
+        czo_id_done = manager.list()
 
-    df_lookup.to_csv(os.path.join(output_dir, "./log/lookup_{}.csv".format(start_time_str)), index=False)
-    logging.info("Total number {}; Total size (MB): {}".format(df_lookup["size"].count(),
-                                                                df_lookup["size"].sum()/1024.0/1024.0))
+        processes = []
 
-    logging.info("Done")
+        for i in range(N_PROCESS):
+            proc = Process(target=download_czo, args=(czo_id_queue, url_file_dict, czo_id_done))
+            processes.append(proc)
+            proc.start()
+
+        for proc in processes:
+            proc.join()
+
+        file_info_list = list(url_file_dict.values())
+
+        df_lookup = pd.DataFrame(file_info_list)
+
+        df_lookup.to_csv(os.path.join(output_dir, "./logs/lookup_{}.csv".format(start_time_str)), index=False)
+        logging.info("Total number {}; Total size (MB): {}".format(df_lookup["size"].count(),
+                                                                   df_lookup["size"].sum()/MB_TO_BYTE))
+
+    logging.info("Done in {}".format(dt.utcnow() - start_time))

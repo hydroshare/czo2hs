@@ -8,7 +8,7 @@ import requests
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from file_ops import extract_fileinfo_from_url, retry_func
-from settings import logger
+from settings import logger, headers, HYDROSHARE_VERISON
 from utils_logging import log_exception
 
 # TODO move to settings and test
@@ -86,7 +86,7 @@ def get_files(in_str, record_dict=None):
             yield 1
 
 
-def safe_get(url, timeout=10, headers={}, stream=False, verify=True):
+def safe_get(url, timeout=10, headers=headers, stream=False, verify=True):
     """
     Attempts to retrieve resource at url
     :param url: url
@@ -95,6 +95,7 @@ def safe_get(url, timeout=10, headers={}, stream=False, verify=True):
     """
     r = {"url_asked": url, "status_code": 400, "error": "", "text": "", "history": ""}
     try:
+        # sending headers is very important or in some cases requests.get() wont download the actual file content/binary
         req = requests.get(url, headers=headers, timeout=timeout, stream=stream, verify=verify)
         r['requested'] = url
         r['status_code'] = req.status_code
@@ -276,6 +277,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                    "ref_file_list": [],
                    "concrete_file_list": [],
                    "error_msg_list": [],
+                   "primary_owner": None,
                    }
 
     _success = False
@@ -284,12 +286,15 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # parse czo_id
         czo_id = _extract_value_from_df_row_dict(czo_res_dict, "czo_id")
         record_dict["czo_id"] = czo_id
-        logging.info("Working on Row {index} CZO_ID {czo_id}".format(index=index, czo_id=czo_id))
+        logging.info("Working on NO.{index} CZO_ID {czo_id}".format(index=index, czo_id=czo_id))
 
         # parse CZOS
         czos = _extract_value_from_df_row_dict(czo_res_dict, "CZOS")
         czos_list = czos.split('|')
         czo_primary = czos_list[0]
+        if len(czos_list) > 1:
+            czo_primary = "national"  # cross-czo res goes to national account
+            logging.info("Cross-CZO resource to be created by National account: {}".format(czos_list))
 
         # parse title, subtitle, description, comments
         title = _extract_value_from_df_row_dict(czo_res_dict, "title")
@@ -437,6 +442,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                                   extra_metadata=json.dumps(hs_extra_metadata)
                                   )
         record_dict["hs_id"] = hs_id
+        record_dict["primary_owner"] = hs.auth.username  # export owner of this hs res
         logging.info('HS resource created at: {hs_id}'.format(hs_id=hs_id))
 
         # update Abstract/Description
@@ -479,11 +485,10 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
             try:
                 logging.info("Creating file: {}".format(str(f)))
                 if f["file_type"] == "ReferencedFile":
-                    # resp_dict = hs.createReferencedFile(pid=hs_id,
-                    #                                     path='data/contents',
-                    #                                     name=f["file_name"],
-                    #                                     ref_url=f["path_or_url"])
-                    kw = {"pid": hs_id, "path": "data/contents", "name": f['file_name'], "ref_url": f['path_or_url']}
+
+                    path_value = "" if HYDROSHARE_VERISON >= 1.19 else "data/contents"
+
+                    kw = {"pid": hs_id, "path": path_value, "name": f['file_name'], "ref_url": f['path_or_url']}
                     resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
                     file_id = resp_dict["file_id"]
 
@@ -497,7 +502,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                     tmpfile_folder_path = os.path.dirname(f["path_or_url"])
                     try:
                         shutil.rmtree(tmpfile_folder_path)
-                    except:
+                    except Exception:
                         pass
                     # find file id (to be replaced by new hs_restclient)
                     file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
@@ -521,7 +526,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # science_metadata_json = hs.getScienceMetadata(hs_id)
         # print (json.dumps(science_metadata_json, sort_keys=True, indent=4))
 
-        logging.info("Done with Row {index} CZO_ID: {czo_id}".format(index=index, czo_id=czo_id))
+        logging.info("Done with NO.{index} CZO_ID: {czo_id}".format(index=index, czo_id=czo_id))
         if _success_abstract and _success_keyword and \
                 _success_coverage and _success_creator and _success_file:
             _success = True

@@ -2,24 +2,31 @@ import logging
 import os
 import tempfile
 import uuid
+import hashlib
 from urllib.parse import unquote
 
 import requests
 import validators
 
-from settings import BIG_FILE_SIZE_MB
+from settings import BIG_FILE_SIZE_MB, MB_TO_BYTE, headers, USE_CACHED_FILES, CACHED_FILE_DIR
 from util import retry_func
 
 
 def check_file_size_mb(url):
-    # res = requests.get(url, stream=True, allow_redirects=True)
-    res = requests.head(url, allow_redirects=True)
+
+    if USE_CACHED_FILES:
+        _, f_size_byte = get_cached_file(url)
+        if f_size_byte is not None:
+            return f_size_byte / MB_TO_BYTE
+
+    # sending headers is very important or in some cases requests.get() wont download the actual file content/binary
+    res = requests.head(url, allow_redirects=True, headers=headers)
     f_size_str = res.headers.get('content-length')
     if f_size_str is None:
         logging.warning("Can't detect file size in HTTP header {}".format(url))
         return -999
-    f_size_byte = int(f_size_str)
-    f_size_mb = f_size_byte / 1024.0 / 1024.0
+    f_size_byte = float(f_size_str)
+    f_size_mb = f_size_byte / MB_TO_BYTE
     return f_size_mb
 
 
@@ -32,9 +39,20 @@ def download_file(url, file_name):
     """
     # TODO try catch and log
     # TODO handle for rate limiting
+
     save_to_base = tempfile.mkdtemp()
     save_to = os.path.join(save_to_base, file_name)
-    response = requests.get(url, stream=True)
+
+    if USE_CACHED_FILES:
+        f_path, _ = get_cached_file(url)
+        if f_path:
+            f_path = os.path.abspath(f_path)
+            os.symlink(f_path, save_to)  # target must be a absolute path
+            logging.info("Using local cache {} --> {}".format(save_to, f_path))
+            return save_to
+
+    # sending headers is very important or in some cases requests.get() wont download the actual file content/binary
+    response = requests.get(url, stream=True, headers=headers)
     with open(save_to, 'wb') as f:
         f.write(response.content)
     return save_to
@@ -176,3 +194,17 @@ def _handle_duplicated_file_name(file_name, file_name_used_dict, split_ext=True)
         file_name_used_dict[file_name] = 0
 
     return file_name_new
+
+
+def hash_string(_str):
+        hash_object = hashlib.md5(_str.encode())
+        return hash_object.hexdigest()
+
+
+def get_cached_file(url, base_dir=CACHED_FILE_DIR):
+    hashkey = hash_string(url)
+    f_path = os.path.join(base_dir, hashkey)
+    if os.path.isfile(f_path):
+        f_size = os.path.getsize(f_path)
+        return f_path, f_size
+    return None, None
