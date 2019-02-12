@@ -1,3 +1,6 @@
-requests
-pandas
-numpy
+requests>=2.21.0,<3.0.0
+pandas>=0.23.4,<1.0.0
+numpy>=1.15.4,<2.0.0
+validators
+hs_restclient
+pytest>=4.2.0,<5.0.0
