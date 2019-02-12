@@ -45,7 +45,7 @@ def download_file(url, file_name):
 
     if USE_CACHED_FILES:
         f_path, _ = get_cached_file(url)
-        if f_path:
+        if f_path is not None:
             f_path = os.path.abspath(f_path)
             os.symlink(f_path, save_to)  # target must be a absolute path
             logging.info("Using local cache {} --> {}".format(save_to, f_path))
