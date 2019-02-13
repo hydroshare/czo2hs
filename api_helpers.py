@@ -497,15 +497,26 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
                 else:
                     # upload other files with auto file type detection
-                    file_id = hs.addResourceFile(hs_id,
-                                                 f["path_or_url"])
-                    tmpfile_folder_path = os.path.dirname(f["path_or_url"])
+                    file_id = hs.addResourceFile(hs_id, f["path_or_url"])
                     try:
+                        tmpfile_folder_path = os.path.dirname(f["path_or_url"])
                         shutil.rmtree(tmpfile_folder_path)
                     except Exception:
                         pass
-                    # find file id (to be replaced by new hs_restclient)
-                    file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
+
+                    try:
+                        # set Content Type to file
+                        options = {
+                            "file_path": f["file_name"],
+                            "hs_file_type": "SingleFile"
+                        }
+                        hs.resource(hs_id).functions.set_file_type(options)
+
+                        # This will be simplified by new hs_restclient PR
+                        # find file id
+                        file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
+                    except Exception:
+                        pass
 
                     # log concrete file
                     record_dict["concrete_file_list"].append(f)
