@@ -95,6 +95,16 @@ def whether_to_harvest_file(filename):
     return False
 
 
+def handle_special_char(_fn):
+
+    return _fn.replace(" ", "_").\
+         replace(",", "_").\
+         replace("/", "_").\
+         replace("\\", "_").\
+         replace('(', '').\
+         replace(')', '')
+
+
 def extract_fileinfo_from_url(f_url, file_name_used_dict=None, ref_file_name=None, invalid_url_warning=False):
     file_info = None
 
@@ -115,7 +125,7 @@ def extract_fileinfo_from_url(f_url, file_name_used_dict=None, ref_file_name=Non
     if len(file_name) == 0:
         file_name = f_url_decoded.split("/")[-2]
 
-    file_name = file_name.replace(" ", "_")
+    file_name = handle_special_char(file_name)
 
     harvestable_file_flag = whether_to_harvest_file(file_name)
     big_file_flag = False
@@ -140,7 +150,7 @@ def extract_fileinfo_from_url(f_url, file_name_used_dict=None, ref_file_name=Non
     else:  # Referenced File Type
         if not harvestable_file_flag:
             # url doesnt explicitly point to a file name
-            file_name = ref_file_name.replace(" ", "_").replace(",", "_").replace("/", "_").replace("\\", "_")
+            file_name = handle_special_char(ref_file_name)
             file_name = _handle_duplicated_file_name(file_name, file_name_used_dict, split_ext=False)
         else:
             # for harvestable but too big file
