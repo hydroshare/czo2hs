@@ -65,6 +65,7 @@ def migrate_czo_row(czo_row_dict, czo_accounts, row_no=1):
                              "hs_id": full_data_item["hs_id"],
                              "success": full_data_item["success"],
                              "primary_owner": full_data_item["primary_owner"],
+                             "elapsed_time": time.time() - _start,
                              }
 
     log_uploaded_file_stats(full_data_item)
@@ -115,7 +116,8 @@ def main():
     logging.info("Start migrating at {}".format(start_time.asctime()))
 
     czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
-    czo_hs_id_lookup_df = pd.DataFrame(columns=["success", "czo_id", "hs_id", "primary_owner"])
+    czo_hs_id_lookup_df = pd.DataFrame(columns=["success", "czo_id", "hs_id", "primary_owner", "elapsed_time"]).\
+        astype(dtype={"elapsed_time": "timedelta64[s]", })
 
     czo_data = pd.read_csv(CZO_DATA_CSV)  # TODO investigate nans in dataframe probably just empty values
 
@@ -140,6 +142,8 @@ def main():
 
     results_file = os.path.join(LOG_DIR, 'lookup_{}.csv'.format(timestamp_suffix))
     logging.info("Saving Lookup Table to {}".format(results_file))
+    czo_hs_id_lookup_df["elapsed_time"] = czo_hs_id_lookup_df["elapsed_time"].\
+        apply(lambda sec: "{:.0f} sec | {:.2f} min".format(sec, sec / 60))
     czo_hs_id_lookup_df.to_csv(results_file, encoding='utf-8', index=False)
 
     hs_id = hs.createResource("CompositeResource",
