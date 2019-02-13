@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import shutil
+import tempfile
 
 import pandas as pd
 import requests
@@ -500,6 +501,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                     file_id = hs.addResourceFile(hs_id, f["path_or_url"])
                     try:
                         tmpfile_folder_path = os.path.dirname(f["path_or_url"])
+                        assert(tmpfile_folder_path.startswith(tempfile.gettempdir()))
                         shutil.rmtree(tmpfile_folder_path)
                     except Exception:
                         pass
