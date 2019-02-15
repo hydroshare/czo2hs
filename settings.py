@@ -8,8 +8,8 @@ CZO_DATA_CSV = "./data/czo.csv"
 CZO_ID_LIST_TO_MIGRATE = []
 
 # only work when CZO_ID_LIST_TO_MIGRATE is empty or NONE
-START_ROW_INDEX = 0  # start row index in CZO_DATA_CSV
-END_ROW_INDEX = 399  # end row index in CZO_DATA_CSV -- max 399
+START_ROW_INDEX = 1  # start row index in CZO_DATA_CSV
+END_ROW_INDEX = 407  # end row index in CZO_DATA_CSV -- max 407
 
 
 LOG_DIR = "./logs"
@@ -33,9 +33,9 @@ headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
 }
 
-USE_CACHED_FILES = False
-CACHED_FILE_DIR = "/czo/2019-02-11_23-09-15"
+USE_CACHED_FILES = True
+CACHED_FILE_DIR = "/media/sf_czo/2019-02-13_18-29-56"
 
 MB_TO_BYTE = 1024 * 1024
 
-HYDROSHARE_VERISON = 1.18
+HYDROSHARE_VERISON = 1.19

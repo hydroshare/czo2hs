@@ -55,3 +55,9 @@ def log_uploaded_file_stats(record_dict):
     logging.info("Big ref files list:".format(len(ref_big_file_list)))
     for f_big in ref_big_file_list:
         logging.info(f_big)
+
+    logging.info("Not-resolving ref files: {}".format(len(record_dict["bad_ref_file_list"])))
+    bad_ref_file_list = record_dict["bad_ref_file_list"]
+    logging.info("Not-resolving ref files list:".format(len(bad_ref_file_list)))
+    for bad_ref in bad_ref_file_list:
+        logging.info(bad_ref)

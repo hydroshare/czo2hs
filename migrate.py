@@ -82,8 +82,13 @@ def output_status(success_error, czo_accounts):
     :return:
     """
     # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.io.json.json_normalize.html
-    df_ref_file_list = json_normalize(success_error, "ref_file_list", ["czo_id", "hs_id"], record_prefix="ref_")
+    df_bad_ref_file_list = json_normalize(success_error, "bad_ref_file_list", ["czo_id", "hs_id"],
+                                          record_prefix="bad_ref_")
+    if (not df_bad_ref_file_list.empty) and df_bad_ref_file_list.shape[0] > 0:
+        logging.info(text_emphasis("Summary on Not-resolving Ref Files"))
+        logging.info(df_bad_ref_file_list.to_string())
 
+    df_ref_file_list = json_normalize(success_error, "ref_file_list", ["czo_id", "hs_id"], record_prefix="ref_")
     if (not df_ref_file_list.empty) and df_ref_file_list.shape[0] > 0:
         logging.info(text_emphasis("Summary on Big Ref Files"))
         df_ref_file_list_big_file_filter = df_ref_file_list[

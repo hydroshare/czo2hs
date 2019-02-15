@@ -29,38 +29,33 @@ def _get_creator(czos, creator, email):
     return hs_creator
 
 
-def get_files(in_str, record_dict=None):
+def get_files(in_str, record_dict=None, other_urls=[]):
     """
     This is a generator that returns a resource file dict in each iterate
     :param in_str: file field
     :return: None
     """
     file_name_used_dict = {}
+    # loop through component files and metadata files
     for f_str in in_str.split("|"):
         try:
             f_info_list = f_str.split("$")
             f_location = f_info_list[0]
             f_topic = f_info_list[1]
-            f_url = f_info_list[2]
+            f_url = f_info_list[2].strip()
             f_data_level = f_info_list[3]
             f_private = f_info_list[4]
             f_doi = f_info_list[5]
-            f_metadata_url = f_info_list[6]
+            f_metadata_url = f_info_list[6].strip()
 
-            ref_file_name = "REF_" + f_topic + "-" + f_location
-            file_info = extract_fileinfo_from_url(f_url,
-                                                  file_name_used_dict,
-                                                  ref_file_name=ref_file_name,
-                                                  invalid_url_warning=True)
+            ref_file_name = f_location + "-" + f_topic
+            file_info = extract_fileinfo_from_url(f_url, ref_file_name,
+                                                  file_name_used_dict=file_name_used_dict,
+                                                  private_flag=(f_private.lower() == "y"))
 
-            file_info["metadata"] = {"title": f_topic,
-
-                                     # "spatial_coverage": {
-                                     #                      "name": f_location,
-                                     #                     },  # "spatial_coverage"
+            file_info["metadata"] = {"title": ref_file_name,
+                                     #"spatial_coverage": {"name": f_location,},  # doesnt work without bounding box
                                      "extra_metadata": {"private": f_private,
-                                                        "data_level": f_data_level,
-                                                        "metadata_url": f_metadata_url,
                                                         "url": f_url,
                                                         "location": f_location,
                                                         "doi": f_doi,
@@ -73,16 +68,34 @@ def get_files(in_str, record_dict=None):
             yield 1
 
         try:
-            metadata_file_info = extract_fileinfo_from_url(f_metadata_url,
-                                                           file_name_used_dict,
-                                                           ref_file_name=ref_file_name + "_metadata",
-                                                           invalid_url_warning=False)
+            metadata_file_info = extract_fileinfo_from_url(f_metadata_url, ref_file_name,
+                                                           file_name_used_dict=file_name_used_dict,
+                                                           skip_invalid_url=True)
             if metadata_file_info is None:
                 yield 2
+            else:
+                metadata_file_info["metadata"]["extra_metadata"] = {"metadata_url": f_metadata_url}
+                if file_info is not None:
+                    metadata_file_info["metadata"]["title"] = "Metadata File for {}".format(file_info["file_name"])
 
-            yield metadata_file_info
+                yield metadata_file_info
         except Exception as ex:
             extra_msg = "Failed to parse metadata file from component {}".format(f_str)
+            log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+            yield 1
+
+    # other urls - map/kml
+    for url in other_urls:
+        try:
+            url = url.strip()
+            ref_file_name = "map_or_kml"
+            other_file_info = extract_fileinfo_from_url(url, ref_file_name,
+                                                        file_name_used_dict=file_name_used_dict)
+            other_file_info["metadata"]["extra_metadata"] = {"url": url}
+
+            yield other_file_info
+        except Exception as ex:
+            extra_msg = "Failed to parse map/kml field {}".format(url)
             log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
             yield 1
 
@@ -218,7 +231,7 @@ def _get_hs_obj(hs_user_name, hs_user_pwd, hs_host_url):
 
 
 def _extract_value_from_df_row_dict(row_dict, key, required=True):
-    v = str(row_dict.get(key))
+    v = str(row_dict.get(key)).strip()
     if len(v) > 0 and v.lower() not in ["nan", "na", "n/a", r"n\a", "none"]:
         return v
     if required:
@@ -305,13 +318,16 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         comments = _extract_value_from_df_row_dict(czo_res_dict, "comments", required=False)
 
         # parse FIELD_AREAS, location
-        field_areas = _extract_value_from_df_row_dict(czo_res_dict, "FIELD_AREAS")
-        field_areas_list = field_areas.split('|')
+        field_areas = _extract_value_from_df_row_dict(czo_res_dict, "FIELD_AREAS", required=False)
+        field_areas_list = field_areas.split('|') if field_areas is not None else []
         location = _extract_value_from_df_row_dict(czo_res_dict, "location")
 
         # parse VARIABLES
-        variables = _extract_value_from_df_row_dict(czo_res_dict, "VARIABLES")
-        variables_list = variables.split('|')
+        variables = _extract_value_from_df_row_dict(czo_res_dict, "VARIABLES", required=False)
+        variables_list = variables.split('|') if variables is not None else []
+        # parse VARIABLES-ODM2
+        variables_odm2 = _extract_value_from_df_row_dict(czo_res_dict, "VARIABLES_ODM2", required=False)
+        variables_odm2_list = variables_odm2.split('|') if variables_odm2 is not None else []
 
         # parse date_start, date_end, date_range_comments
         date_start = _extract_value_from_df_row_dict(czo_res_dict, "date_start")
@@ -330,6 +346,10 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # parse citation, data_doi
         citation = _extract_value_from_df_row_dict(czo_res_dict, "citation", required=False)
         dataset_doi = _extract_value_from_df_row_dict(czo_res_dict, "dataset_doi", required=False)
+        maps_uploads = _extract_value_from_df_row_dict(czo_res_dict, "maps_uploads", required=False)
+        maps_uploads_list = maps_uploads.split('|') if maps_uploads is not None else []
+        kml_files = _extract_value_from_df_row_dict(czo_res_dict, "kml_files", required=False)
+        kml_files_list = kml_files.split('|') if kml_files is not None else []
 
         # parse TOPICS, KEYWORDS
         topics = _extract_value_from_df_row_dict(czo_res_dict, "TOPICS")
@@ -377,8 +397,13 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
             hs_res_abstract += "\n\nDataset DOI: {dataset_doi}".format(dataset_doi=dataset_doi)
         # hs abstract end
 
-        # hs keywords - czos, FIELD_AREAS, TOPICS, VARIABLES, Keyword?????
-        hs_res_keywords = [] + czos_list + field_areas_list + topics_list + keywords_list
+        # hs keywords - czos, FIELD_AREAS, TOPICS, VARIABLES_ODM2, Keyword?????
+        hs_res_keywords = [] + \
+                            field_areas_list + \
+                            topics_list + \
+                            variables_odm2_list + \
+                            czos_list
+
         hs_res_keywords = map(str.lower, hs_res_keywords)
         hs_res_keywords = set(hs_res_keywords)
         if "" in hs_res_keywords:
@@ -406,6 +431,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                                  topics=", ".join(topics_list),
                                  description=description,
                                  variables=", ".join(variables_list),
+                                 variables_omd2=", ".join(variables_odm2_list),
                                  )
         if subtitle is not None:
             hs_extra_metadata["subtitle"] = subtitle
@@ -476,7 +502,8 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # rights, funding_agencies, extra_metadata
 
         _success_file = True
-        for f in get_files(czo_files, record_dict=record_dict):
+        other_urls = [] + maps_uploads_list + kml_files_list
+        for f in get_files(czo_files, record_dict=record_dict, other_urls=other_urls):
             if f == 1:
                 _success_file = False
                 continue
@@ -505,6 +532,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                         resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
                         # log not-resolving ref file
                         record_dict["bad_ref_file_list"].append(f)
+                        _success_file = False
 
                     file_id = resp_dict["file_id"]
 
