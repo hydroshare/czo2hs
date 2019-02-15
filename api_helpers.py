@@ -346,8 +346,8 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # parse citation, data_doi
         citation = _extract_value_from_df_row_dict(czo_res_dict, "citation", required=False)
         dataset_doi = _extract_value_from_df_row_dict(czo_res_dict, "dataset_doi", required=False)
-        maps_uploads = _extract_value_from_df_row_dict(czo_res_dict, "maps_uploads", required=False)
-        maps_uploads_list = maps_uploads.split('|') if maps_uploads is not None else []
+        map_uploads = _extract_value_from_df_row_dict(czo_res_dict, "map_uploads", required=False)
+        map_uploads_list = map_uploads.split('|') if map_uploads is not None else []
         kml_files = _extract_value_from_df_row_dict(czo_res_dict, "kml_files", required=False)
         kml_files_list = kml_files.split('|') if kml_files is not None else []
 
@@ -502,7 +502,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # rights, funding_agencies, extra_metadata
 
         _success_file = True
-        other_urls = [] + maps_uploads_list + kml_files_list
+        other_urls = [] + map_uploads_list + kml_files_list
         for f in get_files(czo_files, record_dict=record_dict, other_urls=other_urls):
             if f == 1:
                 _success_file = False

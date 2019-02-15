@@ -4,7 +4,7 @@ import logging
 from datetime import datetime as dt
 import hashlib
 import multiprocessing
-from multiprocessing import Manager, Queue, Process
+from multiprocessing import Manager, Process
 
 import requests
 import pandas as pd
@@ -16,6 +16,7 @@ from settings import headers, MB_TO_BYTE
 
 requests.packages.urllib3.disable_warnings()
 N_PROCESS = multiprocessing.cpu_count()
+
 
 def _hash_string(_str):
 
@@ -62,20 +63,26 @@ def download_czo(czo_id_queue, url_file_dict, czo_id_done):
             row_dict = _extract_data_row_as_dict(czo_id)
             files = row_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
 
+            component_files = []
             for f_str in files.split("|"):
                 f_info_list = f_str.split("$")
-                f_url = f_info_list[2]
-                f_metadata_url = f_info_list[6]
+                f_url = f_info_list[2].strip()
+                component_files.append(f_url)
+                f_metadata_url = f_info_list[6].strip()
+                component_files.append(f_metadata_url)
+            maps_uploads = str(row_dict["map_uploads"]).strip()
+            maps_uploads_list = maps_uploads.split('|') if len(maps_uploads) > 0 else []
+            kml_files = str(row_dict["kml_files"]).strip()
+            kml_files_list = kml_files.split('|') if len(kml_files) > 0 else []
 
+            urls = component_files + maps_uploads_list + kml_files_list
+            for url in urls:
                 try:
-                    _save_to_file(f_url, url_file_dict)
+                    url = url.strip()
+                    _save_to_file(url, url_file_dict)
                 except Exception as ex:
                     logging.error(ex)
 
-                try:
-                    _save_to_file(f_metadata_url, url_file_dict)
-                except Exception as ex:
-                    logging.error(ex)
             czo_id_done.append(czo_id)
             logging.info("Finished czo_ids: {}/{}".format(len(czo_id_done), len(czo_id_list_subset)-N_PROCESS))
             czo_id_queue.task_done()
@@ -123,7 +130,7 @@ if __name__ == "__main__":
     # read in czo.csv
     czo_df = pd.read_csv("./data/czo.csv")
     czo_id_list = get_czo_id_list()
-    #czo_id_list = [2464]
+    #czo_id_list = [2642]
     czo_id_list_subset = czo_id_list[:]
     czo_id_list_subset = np.append(czo_id_list_subset, [-1] * N_PROCESS)
 
