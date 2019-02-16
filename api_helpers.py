@@ -16,17 +16,28 @@ from utils_logging import log_exception
 requests.packages.urllib3.disable_warnings()
 
 
-def _get_creator(czos, creator, email):
+def get_creator_hs_metadata(creator_list):
     """
     Assemble HydroShare Creator metadata dict
-    :param czos: czos name
-    :param creator: creator field
-    :param email: creator email
-    :return: HydroShare Creator metadata dict
+    :param creator_list: list of creator name string
+    :return: HydroShare Creator metadata list
     """
-    # Hard coded to return "Someone" for now
-    hs_creator = {'organization': czos, 'name': "Someone", 'email': "xxxx@czo.org", }
-    return hs_creator
+
+    hs_creator_list = []
+    for creator in creator_list:
+        if len(creator) > 28:  # criteria czo people said
+            # organization
+            hs_creator_list.append({'organization': creator})
+        elif len(creator) > 0:
+            # person
+            hs_creator_list.append({'name': creator})
+        else:
+            hs_creator_list.append({'name': "Someone"})
+
+    # full metadata terms 
+    # {'organization': "", 'name': "Someone", 'email': "xxxx@czo.org", }
+
+    return hs_creator_list
 
 
 def get_files(in_str, record_dict=None, other_urls=[]):
@@ -272,6 +283,11 @@ def _get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None)
     return hs_coverage_spatial
 
 
+def string_to_list(in_str, delimiter ='|'):
+    return in_str.split(delimiter) if in_str is not None else []
+
+
+
 def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
     """
     TODO break this function up into more functions for readability and modularity
@@ -319,15 +335,15 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
         # parse FIELD_AREAS, location
         field_areas = _extract_value_from_df_row_dict(czo_res_dict, "FIELD_AREAS", required=False)
-        field_areas_list = field_areas.split('|') if field_areas is not None else []
+        field_areas_list = string_to_list(field_areas)
         location = _extract_value_from_df_row_dict(czo_res_dict, "location")
 
         # parse VARIABLES
         variables = _extract_value_from_df_row_dict(czo_res_dict, "VARIABLES", required=False)
-        variables_list = variables.split('|') if variables is not None else []
+        variables_list = string_to_list(variables)
         # parse VARIABLES-ODM2
         variables_odm2 = _extract_value_from_df_row_dict(czo_res_dict, "VARIABLES_ODM2", required=False)
-        variables_odm2_list = variables_odm2.split('|') if variables_odm2 is not None else []
+        variables_odm2_list = string_to_list(variables_odm2)
 
         # parse date_start, date_end, date_range_comments
         date_start = _extract_value_from_df_row_dict(czo_res_dict, "date_start")
@@ -347,19 +363,19 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         citation = _extract_value_from_df_row_dict(czo_res_dict, "citation", required=False)
         dataset_doi = _extract_value_from_df_row_dict(czo_res_dict, "dataset_doi", required=False)
         map_uploads = _extract_value_from_df_row_dict(czo_res_dict, "map_uploads", required=False)
-        map_uploads_list = map_uploads.split('|') if map_uploads is not None else []
+        map_uploads_list = string_to_list(map_uploads)
         kml_files = _extract_value_from_df_row_dict(czo_res_dict, "kml_files", required=False)
-        kml_files_list = kml_files.split('|') if kml_files is not None else []
+        kml_files_list = string_to_list(kml_files)
 
         # parse TOPICS, KEYWORDS
         topics = _extract_value_from_df_row_dict(czo_res_dict, "TOPICS")
         topics_list = topics.split('|')
         keywords = _extract_value_from_df_row_dict(czo_res_dict, "KEYWORDS", required=False)
-        keywords_list = keywords.split('|') if keywords is not None else []
+        keywords_list = string_to_list(keywords)
 
         # parse DISCIPLINES
         disciplines = _extract_value_from_df_row_dict(czo_res_dict, "DISCIPLINES", required=False)
-        disciplines_list = disciplines.split('|') if disciplines is not None else []
+        disciplines_list = string_to_list(disciplines)
 
         # parse sub_topic
         sub_topic = _extract_value_from_df_row_dict(czo_res_dict, "sub_topic", required=False)
@@ -371,7 +387,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         publications_using_this_data = _extract_value_from_df_row_dict(czo_res_dict, "PUBLICATIONS_USING_THIS_DATA",
                                                                        required=False)
         related_datasets = _extract_value_from_df_row_dict(czo_res_dict, "RELATED_DATASETS", required=False)
-        related_datasets_list = related_datasets.split('|') if related_datasets is not None else []
+        related_datasets_list = string_to_list(related_datasets)
 
         # end parse resource-level metadata
 
@@ -412,7 +428,9 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
         # hs creator/author
         # hard coded
-        hs_creator = _get_creator(czo_primary, "", "")
+        creator = _extract_value_from_df_row_dict(czo_res_dict, "creator", required=False)
+        creator_list = string_to_list(creator)
+        hs_creator_list = get_creator_hs_metadata(creator_list)
         # hs creator/author end
 
         # hs coverage
@@ -487,7 +505,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
         # update creators
         _success_creator, _ = _update_core_metadata(hs, hs_id,
-                                                    {"creators": [hs_creator]},
+                                                    {"creators": hs_creator_list},
                                                     message="Author",
                                                     record_dict=record_dict)
 
