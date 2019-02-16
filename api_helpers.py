@@ -34,7 +34,7 @@ def get_creator_hs_metadata(creator_list):
         else:
             hs_creator_list.append({'name': "Someone"})
 
-    # full metadata terms 
+    # full metadata terms
     # {'organization': "", 'name': "Someone", 'email': "xxxx@czo.org", }
 
     return hs_creator_list
@@ -532,25 +532,24 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
             try:
                 logging.info("Creating file: {}".format(str(f)))
                 if f["file_type"] == "ReferencedFile":
-
                     path_value = "" if HYDROSHARE_VERISON >= 1.19 else "data/contents"
-
                     kw = {"pid": hs_id, "path": path_value, "name": f['file_name'], "ref_url": f['path_or_url']}
-
+                    private_flag = f["file_name"].startswith("PRIVATE_")
                     try:
-                        resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
+                        max_tries = 1 if private_flag else 4
+                        resp_dict = retry_func(hs.createReferencedFile, max_tries=max_tries, kwargs=kw)
                         # log successful ref file
                         record_dict["ref_file_list"].append(f)
                     except Exception:
-                        # change Failing RefContentFile URL to HS homepage
+                        # change failing RefContentFile URL to HS homepage
                         kw["ref_url"] = "https://www.hydroshare.org/"
-                        # add prefix "NOT_RESOLVING_URL_" to filename
-                        kw["name"] = "NOT_RESOLVING_URL_{}".format(kw["name"])
-                        # try to create ref content file again
+                        if not private_flag:
+                            # add prefix "NOT_RESOLVING_URL_" to filename
+                            kw["name"] = "NOT_RESOLVING_URL_{}".format(kw["name"])
+                            # log not-resolving ref file
+                            record_dict["bad_ref_file_list"].append(f)
+                            _success_file = False
                         resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
-                        # log not-resolving ref file
-                        record_dict["bad_ref_file_list"].append(f)
-                        _success_file = False
 
                     file_id = resp_dict["file_id"]
 

@@ -2,7 +2,7 @@ import logging
 import time
 
 
-def retry_func(fun, args=None, kwargs=None, max_tries=4, interval_sec=5, increase_interval=True):
+def retry_func(fun, args=None, kwargs=None, max_tries=4, interval_sec=5, increase_interval=True, raise_on_failure=True):
     """
     TODO docstring
     :param fun:
@@ -21,12 +21,12 @@ def retry_func(fun, args=None, kwargs=None, max_tries=4, interval_sec=5, increas
             func_result = fun(*pass_on_args, **pass_on_kwargs)
             return func_result
         except Exception as ex:
-            if i == max_tries - 1:
-                raise ex
-            else:
-                logging.warning("Failed to call {}: {} {}. Retrying {}/{}".format(str(fun), str(pass_on_args),
-                                                                                  str(pass_on_kwargs), str(i+1),
-                                                                                  str(max_tries-1)))
+            if i == max_tries - 1 and raise_on_failure:
+                msg = "All {} attempts were failed to call {} with arguments: {} {}".format(max_tries,
+                                                                                       str(fun),
+                                                                                       str(pass_on_args),
+                                                                                       str(pass_on_kwargs))
+                raise Exception(msg)
 
             if increase_interval:
                 time.sleep(interval_sec*(i+1))
