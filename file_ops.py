@@ -109,15 +109,16 @@ def handle_special_char(_fn):
 
 def extract_fileinfo_from_url(f_url, ref_file_name,
                               file_name_used_dict=None, private_flag=False, skip_invalid_url=False):
-    # case 1: Invalid url --> RefFileType (downstream codes will mark "NOT_RESOLVING")
-    # case 2: Url ends with a filename with any supported extension and ...
-    #   case 2-1: Big file --> RefFileType
-    #   case 2-2: Not a big file --> SingleFileType
-    #   case 2-3: Unknown size (missing headers) --> SingleFileType
-    # case 3: Url ends with a filename without supported extension ---> RefFileType
-    # case 4: Url has no explict filename ---> RefFileType
-    # case 5: For case 2 ,3 ,4 if private_flag is True ---> RefFileType with prefix "Private_" in file_name
-
+    """
+    case 1: Invalid url --> RefFileType (downstream codes will mark "NOT_RESOLVING")
+    case 2: Url ends with a filename with any supported extension and ...
+      case 2-1: Big file --> RefFileType
+      case 2-2: Not a big file --> SingleFileType
+      case 2-3: Unknown size (missing headers) --> SingleFileType
+    case 3: Url ends with a filename without supported extension ---> RefFileType
+    case 4: Url has no explict filename ---> RefFileType
+    case 5: For case 2 ,3 ,4 if private_flag is True ---> RefFileType with prefix "Private_" in file_name
+    """
     ref_filetype = "ReferencedFile"
     regular_filetype = ""
     supported_extension = False

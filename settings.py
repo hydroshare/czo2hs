@@ -8,23 +8,27 @@ CZO_DATA_CSV = "./data/czo.csv"
 CZO_ID_LIST_TO_MIGRATE = []
 
 # only work when CZO_ID_LIST_TO_MIGRATE is empty or NONE
-START_ROW_INDEX = 1  # start row index in CZO_DATA_CSV
+START_ROW_INDEX = 0  # start row index in CZO_DATA_CSV
 END_ROW_INDEX = 407  # end row index in CZO_DATA_CSV -- max 407
 
 
 LOG_DIR = "./logs"
 CLEAR_LOGS = False  # delete everything in the LOG_DIR
 
-HS_URL = "localhost"  # dev-hs-6.cuahsi.org
+HS_URL = "dev-hs-6.cuahsi.org"  # dev-hs-6.cuahsi.org
+PORT = "433"
+USE_HTTPS = True
+VERIFY_HTTPS = False  # check if HTTPS certificate is valid
+
 
 CZO_ACCOUNTS = {
-    "default": {"uname": "czo", "pwd": "123", "hs_url": HS_URL},
-    # "national": {"uname": "czo_national", "pwd": "123", "hs_url": HS_URL},
-    # "boulder": {"uname": "czo_boulder", "pwd": "123", "hs_url": HS_URL},
-    # "eel": {"uname": "czo_eel", "pwd": "123", "hs_url": HS_URL},
-    # "catalina-jemez": {"uname": "czo_catalina-jemez", "pwd": "123", "hs_url": HS_URL},
-    # "reynolds": {"uname": "czo_reynolds", "pwd": "123", "hs_url": HS_URL},
-    # "luquillo": {"uname": "czo_luquillo", "pwd": "123", "hs_url": HS_URL},
+    "default": {"uname": "czo", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    # "national": {"uname": "czo_national", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    # "boulder": {"uname": "czo_boulder", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    # "eel": {"uname": "czo_eel", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    # "catalina-jemez": {"uname": "czo_catalina-jemez", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    # "reynolds": {"uname": "czo_reynolds", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    # "luquillo": {"uname": "czo_luquillo", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
 }
 
 BIG_FILE_SIZE_MB = 500
@@ -34,7 +38,7 @@ headers = {
 }
 
 USE_CACHED_FILES = True
-CACHED_FILE_DIR = "/media/sf_czo/2019-02-13_18-29-56"
+CACHED_FILE_DIR = "/czo/2019-02-13_18-29-56"
 
 MB_TO_BYTE = 1024 * 1024
 

@@ -40,7 +40,7 @@ def get_creator_hs_metadata(creator_list):
     return hs_creator_list
 
 
-def get_files(in_str, record_dict=None, other_urls=[]):
+def get_files(in_str, migration_log=None, other_urls=[]):
     """
     This is a generator that returns a resource file dict in each iterate
     :param in_str: file field
@@ -57,6 +57,7 @@ def get_files(in_str, record_dict=None, other_urls=[]):
             f_data_level = f_info_list[3]
             f_private = f_info_list[4]
             f_doi = f_info_list[5]
+            # TODO handle this in a more centralized way
             f_metadata_url = f_info_list[6].strip()
 
             ref_file_name = f_location + "-" + f_topic
@@ -75,7 +76,7 @@ def get_files(in_str, record_dict=None, other_urls=[]):
             yield file_info
         except Exception as ex:
             extra_msg = "Failed to parse resource file from component {}".format(f_str)
-            log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+            log_exception(ex, migration_log=migration_log, extra_msg=extra_msg)
             yield 1
 
         try:
@@ -92,7 +93,7 @@ def get_files(in_str, record_dict=None, other_urls=[]):
                 yield metadata_file_info
         except Exception as ex:
             extra_msg = "Failed to parse metadata file from component {}".format(f_str)
-            log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+            log_exception(ex, migration_log=migration_log, extra_msg=extra_msg)
             yield 1
 
     # other urls - map/kml
@@ -107,7 +108,7 @@ def get_files(in_str, record_dict=None, other_urls=[]):
             yield other_file_info
         except Exception as ex:
             extra_msg = "Failed to parse map/kml field {}".format(url)
-            log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+            log_exception(ex, migration_log=migration_log, extra_msg=extra_msg)
             yield 1
 
 
@@ -185,7 +186,7 @@ def get_file_id_by_name(hs, resource_id, fname):
     return file_id
 
 
-def _update_core_metadata(hs_obj, hs_id, metadata_dict, message=None, record_dict=None):
+def _update_core_metadata(hs_obj, hs_id, metadata_dict, message=None, migration_log=None):
     """
        Update core metadata for a HydroShare
        :param hs_obj: hs obj initialized by hs_restclient
@@ -205,7 +206,7 @@ def _update_core_metadata(hs_obj, hs_id, metadata_dict, message=None, record_dic
     except Exception as ex:
         extra_msg = 'Failed to update {message}: {metadata}'.format(message=message, metadata=metadata_dict)
         result = False
-        log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+        log_exception(ex, migration_log=migration_log, extra_msg=extra_msg)
     finally:
         return result, science_metadata_json
 
@@ -301,7 +302,8 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                  "error_msg": "success",
                  }
     """
-    record_dict = {"success": False,
+
+    migration_log = {"success": False,
                    "czo_id": -1,
                    "hs_id": -1,
                    "ref_file_list": [],
@@ -316,7 +318,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # parse resource-level metadata
         # parse czo_id
         czo_id = _extract_value_from_df_row_dict(czo_res_dict, "czo_id")
-        record_dict["czo_id"] = czo_id
+        migration_log["czo_id"] = czo_id
         logging.info("Working on NO.{index} CZO_ID {czo_id}".format(index=index, czo_id=czo_id))
 
         # parse CZOS
@@ -449,7 +451,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                                  topics=", ".join(topics_list),
                                  description=description,
                                  variables=", ".join(variables_list),
-                                 variables_omd2=", ".join(variables_odm2_list),
+                                 variables_odm2=", ".join(variables_odm2_list),
                                  )
         if subtitle is not None:
             hs_extra_metadata["subtitle"] = subtitle
@@ -487,41 +489,41 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                                   hs_res_title,
                                   extra_metadata=json.dumps(hs_extra_metadata)
                                   )
-        record_dict["hs_id"] = hs_id
-        record_dict["primary_owner"] = hs.auth.username  # export owner of this hs res
+        migration_log["hs_id"] = hs_id
+        migration_log["primary_owner"] = hs.auth.username  # export owner of this hs res
         logging.info('HS resource created at: {hs_id}'.format(hs_id=hs_id))
 
         # update Abstract/Description
         _success_abstract, _ = _update_core_metadata(hs, hs_id,
                                                      {"description": hs_res_abstract},
                                                      message="Abstract",
-                                                     record_dict=record_dict)
+                                                     migration_log=migration_log)
 
         # update Keywords/Subjects
         _success_keyword, _ = _update_core_metadata(hs, hs_id,
                                                     {"subjects": [{"value": kw} for kw in hs_res_keywords]},
                                                     message="Keyword",
-                                                    record_dict=record_dict)
+                                                    migration_log=migration_log)
 
         # update creators
         _success_creator, _ = _update_core_metadata(hs, hs_id,
                                                     {"creators": hs_creator_list},
                                                     message="Author",
-                                                    record_dict=record_dict)
+                                                    migration_log=migration_log)
 
         # update coverage
         # spatial coverage and period coverage must be updated at the same time as updating any single one would remove the other
         _success_coverage, _ = _update_core_metadata(hs, hs_id,
                                                      {'coverages': [hs_coverage_spatial, hs_coverage_period]},
                                                      message="Coverage",
-                                                     record_dict=record_dict)
+                                                     migration_log=migration_log)
 
         # metadata still not working!!!! https://github.com/hydroshare/hs_restclient/issues/97
         # rights, funding_agencies, extra_metadata
 
         _success_file = True
         other_urls = [] + map_uploads_list + kml_files_list
-        for f in get_files(czo_files, record_dict=record_dict, other_urls=other_urls):
+        for f in get_files(czo_files, migration_log=migration_log, other_urls=other_urls):
             if f == 1:
                 _success_file = False
                 continue
@@ -539,7 +541,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                         max_tries = 1 if private_flag else 4
                         resp_dict = retry_func(hs.createReferencedFile, max_tries=max_tries, kwargs=kw)
                         # log successful ref file
-                        record_dict["ref_file_list"].append(f)
+                        migration_log["ref_file_list"].append(f)
                     except Exception:
                         # change failing RefContentFile URL to HS homepage
                         kw["ref_url"] = "https://www.hydroshare.org/"
@@ -547,7 +549,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                             # add prefix "NOT_RESOLVING_URL_" to filename
                             kw["name"] = "NOT_RESOLVING_URL_{}".format(kw["name"])
                             # log not-resolving ref file
-                            record_dict["bad_ref_file_list"].append(f)
+                            migration_log["bad_ref_file_list"].append(f)
                             _success_file = False
                         resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
 
@@ -578,13 +580,13 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                         pass
 
                     # log concrete file
-                    record_dict["concrete_file_list"].append(f)
+                    migration_log["concrete_file_list"].append(f)
 
                 hs.resource(hs_id).files.metadata(file_id, f["metadata"])
             except Exception as ex_file:
                 _success_file = False
                 extra_msg = "Failed upload file to HS {}: ".format(json.dumps(f))
-                log_exception(ex_file, record_dict=record_dict, extra_msg=extra_msg)
+                log_exception(ex_file, migration_log=migration_log, extra_msg=extra_msg)
 
         # make the resource public
         try:
@@ -604,8 +606,8 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
     except Exception as ex:
         _success = False
         extra_msg = "Failed to migrate CZO dict {}: ".format(json.dumps(czo_res_dict))
-        log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+        log_exception(ex, migration_log=migration_log, extra_msg=extra_msg)
 
     finally:
-        record_dict["success"] = _success
-        return record_dict
+        migration_log["success"] = _success
+        return migration_log
