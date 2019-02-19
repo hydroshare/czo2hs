@@ -81,7 +81,7 @@ def _append_rstr_to_fname(fn, split_ext=True, rstrl=6, pre_rstr=None):
     return fn_new
 
 
-def whether_to_harvest_file(filename):
+def check_extension(filename):
     """
     check file extension and decide whether to harvest/download
     :param filename: filename
@@ -89,7 +89,9 @@ def whether_to_harvest_file(filename):
     """
     filename = filename.lower()
     for ext in [".hdr", ".docx", ".csv", ".txt", ".pdf",
-                ".xlsx", ".kmz", ".zip", ".xls", ".7z", ".kmz", ".dat", ".rdb"]:
+                ".xlsx", ".xls", ".dat", ".zip",  ".7z",
+                ".kml",  ".kmz", ".rdb", ".jpg", ".jpeg",
+                ".png"]:
         if filename.endswith(ext):
             return True
     return False
@@ -105,68 +107,73 @@ def handle_special_char(_fn):
          replace(')', '')
 
 
-def extract_fileinfo_from_url(f_url, file_name_used_dict=None, ref_file_name=None, invalid_url_warning=False):
-    file_info = None
+def extract_fileinfo_from_url(f_url, ref_file_name,
+                              file_name_used_dict=None, private_flag=False, skip_invalid_url=False):
+    """
+    case 1: Invalid url --> RefFileType (downstream codes will mark "NOT_RESOLVING")
+    case 2: Url ends with a filename with any supported extension and ...
+      case 2-1: Big file --> RefFileType
+      case 2-2: Not a big file --> SingleFileType
+      case 2-3: Unknown size (missing headers) --> SingleFileType
+    case 3: Url ends with a filename without supported extension ---> RefFileType
+    case 4: Url has no explict filename ---> RefFileType
+    case 5: For case 2 ,3 ,4 if private_flag is True ---> RefFileType with prefix "Private_" in file_name
+    """
+    ref_filetype = "ReferencedFile"
+    regular_filetype = ""
+    supported_extension = False
+    big_file_flag = False
+    path_or_url = f_url
+    file_size_mb = -1
 
     if not validators.url(f_url):
-        if invalid_url_warning:
-            raise Exception("Not a valid URL: {}".format(f_url))
-        else:
-            return file_info
+        # case 1
+        if skip_invalid_url:
+            return None
+        file_type = ref_filetype
+        file_name = ref_file_name
+    else:
+        f_url_decoded = unquote(f_url)
+        file_name = f_url_decoded.split("/")[-1]
+        file_name = f_url_decoded.split("/")[-2] if len(file_name) == 0 else file_name
+        supported_extension = check_extension(file_name)
+        if supported_extension:
+            # case 2-X
+            file_size_mb = retry_func(check_file_size_mb, args=[f_url])
+            big_file_flag = is_big_file(file_size_mb)
+            if big_file_flag:
+                # case 2-1
+                file_type = ref_filetype
+                file_name = file_name
+            else:  # case 2-2, 2-3
+                file_type = regular_filetype
+                file_name = file_name
+        else:  # case 3, 4
+            file_type = ref_filetype
+            file_name = ref_file_name
 
-    if file_name_used_dict is None:
-        file_name_used_dict = {}
+        # case 5
+        if private_flag:
+            file_type = ref_filetype
+            file_name = "PRIVATE_{}".format(file_name)
 
-    if ref_file_name is None or len(ref_file_name) == 0:
-        ref_file_name = "ref_file_{}".format(uuid.uuid4().hex[:6])
-
-    f_url_decoded = unquote(f_url)
-    file_name = f_url_decoded.split("/")[-1]
-    if len(file_name) == 0:
-        file_name = f_url_decoded.split("/")[-2]
-
+    # remove special chars HS doesn't like in file name
     file_name = handle_special_char(file_name)
+    # handel duplicate file_name
+    file_name = _handle_duplicated_file_name(file_name, file_name_used_dict,
+                                             split_ext=supported_extension)
+    # download regular non-big-file to local
+    if file_type == regular_filetype:
+        path_or_url = retry_func(download_file, args=[f_url, file_name])
 
-    harvestable_file_flag = whether_to_harvest_file(file_name)
-    big_file_flag = False
-    file_size_mb = -1
-    if harvestable_file_flag:
-        file_size_mb = retry_func(check_file_size_mb, args=[f_url])
-        big_file_flag = is_big_file(file_size_mb)
-        if big_file_flag:
-            logging.warning("{} MB big file detected at {}".format(int(file_size_mb), f_url))
-
-    if harvestable_file_flag and not big_file_flag:
-
-        file_name = _handle_duplicated_file_name(file_name, file_name_used_dict)
-
-        file_path_local = retry_func(download_file, args=[f_url, file_name])
-        file_info = {"file_type": "",
-                     "path_or_url": file_path_local,
-                     "file_name": file_name,
-                     "big_file_flag": False,
-                     }
-
-    else:  # Referenced File Type
-        if not harvestable_file_flag:
-            # url doesnt explicitly point to a file name
-            file_name = handle_special_char(ref_file_name)
-            file_name = _handle_duplicated_file_name(file_name, file_name_used_dict, split_ext=False)
-        else:
-            # for harvestable but too big file
-            file_name = _handle_duplicated_file_name(file_name, file_name_used_dict)
-            big_file_flag = True
-
-        file_info = {"file_type": "ReferencedFile",
-                     "path_or_url": f_url,
-                     "file_name": file_name,
-                     "big_file_flag": big_file_flag,
-                     }
-
-    file_info["file_size_mb"] = file_size_mb
-    file_info["original_url"] = f_url
-    file_info["metadata"] = {}
-
+    file_info = {"file_type": file_type,
+                 "path_or_url": path_or_url,
+                 "file_name": file_name,
+                 "big_file_flag": big_file_flag,
+                 "file_size_mb": file_size_mb,
+                 "original_url": f_url,
+                 "metadata": {},
+                 }
     return file_info
 
 
