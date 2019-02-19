@@ -15,9 +15,9 @@ END_ROW_INDEX = 407  # end row index in CZO_DATA_CSV -- max 407
 LOG_DIR = "./logs"
 CLEAR_LOGS = False  # delete everything in the LOG_DIR
 
-HS_URL = "dev-hs-6.cuahsi.org"  # dev-hs-6.cuahsi.org
-PORT = "433"
-USE_HTTPS = True
+HS_URL = "localhost"  # dev-hs-6.cuahsi.org
+PORT = "8000"
+USE_HTTPS = False
 VERIFY_HTTPS = False  # check if HTTPS certificate is valid
 
 
