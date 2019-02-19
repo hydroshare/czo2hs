@@ -16,7 +16,7 @@ LOG_DIR = "./logs"
 CLEAR_LOGS = False  # delete everything in the LOG_DIR
 
 HS_URL = "localhost"  # dev-hs-6.cuahsi.org
-PORT = "8000"
+PORT = "8000"  # https-443
 USE_HTTPS = False
 VERIFY_HTTPS = False  # check if HTTPS certificate is valid
 
@@ -29,6 +29,10 @@ CZO_ACCOUNTS = {
     # "catalina-jemez": {"uname": "czo_catalina-jemez", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
     # "reynolds": {"uname": "czo_reynolds", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
     # "luquillo": {"uname": "czo_luquillo", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    # "sierra": {"uname": "czo_sierra", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    # "christina": {"uname": "czo_christina", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    # "shale hills": {"uname": "czo_shale-hills", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    # "calhoun": {"uname": "czo_calhoun", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
 }
 
 BIG_FILE_SIZE_MB = 500
