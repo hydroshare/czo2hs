@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import time
@@ -8,7 +9,8 @@ from pandas.io.json import json_normalize
 from accounts import CZOHSAccount
 from api_helpers import create_hs_res_from_czo_row
 from settings import LOG_DIR, CZO_ACCOUNTS, CLEAR_LOGS, \
-    CZO_DATA_CSV, CZO_ID_LIST_TO_MIGRATE, START_ROW_INDEX , END_ROW_INDEX
+    CZO_DATA_CSV, CZO_ID_LIST_TO_MIGRATE, START_ROW_INDEX, END_ROW_INDEX
+from util import gen_readme
 from utils_logging import text_emphasis, elapsed_time, log_uploaded_file_stats
 
 
@@ -28,7 +30,6 @@ def logging_init():
             except Exception as e:
                 print(e)
     # Show hour time of day then use time.time() to ensure newest is always at bottom in folder
-    # TODO match this to the lookup_2019-02-09_18-50-18.csv (using hour and time.time) which is exported at migration completion
     timestamp_suffix = start_time.strftime("%Y-%m-%d_%Hh-%Mm_{}".format(int(time.time())))
     log_file_name = "log_{}.log".format(timestamp_suffix)
     logging.basicConfig(
@@ -43,7 +44,6 @@ def logging_init():
 
 def migrate_czo_row(czo_row_dict, czo_accounts, row_no=1):
     """
-    TODO docstring
     Create a HS resource from a CZO row dict
     :param czo_row_dict:
     :param czo_accounts:
@@ -106,13 +106,8 @@ def output_status(success_error, czo_accounts):
         logging.info(df_concrete_file_list_filter.sum(axis=0, skipna=True))
 
     for k, error_item in enumerate(error_status["error"]):
-
-        # TODO split into a variable pre-assignment and make more readable
-        logging.info("{} CZO_ID {} HS_ID {} Error {}".format(k + 1,
-                                                             error_item["czo_id"],
-                                                             error_item["hs_id"],
-                                                             "|".join([err_msg.replace("\n", " ") for err_msg in
-                                                                       error_item["error_msg_list"]])))
+        errors = "|".join([err_msg.replace("\n", " ") for err_msg in error_item["error_msg_list"]])
+        logging.info("{} CZO_ID {} HS_ID {} Error {}".format(k + 1, error_item["czo_id"], error_item["hs_id"], errors))
     return czo_accounts.get_hs_by_czo("default")
 
 
@@ -124,7 +119,7 @@ def main():
     czo_hs_id_lookup_df = pd.DataFrame(columns=["success", "czo_id", "hs_id", "primary_owner", "elapsed_time"]).\
         astype(dtype={"elapsed_time": "timedelta64[s]", })
 
-    czo_data = pd.read_csv(CZO_DATA_CSV)  # TODO investigate nans in dataframe probably just empty values
+    czo_data = pd.read_csv(CZO_DATA_CSV)
 
     czo_id_list = CZO_ID_LIST_TO_MIGRATE.copy()
     if czo_id_list is None or len(czo_id_list) == 0:
@@ -132,10 +127,14 @@ def main():
         czo_id_list = czo_data.iloc[indices]["czo_id"].tolist()
     logging.info("Processing on {} czo_ids: {}".format(len(czo_id_list), czo_id_list))
 
+    with open('data/markdown_map.json') as f:
+        col_map = json.load(f)
+
     for i in range(len(czo_id_list)):
         czo_id = czo_id_list[i]
         # process a specific row by czo_id
         czo_row_dict = czo_data.loc[czo_data['czo_id'] == czo_id].to_dict(orient='records')[0]
+        gen_readme(czo_row_dict, col_map)
         result = migrate_czo_row(czo_row_dict, czo_accounts, row_no=i + 1)
         czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(result, ignore_index=True)
         print(czo_hs_id_lookup_df)
@@ -160,13 +159,6 @@ def main():
 
 
 if __name__ == "__main__":
-    # TODO inspect file_naming, util, migrate, api_operations for import best practices and move functions around as necessary
-    # TODO instead of logging success for each step, such as Abstract/Keyword/Author updated successfully, make that silent/implicit and ensure that a failure is logged for any failures
-    # TODO store time taken in each progress report
-    # TODO display final progress report
-    # TODO cleanup logging displays and reduce overall logging to be more concise
-    # TODO deal with emphasis asterisk text header log messages differently
-    # TODO evaluate async (celery or asyncio) for API calls and why termiate needs to be hit twice
     start_time = time
     start = time.time()
     error_status = {"error": [], "success": [], "size_uploaded_mb": 0.0, "big_file_list": []}
