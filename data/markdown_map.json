@@ -1,0 +1,58 @@
+{
+  "title": {
+    "display": "Title",
+    "id": 2
+  },
+  "CZOS": {
+    "display": "CZOS",
+    "id": 5
+  },
+  "FIELD_AREAS": {
+    "display": "Field Areas",
+    "id": 6
+  },
+  "date_start": {
+    "display": "Date Start",
+    "id": 11
+  },
+  "date_end": {
+    "display": "Date End",
+    "id": 12
+  },
+  "date_range_comments": {
+    "display": "Date Range Comments",
+    "id": 13
+  },
+  "COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url": {
+    "display": "Component Files",
+    "id": 20
+  },
+  "VARIABLES": {
+    "display": "Variables",
+    "id": 22
+  },
+  "comments": {
+    "display": "Comments",
+    "id": 32
+  },
+  "dataset_doi": {
+    "display": "Dataset DOI",
+    "id": 34
+  },
+  "EXTERNAL_LINKS-url$link_text": {
+    "display": "External Links",
+    "id": 35
+  },
+  "PUBLICATIONS_OF_THIS_DATA": {
+    "display": "Publications of This Data",
+    "id": 36
+  },
+  "PUBLICATIONS_USING_THIS_DATA": {
+    "display": "Publications Using This Data",
+    "id": 37
+  },
+  "RELATED_DATASETS": {
+    "display": "Related Datasets",
+    "id": 38
+  }
+}

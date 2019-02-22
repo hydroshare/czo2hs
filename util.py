@@ -1,4 +1,4 @@
-import logging
+import math
 import time
 
 
@@ -35,3 +35,20 @@ def retry_func(fun, args=None, kwargs=None, max_tries=4, interval_sec=5, increas
             continue
 
 
+def gen_readme(rowdata, cmap):
+    """
+    Create a readme from the mappings agreed on with CZOs and captured in markdown_map.json
+    :param rowdata: dict data of row from csv
+    :param cmap: mapping of column names, descriptions and csv column indecies
+    :return: save markdown file to tmp
+    """
+    with open('tmp/readme.md', 'w', encoding='utf-8') as f:
+        for key in cmap:
+            info = rowdata[key]
+            if key == 'COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url':
+                info = ' '.join(info.split('$'))
+            try:
+                if math.isnan(info) or not info:
+                    pass
+            except:
+                f.write("### {}\n\n{}\n\n".format(cmap[key]['display'], info))
