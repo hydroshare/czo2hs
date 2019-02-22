@@ -9,8 +9,9 @@ import requests
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from file_ops import extract_fileinfo_from_url, retry_func
-from settings import logger, headers, HYDROSHARE_VERISON
+from settings import logger, headers, HYDROSHARE_VERISON, README_COLUMN_MAP, README_FILENAME
 from utils_logging import log_exception
+from util import gen_readme
 
 # TODO move to settings and test
 requests.packages.urllib3.disable_warnings()
@@ -40,15 +41,30 @@ def get_creator_hs_metadata(creator_list):
     return hs_creator_list
 
 
-def get_files(in_str, migration_log=None, other_urls=[]):
+def get_files(readme_path, component_files, migration_log=None, other_urls=[]):
     """
     This is a generator that returns a resource file dict in each iterate
     :param in_str: file field
     :return: None
     """
     file_name_used_dict = {}
+
+    # deal with readme.md file first to avoid potential naming conflict with component files
+    if os.path.isfile(readme_path):
+        file_name_used_dict[README_FILENAME] = 0  # mark "readme.md" as used
+        readme_file_info = {"file_type": "",
+                            "path_or_url": readme_path,
+                            "file_name": README_FILENAME,
+                            "big_file_flag": False,
+                            "file_size_mb": -1,
+                            "original_url": "",
+                            "metadata": {},
+                            }
+
+        yield readme_file_info
+
     # loop through component files and metadata files
-    for f_str in in_str.split("|"):
+    for f_str in component_files.split("|"):
         try:
             f_info_list = f_str.split("$")
             f_location = f_info_list[0]
@@ -288,7 +304,6 @@ def string_to_list(in_str, delimiter ='|'):
     return in_str.split(delimiter) if in_str is not None else []
 
 
-
 def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
     """
     TODO break this function up into more functions for readability and modularity
@@ -357,9 +372,6 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         west_long = _extract_value_from_df_row_dict(czo_res_dict, "west_long")
         south_lat = _extract_value_from_df_row_dict(czo_res_dict, "south_lat")
         north_lat = _extract_value_from_df_row_dict(czo_res_dict, "north_lat")
-
-        # parse file info
-        czo_files = czo_res_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
 
         # parse citation, data_doi
         citation = _extract_value_from_df_row_dict(czo_res_dict, "citation", required=False)
@@ -523,7 +535,12 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
         _success_file = True
         other_urls = [] + map_uploads_list + kml_files_list
-        for f in get_files(czo_files, migration_log=migration_log, other_urls=other_urls):
+        # generate readme.md file
+        readme_path = gen_readme(czo_res_dict, README_COLUMN_MAP)
+        # component_files field
+        component_files = czo_res_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
+
+        for f in get_files(readme_path, component_files, migration_log=migration_log, other_urls=other_urls):
             if f == 1:
                 _success_file = False
                 continue

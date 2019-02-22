@@ -1,6 +1,8 @@
 import math
 import time
-
+import tempfile
+import os
+from settings import README_FILENAME
 
 def retry_func(fun, args=None, kwargs=None, max_tries=4, interval_sec=5, increase_interval=True, raise_on_failure=True):
     """
@@ -42,7 +44,8 @@ def gen_readme(rowdata, cmap):
     :param cmap: mapping of column names, descriptions and csv column indecies
     :return: save markdown file to tmp
     """
-    with open('tmp/readme.md', 'w', encoding='utf-8') as f:
+    readme_path = os.path.join(tempfile.mkdtemp(), README_FILENAME)
+    with open(os.path.join(readme_path), 'w', encoding='utf-8') as f:
         for key in cmap:
             info = rowdata[key]
             if key == 'COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url':
@@ -52,3 +55,4 @@ def gen_readme(rowdata, cmap):
                     pass
             except:
                 f.write("### {}\n\n{}\n\n".format(cmap[key]['display'], info))
+    return readme_path
