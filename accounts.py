@@ -5,10 +5,14 @@ from hs_restclient import HydroShare, HydroShareAuthBasic
 
 class HSAccount(object):
 
-    def __init__(self, uname, pwd, hs_url):
+    def __init__(self, uname, pwd, hs_url, port, use_https, verify_https):
         self.uname = uname
         self.pwd = pwd
         self.hs_url = hs_url
+        self.port = port
+        self.use_https = use_https
+        self.verify_https = verify_https
+
         self.hs_auth = self._get_hs_auth()
         self.hs = self._get_hs()
 
@@ -18,12 +22,10 @@ class HSAccount(object):
         return auth
 
     def _get_hs(self):
+
         try:
-            if "hydroshare.org" in self.hs_url or "cuahsi.org" in self.hs_url:
-                hs = HydroShare(auth=self.hs_auth, hostname=self.hs_url)
-            else:
-                hs = HydroShare(auth=self.hs_auth, hostname=self.hs_url, port=8000, use_https=False, verify=False)
-            return hs
+            return HydroShare(auth=self.hs_auth, hostname=self.hs_url,
+                              port=self.port, use_https=self.use_https, verify=self.verify_https)
         except Exception as ex:
             logging.error(ex)
 

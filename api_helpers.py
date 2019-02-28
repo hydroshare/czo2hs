@@ -2,64 +2,88 @@ import json
 import logging
 import os
 import shutil
+import tempfile
 
 import pandas as pd
 import requests
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from file_ops import extract_fileinfo_from_url, retry_func
-from settings import logger, headers, HYDROSHARE_VERISON
+from settings import logger, headers, HYDROSHARE_VERISON, README_COLUMN_MAP, README_FILENAME
 from utils_logging import log_exception
+from util import gen_readme
 
 # TODO move to settings and test
 requests.packages.urllib3.disable_warnings()
 
 
-def _get_creator(czos, creator, email):
+def get_creator_hs_metadata(creator_list):
     """
     Assemble HydroShare Creator metadata dict
-    :param czos: czos name
-    :param creator: creator field
-    :param email: creator email
-    :return: HydroShare Creator metadata dict
+    :param creator_list: list of creator name string
+    :return: HydroShare Creator metadata list
     """
-    # Hard coded to return "Someone" for now
-    hs_creator = {'organization': czos, 'name': "Someone", 'email': "xxxx@czo.org", }
-    return hs_creator
+
+    hs_creator_list = []
+    for creator in creator_list:
+        if len(creator) > 28:  # criteria czo people said
+            # organization
+            hs_creator_list.append({'organization': creator})
+        elif len(creator) > 0:
+            # person
+            hs_creator_list.append({'name': creator})
+        else:
+            hs_creator_list.append({'name': "Someone"})
+
+    # full metadata terms
+    # {'organization': "", 'name': "Someone", 'email': "xxxx@czo.org", }
+
+    return hs_creator_list
 
 
-def get_files(in_str, record_dict=None):
+def get_files(readme_path, component_files, migration_log=None, other_urls=[]):
     """
     This is a generator that returns a resource file dict in each iterate
     :param in_str: file field
     :return: None
     """
     file_name_used_dict = {}
-    for f_str in in_str.split("|"):
+
+    # deal with readme.md file first to avoid potential naming conflict with component files
+    if os.path.isfile(readme_path):
+        file_name_used_dict[README_FILENAME] = 0  # mark "readme.md" as used
+        readme_file_info = {"file_type": "",
+                            "path_or_url": readme_path,
+                            "file_name": README_FILENAME,
+                            "big_file_flag": False,
+                            "file_size_mb": -1,
+                            "original_url": "",
+                            "metadata": {},
+                            }
+
+        yield readme_file_info
+
+    # loop through component files and metadata files
+    for f_str in component_files.split("|"):
         try:
             f_info_list = f_str.split("$")
             f_location = f_info_list[0]
             f_topic = f_info_list[1]
-            f_url = f_info_list[2]
+            f_url = f_info_list[2].strip()
             f_data_level = f_info_list[3]
             f_private = f_info_list[4]
             f_doi = f_info_list[5]
-            f_metadata_url = f_info_list[6]
+            # TODO handle this in a more centralized way
+            f_metadata_url = f_info_list[6].strip()
 
-            ref_file_name = "REF_" + f_topic + "-" + f_location
-            file_info = extract_fileinfo_from_url(f_url,
-                                                  file_name_used_dict,
-                                                  ref_file_name=ref_file_name,
-                                                  invalid_url_warning=True)
+            ref_file_name = f_location + "-" + f_topic
+            file_info = extract_fileinfo_from_url(f_url, ref_file_name,
+                                                  file_name_used_dict=file_name_used_dict,
+                                                  private_flag=(f_private.lower() == "y"))
 
-            file_info["metadata"] = {"title": f_topic,
-
-                                     # "spatial_coverage": {
-                                     #                      "name": f_location,
-                                     #                     },  # "spatial_coverage"
+            file_info["metadata"] = {"title": ref_file_name,
+                                     #"spatial_coverage": {"name": f_location,},  # doesnt work without bounding box
                                      "extra_metadata": {"private": f_private,
-                                                        "data_level": f_data_level,
-                                                        "metadata_url": f_metadata_url,
                                                         "url": f_url,
                                                         "location": f_location,
                                                         "doi": f_doi,
@@ -68,21 +92,39 @@ def get_files(in_str, record_dict=None):
             yield file_info
         except Exception as ex:
             extra_msg = "Failed to parse resource file from component {}".format(f_str)
-            log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+            log_exception(ex, migration_log=migration_log, extra_msg=extra_msg)
             yield 1
 
         try:
-            metadata_file_info = extract_fileinfo_from_url(f_metadata_url,
-                                                           file_name_used_dict,
-                                                           ref_file_name=ref_file_name + "_metadata",
-                                                           invalid_url_warning=False)
+            metadata_file_info = extract_fileinfo_from_url(f_metadata_url, ref_file_name,
+                                                           file_name_used_dict=file_name_used_dict,
+                                                           skip_invalid_url=True)
             if metadata_file_info is None:
                 yield 2
+            else:
+                metadata_file_info["metadata"]["extra_metadata"] = {"metadata_url": f_metadata_url}
+                if file_info is not None:
+                    metadata_file_info["metadata"]["title"] = "Metadata File for {}".format(file_info["file_name"])
 
-            yield metadata_file_info
+                yield metadata_file_info
         except Exception as ex:
             extra_msg = "Failed to parse metadata file from component {}".format(f_str)
-            log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+            log_exception(ex, migration_log=migration_log, extra_msg=extra_msg)
+            yield 1
+
+    # other urls - map/kml
+    for url in other_urls:
+        try:
+            url = url.strip()
+            ref_file_name = "map_or_kml"
+            other_file_info = extract_fileinfo_from_url(url, ref_file_name,
+                                                        file_name_used_dict=file_name_used_dict)
+            other_file_info["metadata"]["extra_metadata"] = {"url": url}
+
+            yield other_file_info
+        except Exception as ex:
+            extra_msg = "Failed to parse map/kml field {}".format(url)
+            log_exception(ex, migration_log=migration_log, extra_msg=extra_msg)
             yield 1
 
 
@@ -160,7 +202,7 @@ def get_file_id_by_name(hs, resource_id, fname):
     return file_id
 
 
-def _update_core_metadata(hs_obj, hs_id, metadata_dict, message=None, record_dict=None):
+def _update_core_metadata(hs_obj, hs_id, metadata_dict, message=None, migration_log=None):
     """
        Update core metadata for a HydroShare
        :param hs_obj: hs obj initialized by hs_restclient
@@ -180,7 +222,7 @@ def _update_core_metadata(hs_obj, hs_id, metadata_dict, message=None, record_dic
     except Exception as ex:
         extra_msg = 'Failed to update {message}: {metadata}'.format(message=message, metadata=metadata_dict)
         result = False
-        log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+        log_exception(ex, migration_log=migration_log, extra_msg=extra_msg)
     finally:
         return result, science_metadata_json
 
@@ -217,7 +259,7 @@ def _get_hs_obj(hs_user_name, hs_user_pwd, hs_host_url):
 
 
 def _extract_value_from_df_row_dict(row_dict, key, required=True):
-    v = str(row_dict.get(key))
+    v = str(row_dict.get(key)).strip()
     if len(v) > 0 and v.lower() not in ["nan", "na", "n/a", r"n\a", "none"]:
         return v
     if required:
@@ -258,6 +300,10 @@ def _get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None)
     return hs_coverage_spatial
 
 
+def string_to_list(in_str, delimiter ='|'):
+    return in_str.split(delimiter) if in_str is not None else []
+
+
 def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
     """
     TODO break this function up into more functions for readability and modularity
@@ -271,10 +317,12 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                  "error_msg": "success",
                  }
     """
-    record_dict = {"success": False,
+
+    migration_log = {"success": False,
                    "czo_id": -1,
                    "hs_id": -1,
                    "ref_file_list": [],
+                   "bad_ref_file_list": [],
                    "concrete_file_list": [],
                    "error_msg_list": [],
                    "primary_owner": None,
@@ -285,7 +333,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # parse resource-level metadata
         # parse czo_id
         czo_id = _extract_value_from_df_row_dict(czo_res_dict, "czo_id")
-        record_dict["czo_id"] = czo_id
+        migration_log["czo_id"] = czo_id
         logging.info("Working on NO.{index} CZO_ID {czo_id}".format(index=index, czo_id=czo_id))
 
         # parse CZOS
@@ -303,13 +351,16 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         comments = _extract_value_from_df_row_dict(czo_res_dict, "comments", required=False)
 
         # parse FIELD_AREAS, location
-        field_areas = _extract_value_from_df_row_dict(czo_res_dict, "FIELD_AREAS")
-        field_areas_list = field_areas.split('|')
+        field_areas = _extract_value_from_df_row_dict(czo_res_dict, "FIELD_AREAS", required=False)
+        field_areas_list = string_to_list(field_areas)
         location = _extract_value_from_df_row_dict(czo_res_dict, "location")
 
         # parse VARIABLES
-        variables = _extract_value_from_df_row_dict(czo_res_dict, "VARIABLES")
-        variables_list = variables.split('|')
+        variables = _extract_value_from_df_row_dict(czo_res_dict, "VARIABLES", required=False)
+        variables_list = string_to_list(variables)
+        # parse VARIABLES-ODM2
+        variables_odm2 = _extract_value_from_df_row_dict(czo_res_dict, "VARIABLES_ODM2", required=False)
+        variables_odm2_list = string_to_list(variables_odm2)
 
         # parse date_start, date_end, date_range_comments
         date_start = _extract_value_from_df_row_dict(czo_res_dict, "date_start")
@@ -322,22 +373,23 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         south_lat = _extract_value_from_df_row_dict(czo_res_dict, "south_lat")
         north_lat = _extract_value_from_df_row_dict(czo_res_dict, "north_lat")
 
-        # parse file info
-        czo_files = czo_res_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
-
         # parse citation, data_doi
         citation = _extract_value_from_df_row_dict(czo_res_dict, "citation", required=False)
         dataset_doi = _extract_value_from_df_row_dict(czo_res_dict, "dataset_doi", required=False)
+        map_uploads = _extract_value_from_df_row_dict(czo_res_dict, "map_uploads", required=False)
+        map_uploads_list = string_to_list(map_uploads)
+        kml_files = _extract_value_from_df_row_dict(czo_res_dict, "kml_files", required=False)
+        kml_files_list = string_to_list(kml_files)
 
         # parse TOPICS, KEYWORDS
         topics = _extract_value_from_df_row_dict(czo_res_dict, "TOPICS")
         topics_list = topics.split('|')
         keywords = _extract_value_from_df_row_dict(czo_res_dict, "KEYWORDS", required=False)
-        keywords_list = keywords.split('|') if keywords is not None else []
+        keywords_list = string_to_list(keywords)
 
         # parse DISCIPLINES
         disciplines = _extract_value_from_df_row_dict(czo_res_dict, "DISCIPLINES", required=False)
-        disciplines_list = disciplines.split('|') if disciplines is not None else []
+        disciplines_list = string_to_list(disciplines)
 
         # parse sub_topic
         sub_topic = _extract_value_from_df_row_dict(czo_res_dict, "sub_topic", required=False)
@@ -349,7 +401,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         publications_using_this_data = _extract_value_from_df_row_dict(czo_res_dict, "PUBLICATIONS_USING_THIS_DATA",
                                                                        required=False)
         related_datasets = _extract_value_from_df_row_dict(czo_res_dict, "RELATED_DATASETS", required=False)
-        related_datasets_list = related_datasets.split('|') if related_datasets is not None else []
+        related_datasets_list = string_to_list(related_datasets)
 
         # end parse resource-level metadata
 
@@ -375,8 +427,13 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
             hs_res_abstract += "\n\nDataset DOI: {dataset_doi}".format(dataset_doi=dataset_doi)
         # hs abstract end
 
-        # hs keywords - czos, FIELD_AREAS, TOPICS, VARIABLES, Keyword?????
-        hs_res_keywords = [] + czos_list + field_areas_list + topics_list + keywords_list
+        # hs keywords - czos, FIELD_AREAS, TOPICS, VARIABLES_ODM2, Keyword?????
+        hs_res_keywords = [] + \
+                            field_areas_list + \
+                            topics_list + \
+                            variables_odm2_list + \
+                            czos_list
+
         hs_res_keywords = map(str.lower, hs_res_keywords)
         hs_res_keywords = set(hs_res_keywords)
         if "" in hs_res_keywords:
@@ -385,7 +442,9 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
         # hs creator/author
         # hard coded
-        hs_creator = _get_creator(czo_primary, "", "")
+        creator = _extract_value_from_df_row_dict(czo_res_dict, "creator", required=False)
+        creator_list = string_to_list(creator)
+        hs_creator_list = get_creator_hs_metadata(creator_list)
         # hs creator/author end
 
         # hs coverage
@@ -404,6 +463,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                                  topics=", ".join(topics_list),
                                  description=description,
                                  variables=", ".join(variables_list),
+                                 variables_odm2=", ".join(variables_odm2_list),
                                  )
         if subtitle is not None:
             hs_extra_metadata["subtitle"] = subtitle
@@ -441,40 +501,46 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                                   hs_res_title,
                                   extra_metadata=json.dumps(hs_extra_metadata)
                                   )
-        record_dict["hs_id"] = hs_id
-        record_dict["primary_owner"] = hs.auth.username  # export owner of this hs res
+        migration_log["hs_id"] = hs_id
+        migration_log["primary_owner"] = hs.auth.username  # export owner of this hs res
         logging.info('HS resource created at: {hs_id}'.format(hs_id=hs_id))
 
         # update Abstract/Description
         _success_abstract, _ = _update_core_metadata(hs, hs_id,
                                                      {"description": hs_res_abstract},
                                                      message="Abstract",
-                                                     record_dict=record_dict)
+                                                     migration_log=migration_log)
 
         # update Keywords/Subjects
         _success_keyword, _ = _update_core_metadata(hs, hs_id,
                                                     {"subjects": [{"value": kw} for kw in hs_res_keywords]},
                                                     message="Keyword",
-                                                    record_dict=record_dict)
+                                                    migration_log=migration_log)
 
         # update creators
         _success_creator, _ = _update_core_metadata(hs, hs_id,
-                                                    {"creators": [hs_creator]},
+                                                    {"creators": hs_creator_list},
                                                     message="Author",
-                                                    record_dict=record_dict)
+                                                    migration_log=migration_log)
 
         # update coverage
         # spatial coverage and period coverage must be updated at the same time as updating any single one would remove the other
         _success_coverage, _ = _update_core_metadata(hs, hs_id,
                                                      {'coverages': [hs_coverage_spatial, hs_coverage_period]},
                                                      message="Coverage",
-                                                     record_dict=record_dict)
+                                                     migration_log=migration_log)
 
         # metadata still not working!!!! https://github.com/hydroshare/hs_restclient/issues/97
         # rights, funding_agencies, extra_metadata
 
         _success_file = True
-        for f in get_files(czo_files, record_dict=record_dict):
+        other_urls = [] + map_uploads_list + kml_files_list
+        # generate readme.md file
+        readme_path = gen_readme(czo_res_dict, README_COLUMN_MAP)
+        # component_files field
+        component_files = czo_res_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
+
+        for f in get_files(readme_path, component_files, migration_log=migration_log, other_urls=other_urls):
             if f == 1:
                 _success_file = False
                 continue
@@ -485,36 +551,59 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
             try:
                 logging.info("Creating file: {}".format(str(f)))
                 if f["file_type"] == "ReferencedFile":
-
                     path_value = "" if HYDROSHARE_VERISON >= 1.19 else "data/contents"
-
                     kw = {"pid": hs_id, "path": path_value, "name": f['file_name'], "ref_url": f['path_or_url']}
-                    resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
-                    file_id = resp_dict["file_id"]
+                    private_flag = f["file_name"].startswith("PRIVATE_")
+                    try:
+                        max_tries = 1 if private_flag else 4
+                        resp_dict = retry_func(hs.createReferencedFile, max_tries=max_tries, kwargs=kw)
+                        # log successful ref file
+                        migration_log["ref_file_list"].append(f)
+                    except Exception:
+                        # change failing RefContentFile URL to HS homepage
+                        kw["ref_url"] = "https://www.hydroshare.org/"
+                        if not private_flag:
+                            # add prefix "NOT_RESOLVING_URL_" to filename
+                            kw["name"] = "NOT_RESOLVING_URL_{}".format(kw["name"])
+                            # log not-resolving ref file
+                            migration_log["bad_ref_file_list"].append(f)
+                            _success_file = False
+                        resp_dict = retry_func(hs.createReferencedFile, kwargs=kw)
 
-                    # log ref file
-                    record_dict["ref_file_list"].append(f)
+                    file_id = resp_dict["file_id"]
 
                 else:
                     # upload other files with auto file type detection
-                    file_id = hs.addResourceFile(hs_id,
-                                                 f["path_or_url"])
-                    tmpfile_folder_path = os.path.dirname(f["path_or_url"])
+                    file_id = hs.addResourceFile(hs_id, f["path_or_url"])
                     try:
+                        tmpfile_folder_path = os.path.dirname(f["path_or_url"])
+                        assert(tmpfile_folder_path.startswith(tempfile.gettempdir()))
                         shutil.rmtree(tmpfile_folder_path)
                     except Exception:
                         pass
-                    # find file id (to be replaced by new hs_restclient)
-                    file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
+
+                    try:
+                        # set Content Type to file
+                        options = {
+                            "file_path": f["file_name"],
+                            "hs_file_type": "SingleFile"
+                        }
+                        hs.resource(hs_id).functions.set_file_type(options)
+
+                        # This will be simplified by new hs_restclient PR
+                        # find file id
+                        file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
+                    except Exception:
+                        pass
 
                     # log concrete file
-                    record_dict["concrete_file_list"].append(f)
+                    migration_log["concrete_file_list"].append(f)
 
                 hs.resource(hs_id).files.metadata(file_id, f["metadata"])
             except Exception as ex_file:
                 _success_file = False
                 extra_msg = "Failed upload file to HS {}: ".format(json.dumps(f))
-                log_exception(ex_file, record_dict=record_dict, extra_msg=extra_msg)
+                log_exception(ex_file, migration_log=migration_log, extra_msg=extra_msg)
 
         # make the resource public
         try:
@@ -534,8 +623,8 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
     except Exception as ex:
         _success = False
         extra_msg = "Failed to migrate CZO dict {}: ".format(json.dumps(czo_res_dict))
-        log_exception(ex, record_dict=record_dict, extra_msg=extra_msg)
+        log_exception(ex, migration_log=migration_log, extra_msg=extra_msg)
 
     finally:
-        record_dict["success"] = _success
-        return record_dict
+        migration_log["success"] = _success
+        return migration_log
