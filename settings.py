@@ -53,3 +53,8 @@ README_FILENAME = "ReadMe.md"
 README_COLUMN_MAP_PATH = './data/markdown_map.json'
 with open(README_COLUMN_MAP_PATH) as f:
     README_COLUMN_MAP = json.load(f)
+
+try:
+    from local_settings import *
+except ImportError:
+    pass

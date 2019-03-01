@@ -1,0 +1,30 @@
+# only work when CZO_ID_LIST_TO_MIGRATE is empty or NONE
+START_ROW_INDEX = 0  # start row index in CZO_DATA_CSV
+END_ROW_INDEX = 407  # end row index in CZO_DATA_CSV -- max 407
+
+LOG_DIR = "./logs"
+CLEAR_LOGS = True  # delete everything in the LOG_DIR
+
+HS_URL = "localhost"  # dev-hs-6.cuahsi.org
+PORT = "8000"  # https-443
+USE_HTTPS = False
+VERIFY_HTTPS = False  # check if HTTPS certificate is valid
+
+CZO_ACCOUNTS = {
+    "default": {"uname": "czo", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    "national": {"uname": "czo_national", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    "boulder": {"uname": "czo_boulder", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    "eel": {"uname": "czo_eel", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    "catalina-jemez": {"uname": "czo_catalina-jemez", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    "reynolds": {"uname": "czo_reynolds", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    "luquillo": {"uname": "czo_luquillo", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    "sierra": {"uname": "czo_sierra", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    "christina": {"uname": "czo_christina", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    "shale hills": {"uname": "czo_shale-hills", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+    "calhoun": {"uname": "czo_calhoun", "pwd": "123", "hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS},
+}
+
+USE_CACHED_FILES = False
+CACHED_FILE_DIR = "/tmp/latest_full"
+
+HYDROSHARE_VERISON = 1.19
