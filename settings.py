@@ -1,5 +1,6 @@
 import logging
 import json
+from collections import OrderedDict
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +52,9 @@ HYDROSHARE_VERISON = 1.19
 
 README_FILENAME = "ReadMe.md"
 README_COLUMN_MAP_PATH = './data/markdown_map.json'
+
 with open(README_COLUMN_MAP_PATH) as f:
-    README_COLUMN_MAP = json.load(f)
+    README_COLUMN_MAP = json.load(f, object_pairs_hook=OrderedDict)
 
 try:
     from local_settings import *

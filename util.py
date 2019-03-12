@@ -48,8 +48,6 @@ def gen_readme(rowdata, cmap):
     with open(os.path.join(readme_path), 'w', encoding='utf-8') as f:
         for key in cmap:
             info = rowdata[key]
-            if key == 'COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url':
-                info = ' '.join(info.split('$'))
             try:
                 if math.isnan(info) or not info:
                     pass
