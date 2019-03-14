@@ -409,18 +409,19 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         hs_res_title = title
 
         # hs abstract
-        hs_res_abstract = "{title}".format(title=title)
+        hs_res_abstract = ""
+        hs_res_abstract += "{description}".format(description=description)
+        #hs_res_abstract += "{title}".format(title=title)
         if subtitle is not None:
             hs_res_abstract += "\n\n{subtitle}".format(subtitle=subtitle)
         hs_res_abstract += "\n\nCZO: {czos_list}".format(czos_list=", ".join(czos_list))
         hs_res_abstract += "\n\nField Area: {field_areas_list}".format(field_areas_list=", ".join(field_areas_list))
         hs_res_abstract += "\n\nLocation: {location}".format(location=location)
-        hs_res_abstract += "\n\nStart Date: {date_start}".format(date_start=date_start)
-        hs_res_abstract += "\nEnd Date: {date_end}".format(date_end=date_end if date_end is not None else "")
+        # hs_res_abstract += "\n\nStart Date: {date_start}".format(date_start=date_start)
+        # hs_res_abstract += "\nEnd Date: {date_end}".format(date_end=date_end if date_end is not None else "")
         if date_range_comments is not None:
             hs_res_abstract += "\nDate Range Comments: {date_range_comments}".format(
                 date_range_comments=date_range_comments)
-        hs_res_abstract += "\n\nDescription: {description}".format(description=description)
         if citation is not None:
             hs_res_abstract += "\n\nCitation: {citation}".format(citation=citation)
         if dataset_doi is not None:
@@ -499,11 +500,14 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # extra metadata is uploaded here because I haven't found a way to update it separately
         hs_id = hs.createResource("CompositeResource",
                                   hs_res_title,
-                                  extra_metadata=json.dumps(hs_extra_metadata)
+                                  # extra_metadata=json.dumps(hs_extra_metadata)
                                   )
         migration_log["hs_id"] = hs_id
         migration_log["primary_owner"] = hs.auth.username  # export owner of this hs res
         logging.info('HS resource created at: {hs_id}'.format(hs_id=hs_id))
+
+        # update Extended Metadata
+        hs.resource(hs_id).scimeta.custom(hs_extra_metadata)
 
         # update Abstract/Description
         _success_abstract, _ = _update_core_metadata(hs, hs_id,
@@ -552,7 +556,8 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                 logging.info("Creating file: {}".format(str(f)))
                 if f["file_type"] == "ReferencedFile":
                     path_value = "" if HYDROSHARE_VERISON >= 1.19 else "data/contents"
-                    kw = {"pid": hs_id, "path": path_value, "name": f['file_name'], "ref_url": f['path_or_url']}
+                    kw = {"pid": hs_id, "path": path_value, "name": f['file_name'],
+                          "ref_url": f['path_or_url'], "validate": False}
                     private_flag = f["file_name"].startswith("PRIVATE_")
                     try:
                         max_tries = 1 if private_flag else 4
@@ -574,7 +579,9 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
                 else:
                     # upload other files with auto file type detection
-                    file_id = hs.addResourceFile(hs_id, f["path_or_url"])
+                    file_add_respone = hs.addResourceFile(hs_id, f["path_or_url"])
+
+                    hs_file_path = file_add_respone["file_path"]
                     try:
                         tmpfile_folder_path = os.path.dirname(f["path_or_url"])
                         assert(tmpfile_folder_path.startswith(tempfile.gettempdir()))
@@ -585,14 +592,15 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                     try:
                         # set Content Type to file
                         options = {
-                            "file_path": f["file_name"],
+                            "file_path": hs_file_path,
                             "hs_file_type": "SingleFile"
                         }
                         hs.resource(hs_id).functions.set_file_type(options)
 
                         # This will be simplified by new hs_restclient PR
                         # find file id
-                        file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
+                        #file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
+                        file_id = hs_file_path
                     except Exception:
                         pass
 
