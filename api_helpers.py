@@ -258,6 +258,17 @@ def _get_hs_obj(hs_user_name, hs_user_pwd, hs_host_url):
     return hs
 
 
+def get_metadata_list(csv_header, csv_value, output_header_list=None):
+
+    header_list = csv_header.split('$') if output_header_list is None else output_header_list
+    metadata_list = csv_value.split('|')
+    md_list = []
+    for md_terms in metadata_list:
+        md_list.append(dict(zip(header_list, md_terms.split('$'))))
+
+    return md_list
+
+
 def _extract_value_from_df_row_dict(row_dict, key, required=True):
     v = str(row_dict.get(key)).strip()
     if len(v) > 0 and v.lower() not in ["nan", "na", "n/a", r"n\a", "none"]:
@@ -403,6 +414,20 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         related_datasets = _extract_value_from_df_row_dict(czo_res_dict, "RELATED_DATASETS", required=False)
         related_datasets_list = string_to_list(related_datasets)
 
+        # grants
+        grants_csv_header = "AWARD_GRANT_NUMBERS-grant_number$funding_agency$url_for_grant"
+        award_grants = _extract_value_from_df_row_dict(czo_res_dict,
+                                                       grants_csv_header,
+                                                       required=False)
+        hs_award_grants_list = get_metadata_list(grants_csv_header,
+                                                 award_grants,
+                                                 output_header_list=["agency_name", "award_number", "agency_url"]) \
+                                if award_grants is not None else []
+        # patch hs_award_grants due to HS REST API bugs
+        # add optional "award_title" as empty ""
+        for grant in hs_award_grants_list:
+            grant["award_title"] = ""
+
         # end parse resource-level metadata
 
         # hs title
@@ -442,7 +467,6 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # hs keywords end
 
         # hs creator/author
-        # hard coded
         creator = _extract_value_from_df_row_dict(czo_res_dict, "creator", required=False)
         creator_list = string_to_list(creator)
         hs_creator_list = get_creator_hs_metadata(creator_list)
@@ -528,14 +552,33 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                                                     migration_log=migration_log)
 
         # update coverage
-        # spatial coverage and period coverage must be updated at the same time as updating any single one would remove the other
+        # spatial coverage and period coverage must be updated at the same time
+        # as updating any single one would remove the other
         _success_coverage, _ = _update_core_metadata(hs, hs_id,
                                                      {'coverages': [hs_coverage_spatial, hs_coverage_period]},
                                                      message="Coverage",
                                                      migration_log=migration_log)
 
-        # metadata still not working!!!! https://github.com/hydroshare/hs_restclient/issues/97
-        # rights, funding_agencies, extra_metadata
+        # update award grants
+        _success_grants= True
+        if len(hs_award_grants_list) > 0:
+            _success_grants, _ = _update_core_metadata(hs, hs_id,
+                                                       {'funding_agencies': hs_award_grants_list},
+                                                       message="Funding_agencies",
+                                                       migration_log=migration_log)
+
+        # update relations for publication of this data
+        _success_relations = True
+        if publications_of_this_data is not None:
+            hs_relations_list = [{
+                    "type": "isDataFor",
+                    "value": publications_of_this_data[:499]  # caps: 500 chars
+                }]
+
+            _success_relations, _ = _update_core_metadata(hs, hs_id,
+                                                       {'relations': hs_relations_list},
+                                                       message="Relations",
+                                                       migration_log=migration_log)
 
         _success_file = True
         other_urls = [] + map_uploads_list + kml_files_list
@@ -625,7 +668,8 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
         logging.info("Done with NO.{index} CZO_ID: {czo_id}".format(index=index, czo_id=czo_id))
         if _success_abstract and _success_keyword and \
-                _success_coverage and _success_creator and _success_file:
+                _success_coverage and _success_creator and _success_file and \
+                _success_grants and _success_relations:
             _success = True
 
     except Exception as ex:
