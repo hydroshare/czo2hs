@@ -28,7 +28,7 @@ def second_pass(lookup_csv_path, czo_accounts):
         hs_owner = query_lookup_table(czo_id, lookup_data_df, attr="primary_owner")
         try:
             if None not in (hs_id, hs_owner):
-                hs_owner = "default" if hs_owner == "czo" else "czo_{}".format(hs_owner)
+                hs_owner = "default" if hs_owner == "czo" else hs_owner
                 hs = czo_accounts.get_hs_by_czo(hs_owner)
                 # get existing extended metadata
                 extented_metadata = hs.resource(hs_id).scimeta.get()
@@ -41,4 +41,4 @@ def second_pass(lookup_csv_path, czo_accounts):
                     logging.info("Updated {0} - {1} by account {2}".format(hs_id, czo_id, hs_owner))
         except Exception as ex:
             logging.error("Failed to updated {0} - {1} by account {2}: {3}".format(hs_id, czo_id, hs_owner, str(ex)))
-    logging.info("\Second Pass Done")
+    logging.info("Second Pass Done")
