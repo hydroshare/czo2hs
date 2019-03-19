@@ -9,7 +9,7 @@ import requests
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from file_ops import extract_fileinfo_from_url, retry_func
-from settings import logger, headers, HYDROSHARE_VERISON, README_COLUMN_MAP, README_FILENAME
+from settings import logger, headers, README_COLUMN_MAP, README_FILENAME
 from utils_logging import log_exception
 from util import gen_readme
 
@@ -598,7 +598,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
             try:
                 logging.info("Creating file: {}".format(str(f)))
                 if f["file_type"] == "ReferencedFile":
-                    path_value = "" if HYDROSHARE_VERISON >= 1.19 else "data/contents"
+                    path_value = ""
                     kw = {"pid": hs_id, "path": path_value, "name": f['file_name'],
                           "ref_url": f['path_or_url'], "validate": False}
                     private_flag = f["file_name"].startswith("PRIVATE_")

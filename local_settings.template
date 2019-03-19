@@ -26,5 +26,3 @@ CZO_ACCOUNTS = {
 
 USE_CACHED_FILES = False
 CACHED_FILE_DIR = "/tmp/latest_full"
-
-HYDROSHARE_VERISON = 1.19

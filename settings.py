@@ -48,15 +48,16 @@ CACHED_FILE_DIR = "/czo/2019-02-13_18-29-56"
 
 MB_TO_BYTE = 1024 * 1024
 
-HYDROSHARE_VERISON = 1.19
-
 README_FILENAME = "ReadMe.md"
 README_COLUMN_MAP_PATH = './data/markdown_map.json'
 
 with open(README_COLUMN_MAP_PATH) as f:
     README_COLUMN_MAP = json.load(f, object_pairs_hook=OrderedDict)
 
+RUN_2ND_PASS = True
+
 try:
     from local_settings import *
 except ImportError:
     pass
+
