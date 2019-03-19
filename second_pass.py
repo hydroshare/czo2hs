@@ -28,7 +28,7 @@ def second_pass(lookup_csv_path, czo_accounts):
         hs_owner = query_lookup_table(czo_id, lookup_data_df, attr="primary_owner")
         try:
             if None not in (hs_id, hs_owner):
-                hs_owner = "default" if hs_owner == "czo" else hs_owner
+                hs_owner = "default" if hs_owner == "czo" else hs_owner.split('_')[1]
                 hs = czo_accounts.get_hs_by_czo(hs_owner)
                 # get existing extended metadata
                 extented_metadata = hs.resource(hs_id).scimeta.get()
