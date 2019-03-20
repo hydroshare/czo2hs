@@ -6,7 +6,7 @@ import pandas as pd
 def query_lookup_table(czo_id, lookup_data_df, attr="hs_id"):
 
         v = lookup_data_df.loc[czo_id][attr]
-        if len(str(v)) == 0:
+        if str(v) == -1 or len(str(v)) == 0:
             return None
         return v
 
@@ -19,16 +19,17 @@ def second_pass(lookup_csv_path, czo_accounts):
     # read lookup table and set czo_id as index
     lookup_data_df = pd.read_csv(lookup_csv_path, index_col=1)
 
+    update_counter = 0
     for index, row in lookup_data_df.iterrows():
 
         czo_id = index
         # get hs_id
         hs_id = query_lookup_table(czo_id, lookup_data_df)
         # get resource owner
-        hs_owner = query_lookup_table(czo_id, lookup_data_df, attr="primary_owner")
+        hs_owner = query_lookup_table(czo_id, lookup_data_df, attr="primary_owner").split('|')[0]
         try:
             if None not in (hs_id, hs_owner):
-                hs_owner = "default" if hs_owner == "czo" else hs_owner.split('_')[1]
+
                 hs = czo_accounts.get_hs_by_czo(hs_owner)
                 # get existing extended metadata
                 extented_metadata = hs.resource(hs_id).scimeta.get()
@@ -39,6 +40,7 @@ def second_pass(lookup_csv_path, czo_accounts):
                     extented_metadata[related_datasets_field_name + "_hs"] = ", ".join(hs_id_list)
                     hs.resource(hs_id).scimeta.custom(extented_metadata)
                     logging.info("Updated {0} - {1} by account {2}".format(hs_id, czo_id, hs_owner))
+                    update_counter += 1
         except Exception as ex:
             logging.error("Failed to updated {0} - {1} by account {2}: {3}".format(hs_id, czo_id, hs_owner, str(ex)))
-    logging.info("Second Pass Done")
+    logging.info("Second Pass Done: {} resources updated \n\n".format(update_counter))

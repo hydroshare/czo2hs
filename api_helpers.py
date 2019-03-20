@@ -527,7 +527,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                                   # extra_metadata=json.dumps(hs_extra_metadata)
                                   )
         migration_log["hs_id"] = hs_id
-        migration_log["primary_owner"] = hs.auth.username  # export owner of this hs res
+        migration_log["primary_owner"] = "{}|{}".format(czo_primary, hs.auth.username)  # export owner of this hs res
         logging.info('HS resource created at: {hs_id}'.format(hs_id=hs_id))
 
         # update Extended Metadata
