@@ -41,7 +41,7 @@ def get_creator_hs_metadata(creator_list):
     return hs_creator_list
 
 
-def get_files(readme_path, component_files, migration_log=None, other_urls=[]):
+def get_files(component_files, migration_log=None, other_urls=[]):
     """
     This is a generator that returns a resource file dict in each iterate
     :param in_str: file field
@@ -49,19 +49,19 @@ def get_files(readme_path, component_files, migration_log=None, other_urls=[]):
     """
     file_name_used_dict = {}
 
-    # deal with readme.md file first to avoid potential naming conflict with component files
-    if os.path.isfile(readme_path):
-        file_name_used_dict[README_FILENAME] = 0  # mark "readme.md" as used
-        readme_file_info = {"file_type": "",
-                            "path_or_url": readme_path,
-                            "file_name": README_FILENAME,
-                            "big_file_flag": False,
-                            "file_size_mb": -1,
-                            "original_url": "",
-                            "metadata": {},
-                            }
-
-        yield readme_file_info
+    # # deal with readme.md file first to avoid potential naming conflict with component files
+    # if os.path.isfile(readme_path):
+    #     file_name_used_dict[README_FILENAME] = 0  # mark "readme.md" as used
+    #     readme_file_info = {"file_type": "",
+    #                         "path_or_url": readme_path,
+    #                         "file_name": README_FILENAME,
+    #                         "big_file_flag": False,
+    #                         "file_size_mb": -1,
+    #                         "original_url": "",
+    #                         "metadata": {},
+    #                         }
+    #
+    #     yield readme_file_info
 
     # loop through component files and metadata files
     for f_str in component_files.split("|"):
@@ -581,12 +581,10 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
         _success_file = True
         other_urls = [] + map_uploads_list + kml_files_list
-        # generate readme.md file
-        readme_path = gen_readme(czo_res_dict, README_COLUMN_MAP)
         # component_files field
         component_files = czo_res_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
 
-        for f in get_files(readme_path, component_files, migration_log=migration_log, other_urls=other_urls):
+        for f in get_files(component_files, migration_log=migration_log, other_urls=other_urls):
             if f == 1:
                 _success_file = False
                 continue
