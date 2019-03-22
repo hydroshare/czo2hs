@@ -2,45 +2,77 @@ import logging
 import functools
 import pandas as pd
 
+from util import gen_readme
+from settings import README_COLUMN_MAP, CZO_ACCOUNTS, CZO_DATA_CSV
+from api_helpers import _extract_value_from_df_row_dict, string_to_list
+from accounts import CZOHSAccount
+
 
 def query_lookup_table(czo_id, lookup_data_df, attr="hs_id"):
 
         v = lookup_data_df.loc[czo_id][attr]
-        if str(v) == -1 or len(str(v)) == 0:
+        if str(v) == "-1" or str(v).lower() == "nan" or len(str(v)) == 0:
             return None
         return v
 
 
-def second_pass(lookup_csv_path, czo_accounts):
+def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
 
     logging.info("\n\nSecond Pass Started")
 
-    related_datasets_field_name = "related_datasets"
+    # read czo csv
+    czo_data_df = pd.read_csv(czo_csv_path)
     # read lookup table and set czo_id as index
     lookup_data_df = pd.read_csv(lookup_csv_path, index_col=1)
 
     update_counter = 0
     for index, row in lookup_data_df.iterrows():
-
         czo_id = index
         # get hs_id
         hs_id = query_lookup_table(czo_id, lookup_data_df)
         # get resource owner
-        hs_owner = query_lookup_table(czo_id, lookup_data_df, attr="primary_owner").split('|')[0]
-        try:
-            if None not in (hs_id, hs_owner):
+        hs_owner = query_lookup_table(czo_id, lookup_data_df, attr="primary_owner")
 
+        if None not in (hs_id, hs_owner):
+            try:
+                hs_owner = hs_owner.split('|')[0]
                 hs = czo_accounts.get_hs_by_czo(hs_owner)
-                # get existing extended metadata
-                extented_metadata = hs.resource(hs_id).scimeta.get()
-                if related_datasets_field_name in extented_metadata:
-                    czo_id_list = extented_metadata[related_datasets_field_name].split(', ')
-                    czo_id_list = list(map(lambda x: int(str.strip(x)), czo_id_list))
-                    hs_id_list = list(map(functools.partial(query_lookup_table, lookup_data_df=lookup_data_df), czo_id_list))
-                    extented_metadata[related_datasets_field_name + "_hs"] = ", ".join(hs_id_list)
+
+                czo_row_dict = czo_data_df.loc[czo_data_df['czo_id'] == czo_id].to_dict(orient='records')[0]
+                related_datasets = _extract_value_from_df_row_dict(czo_row_dict, "RELATED_DATASETS", required=False)
+                if related_datasets is not None:
+                    related_datasets_list = string_to_list(related_datasets)
+                    czo_id_list = list(map(lambda x: int(str.strip(x)), related_datasets_list))
+                    hs_id_list = list(map(functools.partial(query_lookup_table, lookup_data_df=lookup_data_df),
+                                          czo_id_list))
+                    # update czo_row_dict
+                    czo_row_dict["RELATED_DATASETS"] = ", ".join(hs_id_list)
+
+                    # get existing extended metadata
+                    extented_metadata = hs.resource(hs_id).scimeta.get()
+                    extented_metadata["related_datasets_hs"] = czo_row_dict["RELATED_DATASETS"]
                     hs.resource(hs_id).scimeta.custom(extented_metadata)
-                    logging.info("Updated {0} - {1} by account {2}".format(hs_id, czo_id, hs_owner))
-                    update_counter += 1
-        except Exception as ex:
-            logging.error("Failed to updated {0} - {1} by account {2}: {3}".format(hs_id, czo_id, hs_owner, str(ex)))
+
+                # generate readme.md file
+                readme_path = gen_readme(czo_row_dict, README_COLUMN_MAP)
+                file_add_respone = hs.addResourceFile(hs_id, readme_path)
+                logging.info("Updated {0} - {1} by account {2}".format(hs_id, czo_id, hs_owner))
+                update_counter += 1
+
+            except Exception as ex:
+                logging.error("Failed to updated {0} - {1} by account {2}: {3}".format(hs_id, czo_id, hs_owner, str(ex)))
     logging.info("Second Pass Done: {} resources updated \n\n".format(update_counter))
+
+
+if __name__ == "__main__":
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)-5.5s]  %(message)s",
+        handlers=[logging.StreamHandler()])
+
+    lookup_path = "./logs/lookup_2019-03-22_16h-28m_1553286495.csv"
+    czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
+    second_pass(CZO_DATA_CSV,
+                lookup_path,
+                czo_accounts)

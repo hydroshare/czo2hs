@@ -146,7 +146,7 @@ def main():
     czo_hs_id_lookup_df.to_csv(results_file, encoding='utf-8', index=False)
 
     if RUN_2ND_PASS:
-        second_pass(results_file, czo_accounts)
+        second_pass(CZO_DATA_CSV, results_file, czo_accounts)
 
     # upload logs and results to HS
     hs = output_status(success_error, czo_accounts)

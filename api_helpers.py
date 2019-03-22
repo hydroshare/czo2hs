@@ -311,7 +311,7 @@ def _get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None)
     return hs_coverage_spatial
 
 
-def string_to_list(in_str, delimiter ='|'):
+def string_to_list(in_str, delimiter='|'):
     return in_str.split(delimiter) if in_str is not None else []
 
 
@@ -524,7 +524,6 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # extra metadata is uploaded here because I haven't found a way to update it separately
         hs_id = hs.createResource("CompositeResource",
                                   hs_res_title,
-                                  # extra_metadata=json.dumps(hs_extra_metadata)
                                   )
         migration_log["hs_id"] = hs_id
         migration_log["primary_owner"] = "{}|{}".format(czo_primary, hs.auth.username)  # export owner of this hs res
