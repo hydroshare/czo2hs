@@ -9,9 +9,8 @@ import requests
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from file_ops import extract_fileinfo_from_url, retry_func
-from settings import logger, headers, README_COLUMN_MAP, README_FILENAME
+from settings import logger, headers
 from utils_logging import log_exception
-from util import gen_readme
 
 # TODO move to settings and test
 requests.packages.urllib3.disable_warnings()

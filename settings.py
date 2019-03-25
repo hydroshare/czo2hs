@@ -1,6 +1,5 @@
 import logging
-import json
-from collections import OrderedDict
+
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +50,8 @@ MB_TO_BYTE = 1024 * 1024
 README_FILENAME = "ReadMe.md"
 README_COLUMN_MAP_PATH = './data/markdown_map.json'
 
-with open(README_COLUMN_MAP_PATH) as f:
-    README_COLUMN_MAP = json.load(f, object_pairs_hook=OrderedDict)
+# with open(README_COLUMN_MAP_PATH) as f:
+#     README_COLUMN_MAP = json.load(f, object_pairs_hook=OrderedDict)
 
 RUN_2ND_PASS = True
 
