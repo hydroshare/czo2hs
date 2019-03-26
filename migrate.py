@@ -8,11 +8,13 @@ from pandas.io.json import json_normalize
 from accounts import CZOHSAccount
 from api_helpers import create_hs_res_from_czo_row
 from settings import LOG_DIR, CZO_ACCOUNTS, CLEAR_LOGS, \
-    CZO_DATA_CSV, CZO_ID_LIST_TO_MIGRATE, START_ROW_INDEX, END_ROW_INDEX
+    CZO_DATA_CSV, CZO_ID_LIST_TO_MIGRATE, START_ROW_INDEX, END_ROW_INDEX, \
+    RUN_2ND_PASS
 from utils_logging import text_emphasis, elapsed_time, log_uploaded_file_stats
+from second_pass import second_pass
 
 
-def logging_init():
+def logging_init(log_prefix="log"):
     """
     Configure environment and logging settings
     :return: string relative log dir and name
@@ -29,7 +31,7 @@ def logging_init():
                 print(e)
     # Show hour time of day then use time.time() to ensure newest is always at bottom in folder
     timestamp_suffix = start_time.strftime("%Y-%m-%d_%Hh-%Mm_{}".format(int(time.time())))
-    log_file_name = "log_{}.log".format(timestamp_suffix)
+    log_file_name = "{}_{}.log".format(log_prefix, timestamp_suffix)
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)-5.5s]  %(message)s",
@@ -134,7 +136,6 @@ def main():
         print(czo_hs_id_lookup_df)
 
     success_error = error_status["success"] + error_status["error"]
-    hs = output_status(success_error, czo_accounts)
 
     logging.info(czo_hs_id_lookup_df.to_string())
 
@@ -144,6 +145,11 @@ def main():
         apply(lambda sec: "{:.0f} sec | {:.2f} min".format(sec, sec / 60))
     czo_hs_id_lookup_df.to_csv(results_file, encoding='utf-8', index=False)
 
+    if RUN_2ND_PASS:
+        second_pass(CZO_DATA_CSV, results_file, czo_accounts)
+
+    # upload logs and results to HS
+    hs = output_status(success_error, czo_accounts)
     hs_id = hs.createResource("CompositeResource",
                               "czo2hs migration log files {}".format(timestamp_suffix),)
     hs.addResourceFile(hs_id, log_file_path)

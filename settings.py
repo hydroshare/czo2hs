@@ -1,6 +1,5 @@
 import logging
-import json
-from collections import OrderedDict
+
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +10,7 @@ CZO_ID_LIST_TO_MIGRATE = []
 
 # only work when CZO_ID_LIST_TO_MIGRATE is empty or NONE
 START_ROW_INDEX = 0  # start row index in CZO_DATA_CSV
-END_ROW_INDEX = 410  # end row index in CZO_DATA_CSV -- max 410
+END_ROW_INDEX = 409  # end row index in CZO_DATA_CSV -- max 409
 
 
 LOG_DIR = "./logs"
@@ -48,15 +47,13 @@ CACHED_FILE_DIR = "/czo/2019-02-13_18-29-56"
 
 MB_TO_BYTE = 1024 * 1024
 
-HYDROSHARE_VERISON = 1.19
-
 README_FILENAME = "ReadMe.md"
 README_COLUMN_MAP_PATH = './data/markdown_map.json'
 
-with open(README_COLUMN_MAP_PATH) as f:
-    README_COLUMN_MAP = json.load(f, object_pairs_hook=OrderedDict)
+RUN_2ND_PASS = True
 
 try:
     from local_settings import *
 except ImportError:
     pass
+
