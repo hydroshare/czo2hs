@@ -99,11 +99,9 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
 
                     # update czo_row_dict for readme.md
                     czo_row_dict["RELATED_DATASETS"] = "\n\r".join(related_datasets_md)
-                    #czo_row_dict["RELATED_DATASETS"] = ", ".join(hs_id_list)
 
                     # get existing extended metadata
                     extented_metadata = hs.resource(hs_id).scimeta.get()
-                    #extented_metadata["related_datasets_hs"] = czo_row_dict["RELATED_DATASETS"]
                     res_urls = list(map(get_resource_landing_page_url, hs_id_list))
                     extented_metadata["related_datasets_hs"] = ", ".join(res_urls)
                     hs.resource(hs_id).scimeta.custom(extented_metadata)
