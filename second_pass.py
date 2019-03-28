@@ -6,7 +6,8 @@ from collections import OrderedDict
 import pandas as pd
 
 from util import gen_readme
-from settings import CZO_ACCOUNTS, CZO_DATA_CSV, README_COLUMN_MAP_PATH, HS_URL, PORT, USE_HTTPS
+from settings import CZO_ACCOUNTS, CZO_DATA_CSV, README_COLUMN_MAP_PATH, \
+    HS_URL, PORT, USE_HTTPS, README_SHOW_MAPS
 from api_helpers import _extract_value_from_df_row_dict, string_to_list
 from accounts import CZOHSAccount
 
@@ -129,7 +130,7 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
 
             # update maps
             try:
-                if maps is not None:
+                if README_SHOW_MAPS and maps is not None:
                     maps_md = list(map(functools.partial(build_maps_md,
                                                          hs_id=hs_id),
                                        maps.split('|')))

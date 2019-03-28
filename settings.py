@@ -43,13 +43,14 @@ headers = {
 }
 
 USE_CACHED_FILES = True
-#CACHED_FILE_DIR = "/czo/2019-02-13_18-29-56"
-CACHED_FILE_DIR = "/media/sf_czo/2019-02-28_14-39-27"
+#CACHED_FILE_DIR = "/czo/2019-03-28_14-26-16"
+CACHED_FILE_DIR = "/media/sf_czo/2019-03-28_14-29-43"
 
 MB_TO_BYTE = 1024 * 1024
 
 README_FILENAME = "ReadMe.md"
 README_COLUMN_MAP_PATH = './data/markdown_map.json'
+README_SHOW_MAPS = True
 
 RUN_2ND_PASS = True
 
