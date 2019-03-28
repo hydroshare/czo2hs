@@ -10,7 +10,7 @@ CZO_ID_LIST_TO_MIGRATE = []
 
 # only work when CZO_ID_LIST_TO_MIGRATE is empty or NONE
 START_ROW_INDEX = 0  # start row index in CZO_DATA_CSV
-END_ROW_INDEX = 409  # end row index in CZO_DATA_CSV -- max 409
+END_ROW_INDEX = 410  # end row index in CZO_DATA_CSV -- max 410
 
 
 LOG_DIR = "./logs"
@@ -43,7 +43,8 @@ headers = {
 }
 
 USE_CACHED_FILES = True
-CACHED_FILE_DIR = "/czo/2019-02-13_18-29-56"
+#CACHED_FILE_DIR = "/czo/2019-02-13_18-29-56"
+CACHED_FILE_DIR = "/media/sf_czo/2019-02-28_14-39-27"
 
 MB_TO_BYTE = 1024 * 1024
 

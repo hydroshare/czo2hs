@@ -19,31 +19,45 @@ def query_lookup_table(czo_id, lookup_data_df, attr="hs_id"):
         return v
 
 
-def get_resource_landing_page_url(res_id):
+def get_resource_file_url(hs_id, filename):
+
+    landing = get_resource_landing_page_url(hs_id)
+    file = "{landing}data/contents/{filename}".format(landing=landing,
+                                                       filename=filename)
+    return file
+
+
+def get_resource_landing_page_url(hs_id):
 
     protocol = "https" if USE_HTTPS else "http"
     server = HS_URL
     port = ":{0}".format(PORT) if len(PORT) > 0 else ""
-    res_url = "{protocol}://{server}{port}/resource/{res_id}/".format(protocol=protocol,
-                                                                      server=server,
-                                                                      port=port,
-                                                                      res_id=res_id)
-    return res_url
+    hs_res_url = "{protocol}://{server}{port}/resource/{hs_id}/".format(protocol=protocol,
+                                                                        server=server,
+                                                                        port=port,
+                                                                        hs_id=hs_id)
+    return hs_res_url
 
 
-def build_related_dataset_md_link(res_id, czo_id, czo_data_df=None):
+def build_maps_md(map_filename, hs_id):
+    map_url = get_resource_file_url(hs_id, map_filename)
+    md = "![alt text]({url} '{tooltip}')".format(url=map_url,
+                                                 tooltip=map_filename)
+    return md
+
+
+def build_related_dataset_md(res_id, czo_id, czo_data_df=None):
 
     res_url = get_resource_landing_page_url(res_id)
     res_title = None
-    try:
-        if czo_data_df is not None:
+    if czo_data_df is not None:
+        try:
             res_title = get_dict_by_czo_id(czo_id, czo_data_df)["title"]
-    except:
-        pass
+        except:
+            pass
     md = "[{res_title}]({url} '{tooltip}')".format(res_title=res_title if res_title is not None else res_id,
                                                    url=res_url,
                                                    tooltip=res_id)
-
     return md
 
 
@@ -75,6 +89,8 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
         hs_id = query_lookup_table(czo_id, lookup_data_df)
         # get resource owner
         hs_owner = query_lookup_table(czo_id, lookup_data_df, attr="primary_owner")
+        public = query_lookup_table(czo_id, lookup_data_df, attr="public")
+        maps = query_lookup_table(czo_id, lookup_data_df, attr="maps")
 
         if None not in (hs_id, hs_owner):
 
@@ -92,7 +108,7 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
                                                             lookup_data_df=lookup_data_df),
                                           czo_id_list))
 
-                    related_datasets_md = list(map(functools.partial(build_related_dataset_md_link,
+                    related_datasets_md = list(map(functools.partial(build_related_dataset_md,
                                                                      czo_data_df=czo_data_df),
                                                    hs_id_list,
                                                    czo_id_list))
@@ -111,15 +127,34 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
                 logging.error(
                     "Failed to updated ex_metadata {0} - {1}: {2}".format(hs_id, czo_id, str(ex)))
 
-            try:  # generate readme.md file
-                if readme_column_map is not None:
+            # update maps
+            try:
+                if maps is not None:
+                    maps_md = list(map(functools.partial(build_maps_md,
+                                                         hs_id=hs_id),
+                                       maps.split('|')))
+                    # update czo_row_dict for readme.md
+                    czo_row_dict["map_uploads"] = "\n\r".join(maps_md)
+            except Exception as ex:
+                logging.error(
+                    "Failed to process Maps for ReadMe {0} - {1}: {2}".format(hs_id, czo_id, str(ex)))
+
+            # generate readme.md file
+            if readme_column_map is not None:
+                try:
                     readme_path = gen_readme(czo_row_dict, readme_column_map)
                     file_add_respone = hs.addResourceFile(hs_id, readme_path)
                     logging.info("ReadMe file")
                     readme_counter += 1
-            except Exception as ex:
-                logging.error(
-                    "Failed to create ReadMe {0} - {1}: {2}".format(hs_id, czo_id, str(ex)))
+                except Exception as ex:
+                    logging.error(
+                        "Failed to create ReadMe {0} - {1}: {2}".format(hs_id, czo_id, str(ex)))
+
+            try:
+                hs.setAccessRules(hs_id, public=True)
+            except Exception:
+                logging.error("Failed to make Resource Public")
+
     logging.info("Second Pass Done: {} ex metadata updated; {} ReadMe files created\n\n".format(ex_metadata_counter,
                                                                                                 readme_counter))
 

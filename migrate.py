@@ -66,6 +66,8 @@ def migrate_czo_row(czo_row_dict, czo_accounts, row_no=1):
                              "success": full_data_item["success"],
                              "primary_owner": full_data_item["primary_owner"],
                              "elapsed_time": time.time() - _start,
+                             "public": full_data_item["public"],
+                             "maps": "|".join(full_data_item["maps"]),
                              }
 
     log_uploaded_file_stats(full_data_item)
@@ -116,14 +118,20 @@ def main():
     logging.info("Start migrating at {}".format(start_time.asctime()))
 
     czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
-    czo_hs_id_lookup_df = pd.DataFrame(columns=["success", "czo_id", "hs_id", "primary_owner", "elapsed_time"]).\
+    czo_hs_id_lookup_df = pd.DataFrame(columns=["success", "czo_id", "hs_id", "primary_owner", "elapsed_time",
+                                                "public", "maps"]).\
         astype(dtype={"elapsed_time": "timedelta64[s]", })
 
     czo_data = pd.read_csv(CZO_DATA_CSV)
 
     czo_id_list = CZO_ID_LIST_TO_MIGRATE.copy()
     if czo_id_list is None or len(czo_id_list) == 0:
-        indices = range(START_ROW_INDEX, END_ROW_INDEX+1)
+        end_index = END_ROW_INDEX
+        if end_index > czo_data.shape[0] - 1:
+            end_index = czo_data.shape[0] - 1
+            logging.warning("end_index reset to {}".format(end_index))
+
+        indices = range(START_ROW_INDEX, end_index+1)
         czo_id_list = czo_data.iloc[indices]["czo_id"].tolist()
     logging.info("Processing on {} czo_ids: {}".format(len(czo_id_list), czo_id_list))
 
@@ -133,7 +141,8 @@ def main():
         czo_row_dict = czo_data.loc[czo_data['czo_id'] == czo_id].to_dict(orient='records')[0]
         result = migrate_czo_row(czo_row_dict, czo_accounts, row_no=i + 1)
         czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(result, ignore_index=True)
-        print(czo_hs_id_lookup_df)
+        if i % 5 == 0:
+            print(czo_hs_id_lookup_df)
 
     success_error = error_status["success"] + error_status["error"]
 
