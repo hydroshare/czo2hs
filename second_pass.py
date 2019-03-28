@@ -7,7 +7,7 @@ import pandas as pd
 
 from util import gen_readme
 from settings import CZO_ACCOUNTS, CZO_DATA_CSV, README_COLUMN_MAP_PATH, \
-    HS_URL, PORT, USE_HTTPS, README_SHOW_MAPS
+     README_SHOW_MAPS, HS_EXTERNAL_FULL_DOMAIN
 from api_helpers import _extract_value_from_df_row_dict, string_to_list
 from accounts import CZOHSAccount
 
@@ -30,13 +30,8 @@ def get_resource_file_url(hs_id, filename):
 
 def get_resource_landing_page_url(hs_id):
 
-    protocol = "https" if USE_HTTPS else "http"
-    server = HS_URL
-    port = ":{0}".format(PORT) if len(PORT) > 0 else ""
-    hs_res_url = "{protocol}://{server}{port}/resource/{hs_id}/".format(protocol=protocol,
-                                                                        server=server,
-                                                                        port=port,
-                                                                        hs_id=hs_id)
+    hs_res_url = "{HS_FULL_DOMAIN}/resource/{hs_id}/".format(HS_FULL_DOMAIN=HS_EXTERNAL_FULL_DOMAIN,
+                                                             hs_id=hs_id)
     return hs_res_url
 
 
@@ -151,10 +146,11 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
                     logging.error(
                         "Failed to create ReadMe {0} - {1}: {2}".format(hs_id, czo_id, str(ex)))
 
-            try:
-                hs.setAccessRules(hs_id, public=True)
-            except Exception:
-                logging.error("Failed to make Resource Public")
+            if not public:
+                try:
+                    hs.setAccessRules(hs_id, public=True)
+                except Exception:
+                    logging.error("Failed to make Resource Public")
 
     logging.info("Second Pass Done: {} ex metadata updated; {} ReadMe files created\n\n".format(ex_metadata_counter,
                                                                                                 readme_counter))
