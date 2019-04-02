@@ -50,5 +50,9 @@
   "RELATED_DATASETS": {
     "display": "Related Datasets",
     "id": 38
+  },
+  "map_uploads": {
+    "display": "Maps",
+    "id": 44
   }
 }

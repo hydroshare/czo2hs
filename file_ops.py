@@ -173,6 +173,7 @@ def extract_fileinfo_from_url(f_url, ref_file_name,
                  "file_size_mb": file_size_mb,
                  "original_url": f_url,
                  "metadata": {},
+                 "tag": None,
                  }
     return file_info
 

@@ -119,6 +119,7 @@ def get_files(component_files, migration_log=None, other_urls=[]):
             other_file_info = extract_fileinfo_from_url(url, ref_file_name,
                                                         file_name_used_dict=file_name_used_dict)
             other_file_info["metadata"]["extra_metadata"] = {"url": url}
+            other_file_info["tag"] = "map"
 
             yield other_file_info
         except Exception as ex:
@@ -336,6 +337,8 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                    "concrete_file_list": [],
                    "error_msg_list": [],
                    "primary_owner": None,
+                   "public": False,
+                   "maps":[],
                    }
 
     _success = False
@@ -620,7 +623,13 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                     # upload other files with auto file type detection
                     file_add_respone = hs.addResourceFile(hs_id, f["path_or_url"])
 
+                    # file path in HS res
                     hs_file_path = file_add_respone["file_path"]
+
+                    # record map files
+                    if f["tag"] == "map" and hs_file_path.lower().endswith(('.jpg', '.jpeg', '.bmp', '.png')):
+                        migration_log["maps"].append(hs_file_path)
+
                     try:
                         tmpfile_folder_path = os.path.dirname(f["path_or_url"])
                         assert(tmpfile_folder_path.startswith(tempfile.gettempdir()))
@@ -656,6 +665,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         try:
             hs.setAccessRules(hs_id, public=True)
             logging.info("Resource is made Public")
+            migration_log["public"] = True
         except Exception:
             logging.error("Failed to make Resource Public")
 
