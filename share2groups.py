@@ -2,7 +2,7 @@
 
 # Copy this script into "hydroshare" container and run from inside
 # docker cp ./share2groups.py hydroshare:/tmp/share2groups.py
-# docker exec -it bash
+# docker exec -it hydroshare bash
 # python manage.py shell < /tmp/share2groups.py
 
 from hs_core.hydroshare import utils
