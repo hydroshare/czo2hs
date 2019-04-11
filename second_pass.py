@@ -84,15 +84,14 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
         # get hs_id
         hs_id = query_lookup_table(czo_id, lookup_data_df)
         # get resource owner
-        hs_owner = query_lookup_table(czo_id, lookup_data_df, attr="primary_owner")
+        hs_owner = query_lookup_table(czo_id, lookup_data_df, attr="uname")
         public = query_lookup_table(czo_id, lookup_data_df, attr="public")
         maps = query_lookup_table(czo_id, lookup_data_df, attr="maps")
 
         if None not in (hs_id, hs_owner):
 
-            hs_owner = hs_owner.split('|')[0]
             logging.info("Updating {0} - {1} by account {2}".format(hs_id, czo_id, hs_owner))
-            hs = czo_accounts.get_hs_by_czo(hs_owner)
+            hs = czo_accounts.get_hs_by_uname(hs_owner)
             czo_row_dict = get_dict_by_czo_id(czo_id, czo_data_df)
 
             try:  # update czo_id

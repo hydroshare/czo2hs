@@ -2,33 +2,24 @@
 
 # Copy this script into "hydroshare" container and run from inside
 # docker cp ./share2groups.py hydroshare:/tmp/share2groups.py
-# docker exec -it hydroshare bash
-# python manage.py shell < /tmp/share2groups.py
+# docker cp ./settings.py hydroshare:/tmp/settings.py
+# docker exec -it hydroshare bash -c "cd /tmp; python /hydroshare/manage.py shell < share2groups.py"
 
 from hs_core.hydroshare import utils
 from hs_access_control.models import PrivilegeCodes
+from settings import CZO_ACCOUNTS
 
 # PrivilegeCodes.CHANGE or PrivilegeCodes.VIEW
 SHARE_WITH_GROUP_PRIVILEGE = PrivilegeCodes.VIEW
 
-# czo_XXXXX HS account names and namesake Group names
-user_group_mapping = {
-    "czo_national": "CZO National",
-    "czo_boulder": "CZO Boulder",
-    "czo_christina": "CZO Christina",
-    "czo_eel": "CZO Eel",
-    "czo_catalina-jemez": "CZO Catalina-Jemez",
-    "czo_reynolds": "CZO Reynolds",
-    "czo_luquillo": "CZO Luquillo",
-    "czo_sierra": "CZO Sierra",
-    "czo_calhoun": "CZO Calhoun",
-    "czo_shale-hills": "CZO Shale-Hills",
-}
-
 success_counter = 0
 failure_counter = 0
 
-for u_name, g_name in user_group_mapping.items():
+for account in CZO_ACCOUNTS:
+    u_name = account["uname"]
+    if u_name.lower() == "czo":
+        continue
+    g_name = account["group"]
 
     try:
         print("Sharing {}'s resource with Group {} with privilege code {}".format(u_name,
