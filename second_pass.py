@@ -162,7 +162,7 @@ if __name__ == "__main__":
         format="%(asctime)s [%(levelname)-5.5s]  %(message)s",
         handlers=[logging.StreamHandler()])
 
-    lookup_path = "./logs/lookup_2019-03-22_16h-28m_1553286495.csv"
+    lookup_path = "./logs/lookup_2019-04-11_16h-22m_1555014145.csv"
     czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
     second_pass(CZO_DATA_CSV,
                 lookup_path,

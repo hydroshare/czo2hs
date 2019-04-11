@@ -64,7 +64,7 @@ class CZOHSAccount(object):
     def get_hs_by_uname(self, uname):
 
         # uname -> hs obj
-        return self._uname_hs_dict.get(uname)
+        return self._uname_hs_dict.get(uname).hs
 
     def get_hs_by_czo(self, czo):
 
