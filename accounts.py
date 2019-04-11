@@ -61,6 +61,11 @@ class CZOHSAccount(object):
             hs_account = HSAccount(**account_dict)
             self._uname_hs_dict[account_dict["uname"]] = hs_account
 
+    def get_hs_by_uname(self, uname):
+
+        # uname -> hs obj
+        return self._uname_hs_dict.get(uname)
+
     def get_hs_by_czo(self, czo):
 
         # czo -> uname
