@@ -12,7 +12,7 @@ CZO_ID_LIST_TO_MIGRATE = []
 
 # only work when CZO_ID_LIST_TO_MIGRATE is empty or NONE
 START_ROW_INDEX = 0  # start row index in CZO_DATA_CSV
-END_ROW_INDEX = 1  # end row index in CZO_DATA_CSV -- max 410
+END_ROW_INDEX = 410  # end row index in CZO_DATA_CSV -- max 410
 
 LOG_DIR = "./logs"
 CLEAR_LOGS = False  # delete everything in the LOG_DIR
@@ -66,14 +66,13 @@ RUN_2ND_PASS = True
 
 ## Keep Codes Below Unchanged ##
 
-# append hydroshare connection info to each czo account
-connection_info = {"hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS}
-for i in CZO_ACCOUNTS:
-    i.update(connection_info)
-
 # local_settings overriding settings
 try:
     from local_settings import *
 except ImportError:
     pass
 
+# append hydroshare connection info to each czo account
+connection_info = {"hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS}
+for i in CZO_ACCOUNTS:
+    i.update(connection_info)
