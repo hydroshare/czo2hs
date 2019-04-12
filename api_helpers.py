@@ -25,10 +25,16 @@ def get_creator_hs_metadata(creator_list):
 
     hs_creator_list = []
     for creator in creator_list:
-        if len(creator) > 28:  # criteria czo people said
-            # organization
-            hs_creator_list.append({'organization': creator})
-        elif len(creator) > 0:
+        # if len(creator) > 28:  # criteria czo people said
+        #     # organization
+        #     hs_creator_list.append({'organization': creator, "name": ""})
+        # elif len(creator) > 0:
+        #     # person
+        #     hs_creator_list.append({'name': creator})
+        # else:
+        #     hs_creator_list.append({'name': "Someone"})
+
+        if len(creator) > 0:
             # person
             hs_creator_list.append({'name': creator})
         else:
@@ -336,7 +342,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                    "bad_ref_file_list": [],
                    "concrete_file_list": [],
                    "error_msg_list": [],
-                   "primary_owner": None,
+                   "uname": None,
                    "public": False,
                    "maps":[],
                    }
@@ -528,7 +534,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                                   hs_res_title,
                                   )
         migration_log["hs_id"] = hs_id
-        migration_log["primary_owner"] = "{}|{}".format(czo_primary, hs.auth.username)  # export owner of this hs res
+        migration_log["uname"] = "{}".format(hs.auth.username)  # export owner of this hs res
         logging.info('HS resource created at: {hs_id}'.format(hs_id=hs_id))
 
         # update Extended Metadata

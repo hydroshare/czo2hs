@@ -64,7 +64,7 @@ def migrate_czo_row(czo_row_dict, czo_accounts, row_no=1):
     czo_hs_id_lookup_dict = {"czo_id": full_data_item["czo_id"],
                              "hs_id": full_data_item["hs_id"],
                              "success": full_data_item["success"],
-                             "primary_owner": full_data_item["primary_owner"],
+                             "uname": full_data_item["uname"],
                              "elapsed_time": time.time() - _start,
                              "public": full_data_item["public"],
                              "maps": "|".join(full_data_item["maps"]),
@@ -118,7 +118,7 @@ def main():
     logging.info("Start migrating at {}".format(start_time.asctime()))
 
     czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
-    czo_hs_id_lookup_df = pd.DataFrame(columns=["success", "czo_id", "hs_id", "primary_owner", "elapsed_time",
+    czo_hs_id_lookup_df = pd.DataFrame(columns=["success", "czo_id", "hs_id", "uname", "elapsed_time",
                                                 "public", "maps"]).\
         astype(dtype={"elapsed_time": "timedelta64[s]", })
 
