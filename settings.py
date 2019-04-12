@@ -1,5 +1,4 @@
 import logging
-import sys
 
 
 logger = logging.getLogger(__name__)
@@ -12,7 +11,7 @@ CZO_ID_LIST_TO_MIGRATE = []
 
 # only work when CZO_ID_LIST_TO_MIGRATE is empty or NONE
 START_ROW_INDEX = 0  # start row index in CZO_DATA_CSV
-END_ROW_INDEX = 410  # end row index in CZO_DATA_CSV -- max 410
+END_ROW_INDEX = 20  # end row index in CZO_DATA_CSV -- max 410
 
 LOG_DIR = "./logs"
 CLEAR_LOGS = False  # delete everything in the LOG_DIR
@@ -26,13 +25,14 @@ VERIFY_HTTPS = False  # check if HTTPS certificate is valid
 # external-accessible url for map preview
 HS_EXTERNAL_FULL_DOMAIN = "http://localhost:8000"  # https://www.hydroshare.org
 
-# czo:  czo name used in CZO CMS
-# group: HydroShare Group name
-# uname: HydroShare Username
-# pwd: HydroShare Password
+# Mapping of czo names, hydroshare groups, hydroshare users, etc
+# czo:  czo name used in CZO CMS (case-Insensitive)
+# group: HydroShare Group name (case-sensitive)
+# uname: HydroShare Username (case-sensitive)
+# pwd: HydroShare Password (case-sensitive)
 CZO_ACCOUNTS = [
     {"czo":  "national", "group": "CZO National", "uname": "czo_national", "pwd": "123"},
-    {"czo":  "boulder", "group": "CZO Boulder", "uname": "czo_boulder", "pwd": "123"},
+    {"czo":  "noulder", "group": "CZO Boulder", "uname": "czo_boulder", "pwd": "123"},
     {"czo":  "eel", "group": "CZO Eel", "uname": "czo_eel", "pwd": "123"},
     {"czo":  "catalina-jemez", "group": "CZO Catalina-Jemez", "uname": "czo_catalina-jemez", "pwd": "123"},
     {"czo":  "reynolds", "group": "CZO Reynolds", "uname": "czo_reynolds", "pwd": "123"},
