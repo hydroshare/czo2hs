@@ -1,6 +1,9 @@
 # Share resources owned by czo_XXXX accounts with their namesake Groups with specific Privilege
 
-# Copy this script and settings.py into "hydroshare" container and run from inside
+# Run this bash script:
+# ./share2groups.sh
+
+# OR go through the following 3 steps
 # docker cp ./share2groups.py hydroshare:/tmp/share2groups.py
 # docker cp ./settings.py hydroshare:/tmp/settings.py
 # docker exec -it hydroshare bash -c "cd /tmp; python /hydroshare/manage.py shell < share2groups.py"
