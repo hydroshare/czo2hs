@@ -12,7 +12,7 @@ import numpy as np
 import validators
 
 from util import retry_func
-from settings import headers, MB_TO_BYTE
+from settings import headers, MB_TO_BYTE, CACHED_FILE_DIR
 
 requests.packages.urllib3.disable_warnings()
 N_PROCESS = multiprocessing.cpu_count()
@@ -94,7 +94,7 @@ def get_czo_id_list():
 
 def create_output_dir():
 
-    log_dir = os.path.join(base_dir, start_time_str, "logs")
+    log_dir = os.path.join(base_dir, "logs")
 
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
@@ -113,7 +113,8 @@ if __name__ == "__main__":
     start_time_str = start_time.strftime("%Y-%m-%d_%H-%M-%S")
 
     # prepare output dir
-    base_dir = "./tmp"
+    #base_dir = "./tmp"
+    base_dir = CACHED_FILE_DIR
     if not os.path.isabs(base_dir):
         base_dir = os.path.abspath(base_dir)
 
@@ -130,7 +131,6 @@ if __name__ == "__main__":
     # read in czo.csv
     czo_df = pd.read_csv("./data/czo.csv")
     czo_id_list = get_czo_id_list()
-    #czo_id_list = [2642]
     czo_id_list_subset = czo_id_list[:]
     czo_id_list_subset = np.append(czo_id_list_subset, [-1] * N_PROCESS)
 

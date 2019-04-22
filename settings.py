@@ -1,5 +1,4 @@
 import logging
-import sys
 
 
 logger = logging.getLogger(__name__)
@@ -26,10 +25,11 @@ VERIFY_HTTPS = False  # check if HTTPS certificate is valid
 # external-accessible url for map preview
 HS_EXTERNAL_FULL_DOMAIN = "http://localhost:8000"  # https://www.hydroshare.org
 
-# czo:  czo name used in CZO CMS
-# group: HydroShare Group name
-# uname: HydroShare Username
-# pwd: HydroShare Password
+# Mapping of czo names, hydroshare groups, hydroshare users, etc
+# czo:  czo name used in CZO CMS (case-Insensitive)
+# group: HydroShare Group name (case-sensitive)
+# uname: HydroShare Username (case-sensitive)
+# pwd: HydroShare Password (case-sensitive)
 CZO_ACCOUNTS = [
     {"czo":  "national", "group": "CZO National", "uname": "czo_national", "pwd": "123"},
     {"czo":  "boulder", "group": "CZO Boulder", "uname": "czo_boulder", "pwd": "123"},
