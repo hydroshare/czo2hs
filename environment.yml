@@ -1,3 +1,4 @@
+# conda env create -f environment.yml
 name: czo
 
 channels:
@@ -11,4 +12,4 @@ dependencies:
 - pytest
 - pip:
     - validators==0.12.4
-    - hs-restclient==1.3.1
+    - hs-restclient==1.3.3
