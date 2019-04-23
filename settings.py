@@ -1,29 +1,29 @@
 import logging
 
-
 logger = logging.getLogger(__name__)
 
+# Path to CZO CMS export (csv file)
 CZO_DATA_CSV = "./data/czo.csv"
 
 # a list of czo_ids to migrate.
-# If empty or None, list to be generated automatically by START_ROW_INDEX and END_ROW_INDEX
+# If empty or None, list to be generated automatically by START_ROW_INDEX and END_ROW_INDEX below
 CZO_ID_LIST_TO_MIGRATE = []
 
 # only work when CZO_ID_LIST_TO_MIGRATE is empty or NONE
 START_ROW_INDEX = 0  # start row index in CZO_DATA_CSV
-END_ROW_INDEX = 410  # end row index in CZO_DATA_CSV -- max 410
+END_ROW_INDEX = 411  # end row index in CZO_DATA_CSV -- max 411 for now (may change with new czo.csv)
 
+# Migration logs
 LOG_DIR = "./logs"
 CLEAR_LOGS = False  # delete everything in the LOG_DIR
 
 # REST API url
-HS_URL = "localhost"  # dev-hs-6.cuahsi.org
-PORT = "8000"  # https-443
+HS_URL = "localhost"  # localhost; dev-hs-6.cuahsi.org
+PORT = "8000"  # https: 443
 USE_HTTPS = False
 VERIFY_HTTPS = False  # check if HTTPS certificate is valid
-
 # external-accessible url for map preview
-HS_EXTERNAL_FULL_DOMAIN = "http://localhost:8000"  # https://www.hydroshare.org
+HS_EXTERNAL_FULL_DOMAIN = "http://localhost:8000"  # eg: https://www.hydroshare.org
 
 # Mapping of czo names, hydroshare groups, hydroshare users, etc
 # czo:  czo name used in CZO CMS (case-Insensitive)
@@ -45,27 +45,32 @@ CZO_ACCOUNTS = [
     {"czo":  "default", "group": "", "uname": "czo", "pwd": "123"},
 ]
 
+# file size above this limit to be migrated as reference types
 BIG_FILE_SIZE_MB = 500
 
+# http headers (Do not change)
 headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
 }
 
+# Use predownload files
 USE_CACHED_FILES = True
-#CACHED_FILE_DIR = "/czo/2019-03-28_14-26-16"
-CACHED_FILE_DIR = "/media/sf_czo/2019-03-28_14-29-43"
+# Path to predownloaded files
+CACHED_FILE_DIR = "/media/sf_czo/czo_download"
 
+# Unit conversion
 MB_TO_BYTE = 1024 * 1024
 
+# ReadMe filename
 README_FILENAME = "ReadMe.md"
 README_COLUMN_MAP_PATH = './data/markdown_map.json'
 README_SHOW_MAPS = True
 
+# Switch to activate 2nd pass (keep True)
 RUN_2ND_PASS = True
 
 
 ## Keep Codes Below Unchanged ##
-
 # local_settings overriding settings
 try:
     from local_settings import *
