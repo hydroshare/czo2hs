@@ -56,7 +56,7 @@ headers = {
 # Use predownload files
 USE_CACHED_FILES = True
 # Path to predownloaded files
-CACHED_FILE_DIR = "/media/sf_czo/czo_download"
+CACHED_FILE_DIR = "./tmp"
 
 # Unit conversion
 MB_TO_BYTE = 1024 * 1024
