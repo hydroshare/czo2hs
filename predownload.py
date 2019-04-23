@@ -12,7 +12,7 @@ import numpy as np
 import validators
 
 from util import retry_func
-from settings import headers, MB_TO_BYTE, CACHED_FILE_DIR
+from settings import headers, MB_TO_BYTE, CACHED_FILE_DIR, BIG_FILE_SIZE_MB, CZO_DATA_CSV
 
 requests.packages.urllib3.disable_warnings()
 N_PROCESS = multiprocessing.cpu_count()
@@ -32,6 +32,10 @@ def _download(url, save_to_path):
     with open(save_to_path, 'wb') as fd:
         for chunk in response.iter_content(chunk_size=5*MB_TO_BYTE):
             fd.write(chunk)
+            if os.path.getsize(save_to_path) > BIG_FILE_SIZE_MB*MB_TO_BYTE:
+                logging.error("Big File Interrupted @ {}".format(url))
+                break
+
 
     return os.path.getsize(save_to_path)
 
@@ -129,7 +133,7 @@ if __name__ == "__main__":
         ])
 
     # read in czo.csv
-    czo_df = pd.read_csv("./data/czo.csv")
+    czo_df = pd.read_csv(CZO_DATA_CSV)
     czo_id_list = get_czo_id_list()
     czo_id_list_subset = czo_id_list[:]
     czo_id_list_subset = np.append(czo_id_list_subset, [-1] * N_PROCESS)
@@ -155,7 +159,7 @@ if __name__ == "__main__":
 
         df_lookup = pd.DataFrame(file_info_list)
 
-        df_lookup.to_csv(os.path.join(output_dir, "./logs/lookup_{}.csv".format(start_time_str)), index=False)
+        df_lookup.to_csv(os.path.join(output_dir, "./logs/list_{}.csv".format(start_time_str)), index=False)
         logging.info("Total number {}; Total size (MB): {}".format(df_lookup["size"].count(),
                                                                    df_lookup["size"].sum()/MB_TO_BYTE))
 
