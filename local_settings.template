@@ -1,20 +1,13 @@
-# only work when CZO_ID_LIST_TO_MIGRATE is empty or NONE
-START_ROW_INDEX = 0  # start row index in CZO_DATA_CSV
-END_ROW_INDEX = 410  # end row index in CZO_DATA_CSV -- max 410
 
-LOG_DIR = "./logs"
-CLEAR_LOGS = True  # delete everything in the LOG_DIR
-
-HS_URL = "localhost"  # dev-hs-6.cuahsi.org
-PORT = "8000"  # https-443
+# REST API INFO
+HS_URL = "localhost"
+PORT = "8000"
 USE_HTTPS = False
 VERIFY_HTTPS = False  # check if HTTPS certificate is valid
+HS_EXTERNAL_FULL_DOMAIN = "http://localhost:8000"
 
-# Mapping of czo names, hydroshare groups, hydroshare users, etc
-# czo:  czo name used in CZO CMS (case-Insensitive)
-# group: HydroShare Group name (case-sensitive)
-# uname: HydroShare Username (case-sensitive)
-# pwd: HydroShare Password (case-sensitive)
+
+# CZO name -> HydroShare group name --> HydroShare acccount info
 CZO_ACCOUNTS = [
     {"czo":  "national", "group": "CZO National", "uname": "czo_national", "pwd": "123"},
     {"czo":  "noulder", "group": "CZO Boulder", "uname": "czo_boulder", "pwd": "123"},
@@ -30,5 +23,5 @@ CZO_ACCOUNTS = [
     {"czo":  "default", "group": "", "uname": "czo", "pwd": "123"},
 ]
 
-USE_CACHED_FILES = False
-CACHED_FILE_DIR = "/tmp/latest_full"
+# Path to predownloaded files
+CACHED_FILE_DIR = "./czo_download"
