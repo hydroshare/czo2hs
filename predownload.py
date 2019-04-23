@@ -159,7 +159,7 @@ if __name__ == "__main__":
 
         df_lookup = pd.DataFrame(file_info_list)
 
-        df_lookup.to_csv(os.path.join(output_dir, "./logs/lookup_{}.csv".format(start_time_str)), index=False)
+        df_lookup.to_csv(os.path.join(output_dir, "./logs/list_{}.csv".format(start_time_str)), index=False)
         logging.info("Total number {}; Total size (MB): {}".format(df_lookup["size"].count(),
                                                                    df_lookup["size"].sum()/MB_TO_BYTE))
 
