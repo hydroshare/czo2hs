@@ -10,7 +10,7 @@ HS_EXTERNAL_FULL_DOMAIN = "http://localhost:8000"
 # CZO name -> HydroShare group name --> HydroShare acccount info
 CZO_ACCOUNTS = [
     {"czo":  "national", "group": "CZO National", "uname": "czo_national", "pwd": "123"},
-    {"czo":  "noulder", "group": "CZO Boulder", "uname": "czo_boulder", "pwd": "123"},
+    {"czo":  "boulder", "group": "CZO Boulder", "uname": "czo_boulder", "pwd": "123"},
     {"czo":  "eel", "group": "CZO Eel", "uname": "czo_eel", "pwd": "123"},
     {"czo":  "catalina-jemez", "group": "CZO Catalina-Jemez", "uname": "czo_catalina-jemez", "pwd": "123"},
     {"czo":  "reynolds", "group": "CZO Reynolds", "uname": "czo_reynolds", "pwd": "123"},
