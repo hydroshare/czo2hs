@@ -8,11 +8,13 @@ from pandas.io.json import json_normalize
 from accounts import CZOHSAccount
 from api_helpers import create_hs_res_from_czo_row
 from settings import LOG_DIR, CZO_ACCOUNTS, CLEAR_LOGS, \
-    CZO_DATA_CSV, CZO_ID_LIST_TO_MIGRATE, START_ROW_INDEX, END_ROW_INDEX
+    CZO_DATA_CSV, CZO_ID_LIST_TO_MIGRATE, START_ROW_INDEX, END_ROW_INDEX, \
+    RUN_2ND_PASS
 from utils_logging import text_emphasis, elapsed_time, log_uploaded_file_stats
+from second_pass import second_pass
 
 
-def logging_init():
+def logging_init(log_prefix="log"):
     """
     Configure environment and logging settings
     :return: string relative log dir and name
@@ -29,7 +31,7 @@ def logging_init():
                 print(e)
     # Show hour time of day then use time.time() to ensure newest is always at bottom in folder
     timestamp_suffix = start_time.strftime("%Y-%m-%d_%Hh-%Mm_{}".format(int(time.time())))
-    log_file_name = "log_{}.log".format(timestamp_suffix)
+    log_file_name = "{}_{}.log".format(log_prefix, timestamp_suffix)
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)-5.5s]  %(message)s",
@@ -62,8 +64,10 @@ def migrate_czo_row(czo_row_dict, czo_accounts, row_no=1):
     czo_hs_id_lookup_dict = {"czo_id": full_data_item["czo_id"],
                              "hs_id": full_data_item["hs_id"],
                              "success": full_data_item["success"],
-                             "primary_owner": full_data_item["primary_owner"],
+                             "uname": full_data_item["uname"],
                              "elapsed_time": time.time() - _start,
+                             "public": full_data_item["public"],
+                             "maps": "|".join(full_data_item["maps"]),
                              }
 
     log_uploaded_file_stats(full_data_item)
@@ -92,7 +96,7 @@ def output_status(success_error, czo_accounts):
         df_ref_file_list_big_file_filter = df_ref_file_list[
             (df_ref_file_list.ref_big_file_flag == True) & (df_ref_file_list.ref_file_size_mb > 0)]
 
-        logging.info(df_ref_file_list_big_file_filter.to_string())
+        logging.info(df_ref_file_list_big_file_filter.to_string(columns=["ref_file_name", "ref_file_size_mb", "ref_original_url", "czo_id", "hs_id"]))
         logging.info(df_ref_file_list_big_file_filter.sum(axis=0, skipna=True))
 
     df_concrete_file_list = json_normalize(success_error, "concrete_file_list", ["czo_id", "hs_id"],
@@ -114,14 +118,20 @@ def main():
     logging.info("Start migrating at {}".format(start_time.asctime()))
 
     czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
-    czo_hs_id_lookup_df = pd.DataFrame(columns=["success", "czo_id", "hs_id", "primary_owner", "elapsed_time"]).\
+    czo_hs_id_lookup_df = pd.DataFrame(columns=["success", "czo_id", "hs_id", "uname", "elapsed_time",
+                                                "public", "maps"]).\
         astype(dtype={"elapsed_time": "timedelta64[s]", })
 
     czo_data = pd.read_csv(CZO_DATA_CSV)
 
     czo_id_list = CZO_ID_LIST_TO_MIGRATE.copy()
     if czo_id_list is None or len(czo_id_list) == 0:
-        indices = range(START_ROW_INDEX, END_ROW_INDEX+1)
+        end_index = END_ROW_INDEX
+        if end_index > czo_data.shape[0] - 1:
+            end_index = czo_data.shape[0] - 1
+            logging.warning("end_index reset to {}".format(end_index))
+
+        indices = range(START_ROW_INDEX, end_index+1)
         czo_id_list = czo_data.iloc[indices]["czo_id"].tolist()
     logging.info("Processing on {} czo_ids: {}".format(len(czo_id_list), czo_id_list))
 
@@ -131,10 +141,10 @@ def main():
         czo_row_dict = czo_data.loc[czo_data['czo_id'] == czo_id].to_dict(orient='records')[0]
         result = migrate_czo_row(czo_row_dict, czo_accounts, row_no=i + 1)
         czo_hs_id_lookup_df = czo_hs_id_lookup_df.append(result, ignore_index=True)
-        print(czo_hs_id_lookup_df)
+        if i % 5 == 0:
+            print(czo_hs_id_lookup_df)
 
     success_error = error_status["success"] + error_status["error"]
-    hs = output_status(success_error, czo_accounts)
 
     logging.info(czo_hs_id_lookup_df.to_string())
 
@@ -144,6 +154,11 @@ def main():
         apply(lambda sec: "{:.0f} sec | {:.2f} min".format(sec, sec / 60))
     czo_hs_id_lookup_df.to_csv(results_file, encoding='utf-8', index=False)
 
+    if RUN_2ND_PASS:
+        second_pass(CZO_DATA_CSV, results_file, czo_accounts)
+
+    # upload logs and results to HS
+    hs = output_status(success_error, czo_accounts)
     hs_id = hs.createResource("CompositeResource",
                               "czo2hs migration log files {}".format(timestamp_suffix),)
     hs.addResourceFile(hs_id, log_file_path)

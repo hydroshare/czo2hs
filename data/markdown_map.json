@@ -23,10 +23,6 @@
     "display": "Date Range Comments",
     "id": 13
   },
-  "COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url": {
-    "display": "Component Files",
-    "id": 20
-  },
   "VARIABLES": {
     "display": "Variables",
     "id": 22
@@ -54,5 +50,9 @@
   "RELATED_DATASETS": {
     "display": "Related Datasets",
     "id": 38
+  },
+  "map_uploads": {
+    "display": "Maps",
+    "id": 44
   }
 }

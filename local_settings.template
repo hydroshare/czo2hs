@@ -1,0 +1,27 @@
+
+# REST API INFO
+HS_URL = "localhost"
+PORT = "8000"
+USE_HTTPS = False
+VERIFY_HTTPS = False  # check if HTTPS certificate is valid
+HS_EXTERNAL_FULL_DOMAIN = "http://localhost:8000"
+
+
+# CZO name -> HydroShare group name --> HydroShare acccount info
+CZO_ACCOUNTS = [
+    {"czo":  "national", "group": "CZO National", "uname": "czo_national", "pwd": "123"},
+    {"czo":  "boulder", "group": "CZO Boulder", "uname": "czo_boulder", "pwd": "123"},
+    {"czo":  "eel", "group": "CZO Eel", "uname": "czo_eel", "pwd": "123"},
+    {"czo":  "catalina-jemez", "group": "CZO Catalina-Jemez", "uname": "czo_catalina-jemez", "pwd": "123"},
+    {"czo":  "reynolds", "group": "CZO Reynolds", "uname": "czo_reynolds", "pwd": "123"},
+    {"czo":  "luquillo", "group": "CZO Luquillo", "uname": "czo_luquillo", "pwd": "123"},
+    {"czo":  "sierra", "group": "CZO Sierra", "uname": "czo_sierra", "pwd": "123"},
+    {"czo":  "christina", "group": "CZO Christina", "uname": "czo_christina", "pwd": "123"},
+    {"czo":  "shale hills", "group": "CZO Shale-Hills", "uname": "czo_shale-hills", "pwd": "123"},
+    {"czo":  "calhoun", "group": "CZO Calhoun", "uname": "czo_calhoun", "pwd": "123"},
+    # Keep the last line unchanged
+    {"czo":  "default", "group": "", "uname": "czo", "pwd": "123"},
+]
+
+# Path to predownloaded files
+CACHED_FILE_DIR = "./czo_download"
