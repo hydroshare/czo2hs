@@ -14,6 +14,7 @@ from utils_logging import log_exception
 
 # TODO move to settings and test
 requests.packages.urllib3.disable_warnings()
+pd.set_option('display.max_colwidth', 200)
 
 
 def get_creator_hs_metadata(creator_list):
