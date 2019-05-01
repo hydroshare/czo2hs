@@ -96,7 +96,7 @@ def output_status(success_error, czo_accounts):
         df_ref_file_list_big_file_filter = df_ref_file_list[
             (df_ref_file_list.ref_big_file_flag == True) & (df_ref_file_list.ref_file_size_mb > 0)]
 
-        logging.info(df_ref_file_list_big_file_filter.to_string())
+        logging.info(df_ref_file_list_big_file_filter.to_string(columns=["ref_file_name", "ref_file_size_mb", "ref_original_url", "czo_id", "hs_id"]))
         logging.info(df_ref_file_list_big_file_filter.sum(axis=0, skipna=True))
 
     df_concrete_file_list = json_normalize(success_error, "concrete_file_list", ["czo_id", "hs_id"],
