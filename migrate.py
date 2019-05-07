@@ -90,13 +90,13 @@ def output_status(success_error, czo_accounts):
         logging.info(text_emphasis("Summary on Not-resolving Ref Files"))
         logging.info(df_bad_ref_file_list.to_string())
 
-    df_ref_file_list = json_normalize(success_error, "ref_file_list", ["czo_id", "hs_id"], record_prefix="ref_")
+    df_ref_file_list = json_normalize(success_error, "ref_file_list", ["czo_id", "hs_id", "uname"], record_prefix="ref_")
     if (not df_ref_file_list.empty) and df_ref_file_list.shape[0] > 0:
         logging.info(text_emphasis("Summary on Big Ref Files"))
         df_ref_file_list_big_file_filter = df_ref_file_list[
             (df_ref_file_list.ref_big_file_flag == True) & (df_ref_file_list.ref_file_size_mb > 0)]
 
-        logging.info(df_ref_file_list_big_file_filter.to_string(columns=["ref_file_name", "ref_file_size_mb", "ref_original_url", "czo_id", "hs_id"]))
+        logging.info(df_ref_file_list_big_file_filter.to_string(columns=["ref_file_name", "ref_file_size_mb", "ref_original_url", "czo_id", "hs_id", 'uname']))
         logging.info(df_ref_file_list_big_file_filter.sum(axis=0, skipna=True))
 
     df_concrete_file_list = json_normalize(success_error, "concrete_file_list", ["czo_id", "hs_id"],
