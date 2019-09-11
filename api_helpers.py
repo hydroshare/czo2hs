@@ -324,7 +324,6 @@ def string_to_list(in_str, delimiter='|'):
 
 def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
     """
-    TODO break this function up into more functions for readability and modularity
     Create a HydroShare resource from a CZO data row
     :param czo_res_dict: dict of CZO data row
     :return: {"success": False,
@@ -416,6 +415,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
         # parse EXTERNAL_LINKS-url$link_text,PUBLICATIONS_OF_THIS_DATA, RELATED_DATASETS
         external_links = _extract_value_from_df_row_dict(czo_res_dict, "EXTERNAL_LINKS-url$link_text", required=False)
+
         publications_of_this_data = _extract_value_from_df_row_dict(czo_res_dict, "PUBLICATIONS_OF_THIS_DATA",
                                                                     required=False)
         publications_using_this_data = _extract_value_from_df_row_dict(czo_res_dict, "PUBLICATIONS_USING_THIS_DATA",
@@ -539,7 +539,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         logging.info('HS resource created at: {hs_id}'.format(hs_id=hs_id))
 
         # update Extended Metadata
-        hs.resource(hs_id).scimeta.custom(hs_extra_metadata)
+        # hs.resource(hs_id).scimeta.custom(hs_extra_metadata)
 
         # update Abstract/Description
         _success_abstract, _ = _update_core_metadata(hs, hs_id,
@@ -593,6 +593,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # component_files field
         component_files = czo_res_dict['COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']
 
+        refurls = []
         for f in get_files(component_files, migration_log=migration_log, other_urls=other_urls):
             if f == 1:
                 _success_file = False
@@ -603,6 +604,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                 continue
             if f.get('file_size_mb') == -1:
                 logging.info("Found non-file link {}".format(f.get('path_or_url')))
+                refurls.append(f.get('path_or_url'))
                 continue
             try:
                 logging.info("Creating file: {}".format(str(f)))
@@ -670,6 +672,13 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                 _success_file = False
                 extra_msg = "Failed upload file to HS {}: ".format(json.dumps(f))
                 log_exception(ex_file, migration_log=migration_log, extra_msg=extra_msg)
+
+        # Add reference urls
+        if len(refurls) > 0:
+            hs_extra_metadata["reference_urls"] = ", ".join(refurls)
+        # NOTE would have been handled with the rest of these in 541-542
+        hs.resource(hs_id).scimeta.custom(hs_extra_metadata)
+
 
         # make the resource public
         try:
