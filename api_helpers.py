@@ -601,6 +601,9 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                 continue
             elif f is None:
                 continue
+            if f.get('file_size_mb') == -1:
+                logging.info("Found non-file link {}".format(f.get('path_or_url')))
+                continue
             try:
                 logging.info("Creating file: {}".format(str(f)))
                 if f["file_type"] == "ReferencedFile":
@@ -657,7 +660,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                         #file_id = get_file_id_by_name(hs, hs_id, f["file_name"])
                         file_id = hs_file_path
                     except Exception:
-                        pass
+                        raise
 
                     # log concrete file
                     migration_log["concrete_file_list"].append(f)
