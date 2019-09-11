@@ -25,3 +25,8 @@ CZO_ACCOUNTS = [
 
 # Path to predownloaded files
 CACHED_FILE_DIR = "./czo_download"
+
+RUN_2ND_PASS = True
+SECOND_PASS_FILE = "./logs/lookup_2019-09-10_13h-18m_1568135896.csv"
+BIG_FILE_SIZE_MB = 4096
+END_ROW_INDEX = 2

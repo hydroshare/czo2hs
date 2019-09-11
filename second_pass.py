@@ -7,7 +7,7 @@ import pandas as pd
 
 from util import gen_readme
 from settings import CZO_ACCOUNTS, CZO_DATA_CSV, README_COLUMN_MAP_PATH, \
-     README_SHOW_MAPS, HS_EXTERNAL_FULL_DOMAIN
+     README_SHOW_MAPS, HS_EXTERNAL_FULL_DOMAIN, SECOND_PASS_FILE
 from api_helpers import _extract_value_from_df_row_dict, string_to_list
 from accounts import CZOHSAccount
 
@@ -162,7 +162,7 @@ if __name__ == "__main__":
         format="%(asctime)s [%(levelname)-5.5s]  %(message)s",
         handlers=[logging.StreamHandler()])
 
-    lookup_path = "./logs/lookup_2019-04-11_16h-22m_1555014145.csv"
+    lookup_path = SECOND_PASS_FILE
     czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
     second_pass(CZO_DATA_CSV,
                 lookup_path,
