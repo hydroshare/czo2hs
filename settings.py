@@ -11,7 +11,7 @@ CZO_ID_LIST_TO_MIGRATE = []
 
 # only work when CZO_ID_LIST_TO_MIGRATE is empty or NONE
 START_ROW_INDEX = 0  # start row index in CZO_DATA_CSV
-END_ROW_INDEX = 411  # end row index in CZO_DATA_CSV -- max 411 for now (may change with new czo.csv)
+END_ROW_INDEX = 434  # end row index in CZO_DATA_CSV (may change with new czo.csv)
 
 # Migration logs
 LOG_DIR = "./logs"
