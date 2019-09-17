@@ -75,7 +75,6 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
     readme_counter = 0
     ex_metadata_counter = 0
 
-    readme_column_map = None
     with open(README_COLUMN_MAP_PATH) as f:
         readme_column_map = json.load(f, object_pairs_hook=OrderedDict)
 
@@ -95,6 +94,7 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
             czo_row_dict = get_dict_by_czo_id(czo_id, czo_data_df)
 
             try:  # update czo_id
+                print("Related datasets {}".format())
                 related_datasets = _extract_value_from_df_row_dict(czo_row_dict, "RELATED_DATASETS", required=False)
                 if related_datasets is not None:
                     related_datasets_list = string_to_list(related_datasets)
@@ -138,6 +138,11 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
             if readme_column_map is not None:
                 try:
                     readme_path = gen_readme(czo_row_dict, readme_column_map)
+                    try:
+                        delete_file_status = hs.deleteResourceFile(hs_id, readme_path.split("/")[-1])
+                        print("Status of delete Readme.md for second pass: {}".format(delete_file_status))
+                    except Exception as e:
+                        print("Exception: {}".format(e))
                     file_add_respone = hs.addResourceFile(hs_id, readme_path)
                     logging.info("ReadMe file")
                     readme_counter += 1
