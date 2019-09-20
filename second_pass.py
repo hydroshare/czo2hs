@@ -94,18 +94,16 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
             czo_row_dict = get_dict_by_czo_id(czo_id, czo_data_df)
 
             try:  # update czo_id
-                print("Related datasets {}".format())
                 related_datasets = _extract_value_from_df_row_dict(czo_row_dict, "RELATED_DATASETS", required=False)
                 if related_datasets is not None:
                     related_datasets_list = string_to_list(related_datasets)
+                    print("Related datasets {}".format(related_datasets_list))
                     czo_id_list = list(map(lambda x: int(str.strip(x)), related_datasets_list))
-                    hs_id_list = list(map(functools.partial(query_lookup_table,
-                                                            lookup_data_df=lookup_data_df),
+                    hs_id_list = list(map(functools.partial(query_lookup_table, lookup_data_df=lookup_data_df),
                                           czo_id_list))
 
                     related_datasets_md = list(map(functools.partial(build_related_dataset_md,
-                                                                     czo_data_df=czo_data_df),
-                                                   hs_id_list,
+                                                                     czo_data_df=czo_data_df), hs_id_list,
                                                    czo_id_list))
 
                     # update czo_row_dict for readme.md
@@ -138,13 +136,13 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
             if readme_column_map is not None:
                 try:
                     readme_path = gen_readme(czo_row_dict, readme_column_map)
-                    try:
-                        delete_file_status = hs.deleteResourceFile(hs_id, readme_path.split("/")[-1])
-                        print("Status of delete Readme.md for second pass: {}".format(delete_file_status))
-                    except Exception as e:
-                        print("Exception: {}".format(e))
+                    # try:
+                    #     delete_file_status = hs.deleteResourceFile(hs_id, readme_path.split("/")[-1])
+                    #     print("Status of delete Readme.md for second pass: {}".format(delete_file_status))
+                    # except Exception as e:
+                    #     print("Exception: {}".format(e))
                     file_add_respone = hs.addResourceFile(hs_id, readme_path)
-                    logging.info("ReadMe file")
+                    logging.info("Creating ReadMe file {}".format(readme_path))
                     readme_counter += 1
                 except Exception as ex:
                     logging.error(
