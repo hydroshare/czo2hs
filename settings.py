@@ -75,7 +75,7 @@ RUN_2ND_PASS = True
 try:
     from local_settings import *
 except ImportError:
-    pass
+    print("----ERROR OVERRIDING SETTINGS WITH LOCAL_SETTINGS-------")
 
 # append hydroshare connection info to each czo account
 connection_info = {"hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS}

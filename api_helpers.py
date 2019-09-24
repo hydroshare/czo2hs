@@ -445,23 +445,25 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # hs abstract
         hs_res_abstract = ""
         hs_res_abstract += "{description}".format(description=description)
-        #hs_res_abstract += "{title}".format(title=title)
-        if subtitle is not None:
-            hs_res_abstract += "\n\n{subtitle}".format(subtitle=subtitle)
-        hs_res_abstract += "\n\nCZO: {czos_list}".format(czos_list=", ".join(czos_list))
-        hs_res_abstract += "\n\nField Area: {field_areas_list}".format(field_areas_list=", ".join(field_areas_list))
-        hs_res_abstract += "\n\nLocation: {location}".format(location=location)
+
+        # if subtitle is not None:
+        #     hs_res_abstract += "\n\n{subtitle}".format(subtitle=subtitle)
+        # hs_res_abstract += "\n\nCZO: {czos_list}".format(czos_list=", ".join(czos_list))
+        # hs_res_abstract += "\n\nField Area: {field_areas_list}".format(field_areas_list=", ".join(field_areas_list))
+        # hs_res_abstract += "\n\nLocation: {location}".format(location=location)
+
         # hs_res_abstract += "\n\nStart Date: {date_start}".format(date_start=date_start)
         # hs_res_abstract += "\nEnd Date: {date_end}".format(date_end=date_end if date_end is not None else "")
         if date_range_comments is not None:
             hs_res_abstract += "\nDate Range Comments: {date_range_comments}".format(
                 date_range_comments=date_range_comments)
-        if citation is not None:
-            hs_res_abstract += "\n\nCitation: {citation}".format(citation=citation)
+        # if citation is not None:
+        #     hs_res_abstract += "\n\nCitation: {citation}".format(citation=citation)
         if dataset_doi is not None:
             hs_res_abstract += "\n\nDataset DOI: {dataset_doi}".format(dataset_doi=dataset_doi)
         # hs abstract end
 
+        # TODO make sure this is all of them
         # hs keywords - czos, FIELD_AREAS, TOPICS, VARIABLES_ODM2, Keyword?????
         hs_res_keywords = [] + \
                             field_areas_list + \
