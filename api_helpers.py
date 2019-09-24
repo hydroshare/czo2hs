@@ -580,7 +580,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         if publications_of_this_data is not None:
             hs_relations_list = [{
                     "type": "isDataFor",
-                    "value": publications_of_this_data[:499]  # caps: 500 chars
+                    "value": publications_of_this_data # TODO was capped at 499
                 }]
 
             _success_relations, _ = _update_core_metadata(hs, hs_id,
