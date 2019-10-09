@@ -46,7 +46,7 @@ def conditional_write(_heading, _text):
     _text = str(_text)
     if _text:
         if _text.lower() != 'nan' and _text.lower() != 'none':
-            return "###{}\n".format(_heading) + _text + "\n\n"
+            return "###{}\n".format(_heading) + _text.replace('[CRLF]', '\n') + "\n\n"
     return ""
 
 
@@ -56,7 +56,7 @@ def normal_write(_heading, _text):
     :return:
     """
     _text = str(_text)
-    return "###{}\n".format(_heading) + _text + "\n\n"
+    return "###{}\n".format(_heading) + _text.replace('[CRLF]', '\n') + "\n\n"
 
 
 def gen_readme(rowdata, related_resources):
@@ -69,8 +69,8 @@ def gen_readme(rowdata, related_resources):
     readme_path = os.path.join(tempfile.mkdtemp(), README_FILENAME)
     info = ''
     with open(os.path.join(readme_path), 'w', encoding='utf-8') as f:
-        info += "#" + rowdata.get('title') + "\n\n\n"
-        info += "------\n##OVERVIEW\n\n\n"
+        info += "#" + rowdata.get('title') + "\n"
+        info += "------\n##OVERVIEW\n"
         info += normal_write("Description/Abstract", rowdata.get('description'))
         info += conditional_write('Dataset DOI', rowdata.get('dataset_doi'))
         info += normal_write("Creator/Author", rowdata.get('creator'))
@@ -78,7 +78,7 @@ def gen_readme(rowdata, related_resources):
         info += normal_write("Contact", rowdata.get('contact'))
         info += conditional_write('Subtitle', rowdata.get('subtitle'))
 
-        info += "------\n##SUBJECTS\n\n\n"
+        info += "------\n##SUBJECTS\n"
         info += normal_write("Disciplines", rowdata.get('DISCIPLINES'))
         info += normal_write("Topics", rowdata.get('TOPICS'))
         info += conditional_write('Subtopic', rowdata.get('sub_topic'))
@@ -86,12 +86,12 @@ def gen_readme(rowdata, related_resources):
         info += normal_write("Variables", rowdata.get('VARIABLES'))
         info += normal_write("Variables ODM2", rowdata.get('VARIABLES_ODM2'))
 
-        info += "------\n##TEMPORAL\n\n\n"
+        info += "------\n##TEMPORAL\n"
         info += normal_write("Date Start", rowdata.get('date_start'))
         info += normal_write("Date End", rowdata.get('date_end'))
         info += conditional_write('Date Range Comments', rowdata.get('date_range_comments'))
 
-        info += "------\n##SPATIAL\n\n\n"
+        info += "------\n##SPATIAL\n"
         info += normal_write("Field Areas", rowdata.get('FIELD_AREAS'))
         info += normal_write("Location", rowdata.get('location'))
         info += normal_write("North latitude", rowdata.get('north_lat'))
@@ -99,18 +99,18 @@ def gen_readme(rowdata, related_resources):
         info += normal_write("West longitude", rowdata.get('west_long'))
         info += normal_write("East longitude", rowdata.get('east_long'))
 
-        info += "------\n##REFERENCE\n\n\n"
+        info += "------\n##REFERENCE\n"
         info += conditional_write("Citation", rowdata.get('citation'))
         info += conditional_write('Publications of this data', rowdata.get('PUBLICATIONS_OF_THIS_DATA'))
         info += conditional_write('Publications using this data', rowdata.get('PUBLICATIONS_USING_THIS_DATA'))
         info += normal_write("CZO ID", rowdata.get('czo_id'))
         info += conditional_write('Related datasets', rowdata.get('RELATED_DATASETS'))
-        conditional_write('Related Resources', related_resources)
-        info += conditional_write('External Links', rowdata.get('EXTERNAL_LINKS'))
-        info += conditional_write('Award Grant Numbers', rowdata.get('AWARD_GRANT_NUMBERS'))
+        # info += conditional_write('Related Resources', related_resources)
+        info += conditional_write('External Links', rowdata.get('EXTERNAL_LINKS-url'))
+        info += conditional_write('Award Grant Numbers', rowdata.get('AWARD_GRANT_NUMBERS-grant_number'))
 
         if rowdata.get('comments'):
-            info += "------\n##COMMENTS\n\n"
-        info += conditional_write('Comments', rowdata.get('comments'))
+            info += "------\n##COMMENTS\n"
+            info += conditional_write('Comments', rowdata.get('comments'))
         f.write(info)
     return readme_path
