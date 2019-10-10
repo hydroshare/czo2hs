@@ -497,9 +497,9 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                                  field_areas=", ".join(field_areas_list),
                                  location=location,
                                  topics=", ".join(topics_list),
-                                 description=description,
+                                 description=description.replace('[CRLF]', ''),  # TODO verify
                                  variables=", ".join(variables_list),
-                                 variables_odm2=", ".join(variables_odm2_list),
+                                 variables_odm2=", ".join(variables_odm2_list).replace('[CRLF]', ''),  # TODO verify
                                  )
         if subtitle is not None:
             hs_extra_metadata["subtitle"] = subtitle
@@ -545,7 +545,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
         # update Abstract/Description
         _success_abstract, _ = _update_core_metadata(hs, hs_id,
-                                                     {"description": hs_res_abstract},
+                                                     {"description": hs_res_abstract.replace('[CRLF]', '\n\n')}, # TODO verify change
                                                      message="Abstract",
                                                      migration_log=migration_log)
 

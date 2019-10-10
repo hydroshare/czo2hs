@@ -109,8 +109,9 @@ def gen_readme(rowdata, related_resources):
         info += conditional_write('External Links', rowdata.get('EXTERNAL_LINKS-url'))
         info += conditional_write('Award Grant Numbers', rowdata.get('AWARD_GRANT_NUMBERS-grant_number'))
 
-        if rowdata.get('comments'):
+        _comments = str(rowdata.get('comments'))
+        if _comments and _comments.lower() != 'nan' and _comments.lower() != 'none':
             info += "------\n##COMMENTS\n"
-            info += conditional_write('Comments', rowdata.get('comments'))
+            info += conditional_write('Comments', _comments)
         f.write(info)
     return readme_path
