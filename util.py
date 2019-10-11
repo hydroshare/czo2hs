@@ -77,6 +77,7 @@ def gen_readme(rowdata, related_resources):
         info += normal_write("CZOs", rowdata.get('CZOS'))
         info += normal_write("Contact", rowdata.get('contact'))
         info += conditional_write('Subtitle', rowdata.get('subtitle'))
+        info += "  \n<br /><br />\n  "
 
         info += "------\n##SUBJECTS\n"
         info += normal_write("Disciplines", rowdata.get('DISCIPLINES'))
@@ -85,11 +86,13 @@ def gen_readme(rowdata, related_resources):
         info += normal_write("Keywords", rowdata.get('KEYWORDS'))
         info += normal_write("Variables", rowdata.get('VARIABLES'))
         info += normal_write("Variables ODM2", rowdata.get('VARIABLES_ODM2'))
+        info += "  \n<br /><br />\n  "
 
         info += "------\n##TEMPORAL\n"
         info += normal_write("Date Start", rowdata.get('date_start'))
         info += normal_write("Date End", rowdata.get('date_end'))
         info += conditional_write('Date Range Comments', rowdata.get('date_range_comments'))
+        info += "  \n<br /><br />\n  "
 
         info += "------\n##SPATIAL\n"
         info += normal_write("Field Areas", rowdata.get('FIELD_AREAS'))
@@ -98,6 +101,7 @@ def gen_readme(rowdata, related_resources):
         info += normal_write("South latitude", rowdata.get('south_lat'))
         info += normal_write("West longitude", rowdata.get('west_long'))
         info += normal_write("East longitude", rowdata.get('east_long'))
+        info += "  \n<br /><br />\n  "
 
         info += "------\n##REFERENCE\n"
         info += conditional_write("Citation", rowdata.get('citation'))
@@ -108,6 +112,7 @@ def gen_readme(rowdata, related_resources):
         # info += conditional_write('Related Resources', related_resources)
         info += conditional_write('External Links', rowdata.get('EXTERNAL_LINKS-url'))
         info += conditional_write('Award Grant Numbers', rowdata.get('AWARD_GRANT_NUMBERS-grant_number'))
+        info += "  \n<br /><br />\n  "
 
         _comments = str(rowdata.get('comments'))
         if _comments and _comments.lower() != 'nan' and _comments.lower() != 'none':
