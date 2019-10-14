@@ -324,7 +324,6 @@ def string_to_list(in_str, delimiter='|'):
 
 def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
     """
-    TODO break this function up into more functions for readability and modularity
     Create a HydroShare resource from a CZO data row
     :param czo_res_dict: dict of CZO data row
     :return: {"success": False,
@@ -514,7 +513,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         if citation is not None:
             hs_extra_metadata["citation"] = citation
         if comments is not None:
-            hs_extra_metadata["comments"] = comments
+            hs_extra_metadata["comments"] = comments.replace('[CRLF]', ' \n\n')  # TODO verify
         if external_links is not None:
             hs_extra_metadata["external_links"] = external_links
         if publications_of_this_data is not None:

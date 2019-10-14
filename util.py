@@ -1,4 +1,3 @@
-import math
 import time
 import tempfile
 import os
@@ -109,14 +108,25 @@ def gen_readme(rowdata, related_resources):
         info += conditional_write('Publications using this data', rowdata.get('PUBLICATIONS_USING_THIS_DATA'))
         info += normal_write("CZO ID", rowdata.get('czo_id'))
         info += conditional_write('Related datasets', rowdata.get('RELATED_DATASETS'))
-        # info += conditional_write('Related Resources', related_resources)
-        info += conditional_write('External Links', rowdata.get('EXTERNAL_LINKS-url'))
-        info += conditional_write('Award Grant Numbers', rowdata.get('AWARD_GRANT_NUMBERS-grant_number'))
-        info += "  \n<br /><br />\n  "
+        ext_links = str(rowdata.get('EXTERNAL_LINKS-url$link_text'))
+        award_grants = str(rowdata.get('AWARD_GRANT_NUMBERS-grant_number$funding_agency$url_for_grant'))
+
+        if ext_links.lower() != 'nan' and ext_links.lower() != 'none':
+            info += conditional_write('External Links', ext_links.replace('$', '\n\n'))
+
+        if award_grants.lower() != 'nan' and award_grants.lower() != 'none':
+            award_grants = award_grants.split('|')
+            award_grants = ["<a href='{}' target='_blank'>{} - {}</a>".format(x.split('$')[2], x.split('$')[0], x.split('$')[1]) for x in award_grants]
+            printable_award_grants = " \n\n".join(award_grants)
+            info += conditional_write('Award Grant Numbers', printable_award_grants)
+            if ext_links.lower() != 'nan' and ext_links.lower() != 'none':
+                _ = 1
+            else:
+                info += "  \n<br /><br />\n  "
 
         _comments = str(rowdata.get('comments'))
         if _comments and _comments.lower() != 'nan' and _comments.lower() != 'none':
             info += "------\n##COMMENTS\n"
-            info += conditional_write('Comments', _comments)
+            info += conditional_write('Comments', _comments.replace('[CRLF]', '\n\n'))
         f.write(info)
     return readme_path
