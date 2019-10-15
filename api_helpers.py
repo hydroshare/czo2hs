@@ -522,9 +522,9 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
             hs_extra_metadata["external_links"] = printable_links
         if publications_of_this_data is not None:
-            hs_extra_metadata["publications_of_this_data"] = publications_of_this_data
+            hs_extra_metadata["publications_of_this_data"] = publications_of_this_data.replace('|', ' ')
         if publications_using_this_data is not None:
-            hs_extra_metadata["publications_using_this_data"] = publications_using_this_data
+            hs_extra_metadata["publications_using_this_data"] = publications_using_this_data.replace('|', ' ')
         if related_datasets is not None:
             hs_extra_metadata["related_datasets"] = ", ".join(related_datasets_list)
 
@@ -584,9 +584,10 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # update relations for publication of this data
         _success_relations = True
         if publications_of_this_data is not None:
+
             hs_relations_list = [{
                     "type": "isDataFor",
-                    "value": publications_of_this_data # TODO was capped at 499
+                    "value": publications_of_this_data[:499]
                 }]
 
             _success_relations, _ = _update_core_metadata(hs, hs_id,

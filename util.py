@@ -104,8 +104,14 @@ def gen_readme(rowdata, related_resources):
 
         info += "------\n##REFERENCE\n"
         info += conditional_write("Citation", rowdata.get('citation'))
-        info += conditional_write('Publications of this data', rowdata.get('PUBLICATIONS_OF_THIS_DATA'))
-        info += conditional_write('Publications using this data', rowdata.get('PUBLICATIONS_USING_THIS_DATA'))
+        _pub_of = rowdata.get('PUBLICATIONS_OF_THIS_DATA')
+        if _pub_of.lower() != 'nan' and _pub_of.lower() != 'none':
+            _pub_of = _pub_of.replace('|', '\n\n')
+            info += conditional_write('Publications of this data', _pub_of)
+        _pub_using = rowdata.get('PUBLICATIONS_USING_THIS_DATA')
+        if _pub_using.lower() != 'nan' and _pub_using.lower() != 'none':
+            _pub_using = _pub_using.replace('|', '\n\n')
+            info += conditional_write('Publications using this data', _pub_using)
         info += normal_write("CZO ID", rowdata.get('czo_id'))
         info += conditional_write('Related datasets', rowdata.get('RELATED_DATASETS'))
         ext_links = str(rowdata.get('EXTERNAL_LINKS-url$link_text'))
