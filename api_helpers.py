@@ -515,7 +515,12 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         if comments is not None:
             hs_extra_metadata["comments"] = comments.replace('[CRLF]', ' \n\n')  # TODO verify
         if external_links is not None:
-            hs_extra_metadata["external_links"] = external_links
+            external_links = external_links.split('|')
+            external_links = ["{} | ".format(x.split('$')[0]) for x in external_links]
+            external_links.insert(0, "| ")
+            printable_links = " ".join(external_links)
+
+            hs_extra_metadata["external_links"] = printable_links
         if publications_of_this_data is not None:
             hs_extra_metadata["publications_of_this_data"] = publications_of_this_data
         if publications_using_this_data is not None:

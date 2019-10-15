@@ -112,7 +112,10 @@ def gen_readme(rowdata, related_resources):
         award_grants = str(rowdata.get('AWARD_GRANT_NUMBERS-grant_number$funding_agency$url_for_grant'))
 
         if ext_links.lower() != 'nan' and ext_links.lower() != 'none':
-            info += conditional_write('External Links', ext_links.replace('$', '\n\n'))
+            ext_links = ext_links.split('|')
+            ext_links = ["<a href='{}' target='_blank'>{}</a> | ".format(x.split('$')[0], x.split('$')[1]) for x in ext_links]
+            printable_links = " ".join(ext_links)
+            info += conditional_write('External Links', printable_links)
 
         if award_grants.lower() != 'nan' and award_grants.lower() != 'none':
             award_grants = award_grants.split('|')
