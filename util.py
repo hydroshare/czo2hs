@@ -104,12 +104,12 @@ def gen_readme(rowdata, related_resources):
 
         info += "------\n##REFERENCE\n"
         info += conditional_write("Citation", rowdata.get('citation'))
-        _pub_of = rowdata.get('PUBLICATIONS_OF_THIS_DATA')
+        _pub_of = str(rowdata.get('PUBLICATIONS_OF_THIS_DATA'))
         if _pub_of.lower() != 'nan' and _pub_of.lower() != 'none':
             _pub_of = _pub_of.replace('|', '\n\n')
             info += conditional_write('Publications of this data', _pub_of)
 
-        _pub_using = rowdata.get('PUBLICATIONS_USING_THIS_DATA')
+        _pub_using = str(rowdata.get('PUBLICATIONS_USING_THIS_DATA'))
         if _pub_using.lower() != 'nan' and _pub_using.lower() != 'none':
             _pub_using = _pub_using.replace('|', '\n\n')
             info += conditional_write('Publications using this data', _pub_using)
