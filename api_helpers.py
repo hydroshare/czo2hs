@@ -491,21 +491,27 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # hs coverage end
 
         # hs res level extended metadata
+        # hs_extra_metadata = dict(czo_id=czo_id,
+        #                          czos=", ".join(czos_list),
+        #                          field_areas=", ".join(field_areas_list),
+        #                          location=location,
+        #                          topics=", ".join(topics_list),
+        #                          description=description.replace('[CRLF]', ''),  # TODO verify
+        #                          variables=", ".join(variables_list),
+        #                          variables_odm2=", ".join(variables_odm2_list).replace('[CRLF]', ''),  # TODO verify
+        #                          )
+
         hs_extra_metadata = dict(czo_id=czo_id,
                                  czos=", ".join(czos_list),
-                                 field_areas=", ".join(field_areas_list),
-                                 location=location,
-                                 topics=", ".join(topics_list),
-                                 description=description.replace('[CRLF]', ''),  # TODO verify
                                  variables=", ".join(variables_list),
-                                 variables_odm2=", ".join(variables_odm2_list).replace('[CRLF]', ''),  # TODO verify
                                  )
+
         if subtitle is not None:
             hs_extra_metadata["subtitle"] = subtitle
         if disciplines is not None:
             hs_extra_metadata["disciplines"] = ", ".join(disciplines_list)
-        if sub_topic is not None:
-            hs_extra_metadata["sub_topic"] = sub_topic
+        # if sub_topic is not None:
+        #     hs_extra_metadata["sub_topic"] = sub_topic
         if date_range_comments is not None:
             hs_extra_metadata["date_range_comments"] = date_range_comments
         if keywords is not None:
@@ -521,10 +527,10 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
             printable_links = " ".join(external_links)
 
             hs_extra_metadata["external_links"] = printable_links
-        if publications_of_this_data is not None:
-            hs_extra_metadata["publications_of_this_data"] = publications_of_this_data.replace('|', ' ')
-        if publications_using_this_data is not None:
-            hs_extra_metadata["publications_using_this_data"] = publications_using_this_data.replace('|', ' ')
+        # if publications_of_this_data is not None:
+        #     hs_extra_metadata["publications_of_this_data"] = publications_of_this_data.replace('|', ' ')
+        # if publications_using_this_data is not None:
+        #     hs_extra_metadata["publications_using_this_data"] = publications_using_this_data.replace('|', ' ')
         if related_datasets is not None:
             hs_extra_metadata["related_datasets"] = ", ".join(related_datasets_list)
 
@@ -584,11 +590,19 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # update relations for publication of this data
         _success_relations = True
         if publications_of_this_data is not None:
-
-            hs_relations_list = [{
-                    "type": "isDataFor",
-                    "value": publications_of_this_data[:499]
-                }]
+            pub_list = publications_of_this_data.split('|')
+            hs_relations_list = []
+            for pub_item in pub_list:
+                hs_relations_list.append(
+                    {
+                        "type": "isDataFor",
+                        "value": pub_item[:499]
+                    }
+                )
+            # hs_relations_list = [{
+            #         "type": "isDataFor",
+            #         "value": publications_of_this_data[:499]
+            #     }]
 
             _success_relations, _ = _update_core_metadata(hs, hs_id,
                                                        {'relations': hs_relations_list},

@@ -129,7 +129,7 @@ def gen_readme(rowdata, related_resources):
             award_grants = ["<a href='{}' target='_blank'>{} - {}</a>".format(x.split('$')[2], x.split('$')[0], x.split('$')[1]) for x in award_grants]
             printable_award_grants = " \n\n".join(award_grants)
             info += conditional_write('Award Grant Numbers', printable_award_grants)
-            
+
         info += "  \n<br /><br />\n  "
 
         _comments = str(rowdata.get('comments'))
