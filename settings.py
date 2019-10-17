@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Path to CZO CMS export (csv file)
-CZO_DATA_CSV = "./data/czo-4oct2019.csv"
+CZO_DATA_CSV = "./data/czo-2019-10-17.csv"
 
 # a list of czo_ids to migrate.
 # If empty or None, list to be generated automatically by START_ROW_INDEX and END_ROW_INDEX below
