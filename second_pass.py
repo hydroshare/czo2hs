@@ -7,7 +7,7 @@ import pandas as pd
 
 from util import gen_readme
 from settings import CZO_ACCOUNTS, CZO_DATA_CSV, README_COLUMN_MAP_PATH, \
-     README_SHOW_MAPS, HS_EXTERNAL_FULL_DOMAIN
+     README_SHOW_MAPS, HS_EXTERNAL_FULL_DOMAIN, SECOND_PASS_FILE
 from api_helpers import _extract_value_from_df_row_dict, string_to_list
 from accounts import CZOHSAccount
 
@@ -75,7 +75,6 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
     readme_counter = 0
     ex_metadata_counter = 0
 
-    readme_column_map = None
     with open(README_COLUMN_MAP_PATH) as f:
         readme_column_map = json.load(f, object_pairs_hook=OrderedDict)
 
@@ -94,18 +93,18 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
             hs = czo_accounts.get_hs_by_uname(hs_owner)
             czo_row_dict = get_dict_by_czo_id(czo_id, czo_data_df)
 
+            related_datasets_md = []
             try:  # update czo_id
                 related_datasets = _extract_value_from_df_row_dict(czo_row_dict, "RELATED_DATASETS", required=False)
                 if related_datasets is not None:
                     related_datasets_list = string_to_list(related_datasets)
+                    print("Related datasets {}".format(related_datasets_list))
                     czo_id_list = list(map(lambda x: int(str.strip(x)), related_datasets_list))
-                    hs_id_list = list(map(functools.partial(query_lookup_table,
-                                                            lookup_data_df=lookup_data_df),
+                    hs_id_list = list(map(functools.partial(query_lookup_table, lookup_data_df=lookup_data_df),
                                           czo_id_list))
 
                     related_datasets_md = list(map(functools.partial(build_related_dataset_md,
-                                                                     czo_data_df=czo_data_df),
-                                                   hs_id_list,
+                                                                     czo_data_df=czo_data_df), hs_id_list,
                                                    czo_id_list))
 
                     # update czo_row_dict for readme.md
@@ -136,14 +135,19 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
 
             # generate readme.md file
             if readme_column_map is not None:
-                try:
-                    readme_path = gen_readme(czo_row_dict, readme_column_map)
-                    file_add_respone = hs.addResourceFile(hs_id, readme_path)
-                    logging.info("ReadMe file")
-                    readme_counter += 1
-                except Exception as ex:
-                    logging.error(
-                        "Failed to create ReadMe {0} - {1}: {2}".format(hs_id, czo_id, str(ex)))
+                # try:
+                readme_path = gen_readme(czo_row_dict, related_datasets_md)
+                # try:
+                #     delete_file_status = hs.deleteResourceFile(hs_id, readme_path.split("/")[-1])
+                #     print("Status of delete Readme.md for second pass: {}".format(delete_file_status))
+                # except Exception as e:
+                #     print("Exception: {}".format(e))
+                file_add_respone = hs.addResourceFile(hs_id, readme_path)
+                logging.info("Creating ReadMe file {}".format(readme_path))
+                readme_counter += 1
+                # except Exception as ex:
+                #     logging.error(
+                #         "Failed to create ReadMe {0} - {1}: {2}".format(hs_id, czo_id, str(ex)))
 
             if not public:
                 try:
@@ -162,7 +166,7 @@ if __name__ == "__main__":
         format="%(asctime)s [%(levelname)-5.5s]  %(message)s",
         handlers=[logging.StreamHandler()])
 
-    lookup_path = "./logs/lookup_2019-04-11_16h-22m_1555014145.csv"
+    lookup_path = SECOND_PASS_FILE
     czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
     second_pass(CZO_DATA_CSV,
                 lookup_path,

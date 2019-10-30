@@ -324,7 +324,6 @@ def string_to_list(in_str, delimiter='|'):
 
 def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
     """
-    TODO break this function up into more functions for readability and modularity
     Create a HydroShare resource from a CZO data row
     :param czo_res_dict: dict of CZO data row
     :return: {"success": False,
@@ -445,23 +444,25 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # hs abstract
         hs_res_abstract = ""
         hs_res_abstract += "{description}".format(description=description)
-        #hs_res_abstract += "{title}".format(title=title)
-        if subtitle is not None:
-            hs_res_abstract += "\n\n{subtitle}".format(subtitle=subtitle)
-        hs_res_abstract += "\n\nCZO: {czos_list}".format(czos_list=", ".join(czos_list))
-        hs_res_abstract += "\n\nField Area: {field_areas_list}".format(field_areas_list=", ".join(field_areas_list))
-        hs_res_abstract += "\n\nLocation: {location}".format(location=location)
+
+        # if subtitle is not None:
+        #     hs_res_abstract += "\n\n{subtitle}".format(subtitle=subtitle)
+        # hs_res_abstract += "\n\nCZO: {czos_list}".format(czos_list=", ".join(czos_list))
+        # hs_res_abstract += "\n\nField Area: {field_areas_list}".format(field_areas_list=", ".join(field_areas_list))
+        # hs_res_abstract += "\n\nLocation: {location}".format(location=location)
+
         # hs_res_abstract += "\n\nStart Date: {date_start}".format(date_start=date_start)
         # hs_res_abstract += "\nEnd Date: {date_end}".format(date_end=date_end if date_end is not None else "")
         if date_range_comments is not None:
             hs_res_abstract += "\nDate Range Comments: {date_range_comments}".format(
                 date_range_comments=date_range_comments)
-        if citation is not None:
-            hs_res_abstract += "\n\nCitation: {citation}".format(citation=citation)
+        # if citation is not None:
+        #     hs_res_abstract += "\n\nCitation: {citation}".format(citation=citation)
         if dataset_doi is not None:
             hs_res_abstract += "\n\nDataset DOI: {dataset_doi}".format(dataset_doi=dataset_doi)
         # hs abstract end
 
+        # TODO make sure this is all of them
         # hs keywords - czos, FIELD_AREAS, TOPICS, VARIABLES_ODM2, Keyword?????
         hs_res_keywords = [] + \
                             field_areas_list + \
@@ -490,21 +491,27 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # hs coverage end
 
         # hs res level extended metadata
+        # hs_extra_metadata = dict(czo_id=czo_id,
+        #                          czos=", ".join(czos_list),
+        #                          field_areas=", ".join(field_areas_list),
+        #                          location=location,
+        #                          topics=", ".join(topics_list),
+        #                          description=description.replace('[CRLF]', ''),  # TODO verify
+        #                          variables=", ".join(variables_list),
+        #                          variables_odm2=", ".join(variables_odm2_list).replace('[CRLF]', ''),  # TODO verify
+        #                          )
+
         hs_extra_metadata = dict(czo_id=czo_id,
                                  czos=", ".join(czos_list),
-                                 field_areas=", ".join(field_areas_list),
-                                 location=location,
-                                 topics=", ".join(topics_list),
-                                 description=description,
                                  variables=", ".join(variables_list),
-                                 variables_odm2=", ".join(variables_odm2_list),
                                  )
+
         if subtitle is not None:
             hs_extra_metadata["subtitle"] = subtitle
         if disciplines is not None:
             hs_extra_metadata["disciplines"] = ", ".join(disciplines_list)
-        if sub_topic is not None:
-            hs_extra_metadata["sub_topic"] = sub_topic
+        # if sub_topic is not None:
+        #     hs_extra_metadata["sub_topic"] = sub_topic
         if date_range_comments is not None:
             hs_extra_metadata["date_range_comments"] = date_range_comments
         if keywords is not None:
@@ -512,13 +519,18 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         if citation is not None:
             hs_extra_metadata["citation"] = citation
         if comments is not None:
-            hs_extra_metadata["comments"] = comments
+            hs_extra_metadata["comments"] = comments.replace('[CRLF]', ' \n\n')  # TODO verify
         if external_links is not None:
-            hs_extra_metadata["external_links"] = external_links
-        if publications_of_this_data is not None:
-            hs_extra_metadata["publications_of_this_data"] = publications_of_this_data
-        if publications_using_this_data is not None:
-            hs_extra_metadata["publications_using_this_data"] = publications_using_this_data
+            external_links = external_links.split('|')
+            external_links = ["{} | ".format(x.split('$')[0]) for x in external_links]
+            external_links.insert(0, "| ")
+            printable_links = " ".join(external_links)
+
+            hs_extra_metadata["external_links"] = printable_links
+        # if publications_of_this_data is not None:
+        #     hs_extra_metadata["publications_of_this_data"] = publications_of_this_data.replace('|', ' ')
+        # if publications_using_this_data is not None:
+        #     hs_extra_metadata["publications_using_this_data"] = publications_using_this_data.replace('|', ' ')
         if related_datasets is not None:
             hs_extra_metadata["related_datasets"] = ", ".join(related_datasets_list)
 
@@ -543,7 +555,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
         # update Abstract/Description
         _success_abstract, _ = _update_core_metadata(hs, hs_id,
-                                                     {"description": hs_res_abstract},
+                                                     {"description": hs_res_abstract.replace('[CRLF]', '\n\n')}, # TODO verify change
                                                      message="Abstract",
                                                      migration_log=migration_log)
 
@@ -578,10 +590,19 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
         # update relations for publication of this data
         _success_relations = True
         if publications_of_this_data is not None:
-            hs_relations_list = [{
-                    "type": "isDataFor",
-                    "value": publications_of_this_data[:499]  # caps: 500 chars
-                }]
+            pub_list = publications_of_this_data.split('|')
+            hs_relations_list = []
+            for pub_item in pub_list:
+                hs_relations_list.append(
+                    {
+                        "type": "isDataFor",
+                        "value": pub_item[:499]
+                    }
+                )
+            # hs_relations_list = [{
+            #         "type": "isDataFor",
+            #         "value": publications_of_this_data[:499]
+            #     }]
 
             _success_relations, _ = _update_core_metadata(hs, hs_id,
                                                        {'relations': hs_relations_list},

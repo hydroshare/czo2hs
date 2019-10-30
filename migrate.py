@@ -115,7 +115,7 @@ def output_status(success_error, czo_accounts):
 
 def main():
     log_file_path, timestamp_suffix = logging_init()
-    logging.info("Start migrating at {}".format(start_time.asctime()))
+    logging.info("Migration Start {}".format(start_time.asctime()))
 
     czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
     czo_hs_id_lookup_df = pd.DataFrame(columns=["success", "czo_id", "hs_id", "uname", "elapsed_time",
@@ -159,6 +159,11 @@ def main():
 
     # upload logs and results to HS
     hs = output_status(success_error, czo_accounts)
+
+    # existing_hs_ids = [x for x in hs.resources()]
+    # scimeta = [hs.getScienceMetadata(x.get('resource_id')) for x in existing_hs_ids]
+    # print(scimeta)
+
     hs_id = hs.createResource("CompositeResource",
                               "czo2hs migration log files {}".format(timestamp_suffix),)
     hs.addResourceFile(hs_id, log_file_path)
