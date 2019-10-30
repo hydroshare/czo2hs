@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Path to CZO CMS export (csv file)
-CZO_DATA_CSV = "./data/czo.csv"
+CZO_DATA_CSV = "./data/CZO-datasets-metadata-2019-10-29.csv"
 
 # a list of czo_ids to migrate.
 # If empty or None, list to be generated automatically by START_ROW_INDEX and END_ROW_INDEX below
@@ -11,7 +11,7 @@ CZO_ID_LIST_TO_MIGRATE = []
 
 # only work when CZO_ID_LIST_TO_MIGRATE is empty or NONE
 START_ROW_INDEX = 0  # start row index in CZO_DATA_CSV
-END_ROW_INDEX = 411  # end row index in CZO_DATA_CSV -- max 411 for now (may change with new czo.csv)
+END_ROW_INDEX = 10 #434  # end row index in CZO_DATA_CSV (may change with new czo.csv)
 
 # Migration logs
 LOG_DIR = "./logs"
@@ -74,8 +74,8 @@ RUN_2ND_PASS = True
 # local_settings overriding settings
 try:
     from local_settings import *
-except ImportError:
-    pass
+except ImportError as e:
+    print("----ERROR OVERRIDING SETTINGS WITH LOCAL_SETTINGS------- {}".format(e))
 
 # append hydroshare connection info to each czo account
 connection_info = {"hs_url": HS_URL, "port": PORT, "use_https": USE_HTTPS, "verify_https": VERIFY_HTTPS}
