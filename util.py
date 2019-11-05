@@ -1,7 +1,7 @@
 import time
 import tempfile
 import os
-from settings import README_FILENAME
+from settings import README_FILENAME, MORE_TMP
 
 
 def retry_func(fun, args=None, kwargs=None, max_tries=4, interval_sec=5, increase_interval=True, raise_on_failure=True):
@@ -65,7 +65,10 @@ def gen_readme(rowdata, related_resources):
     :param related_resources: list of hydroshare resource ids
     :return: save markdown file to tmp
     """
-    readme_path = os.path.join(tempfile.mkdtemp(), README_FILENAME)
+    # readme_path = os.path.join(tempfile.mkdtemp(), README_FILENAME)
+    readme_path = os.path.join(MORE_TMP, 'readme')  # TODO parameterize
+    readme_path = os.path.join(readme_path, README_FILENAME)
+
     info = ''
     with open(os.path.join(readme_path), 'w', encoding='utf-8') as f:
         info += "#" + rowdata.get('title') + "\n"

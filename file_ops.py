@@ -8,7 +8,7 @@ from urllib.parse import unquote
 import requests
 import validators
 
-from settings import BIG_FILE_SIZE_MB, MB_TO_BYTE, headers, USE_CACHED_FILES, CACHED_FILE_DIR
+from settings import BIG_FILE_SIZE_MB, MB_TO_BYTE, headers, USE_CACHED_FILES, CACHED_FILE_DIR, MORE_TMP
 from util import retry_func
 
 
@@ -40,7 +40,8 @@ def download_file(url, file_name):
     # TODO try catch and log
     # TODO handle for rate limiting
 
-    save_to_base = tempfile.mkdtemp()
+    # save_to_base = tempfile.mkdtemp()
+    save_to_base = MORE_TMP
     save_to = os.path.join(save_to_base, file_name)
 
     if USE_CACHED_FILES:

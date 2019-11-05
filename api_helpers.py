@@ -9,7 +9,7 @@ import requests
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from file_ops import extract_fileinfo_from_url, retry_func
-from settings import logger, headers
+from settings import logger, headers, MORE_TMP
 from utils_logging import log_exception
 
 # TODO move to settings and test
@@ -660,6 +660,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
 
                     try:
                         tmpfile_folder_path = os.path.dirname(f["path_or_url"])
+                        print(tempfile.gettemptdir())
                         assert(tmpfile_folder_path.startswith(tempfile.gettempdir()))
                         shutil.rmtree(tmpfile_folder_path)
                     except Exception:

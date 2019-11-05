@@ -1,4 +1,5 @@
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +58,15 @@ headers = {
 USE_CACHED_FILES = True
 # Path to predownloaded files
 CACHED_FILE_DIR = "./tmp"
+
+if not os.path.exists("./tmp2"):
+    os.mkdir("./tmp2")
+
+if not os.path.exists("./tmp2/readme"):  # this is hardcoded in util.py
+    os.mkdir("./tmp2/readme")
+
+# More tmp
+MORE_TMP = "./tmp2"
 
 # Unit conversion
 MB_TO_BYTE = 1024 * 1024
