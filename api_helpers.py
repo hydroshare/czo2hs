@@ -661,6 +661,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                     try:
                         tmpfile_folder_path = os.path.dirname(f["path_or_url"])
                         assert(tmpfile_folder_path.startswith(tempfile.gettempdir()))
+                        logging.info("DELTREE {}".format(tmpfile_folder_path))
                         shutil.rmtree(tmpfile_folder_path)
                     except Exception:
                         pass
