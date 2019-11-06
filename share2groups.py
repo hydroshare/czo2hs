@@ -24,7 +24,7 @@ for account in CZO_ACCOUNTS:
     czo = account["czo"]
     if czo.lower() == "default":
         continue
-    g_name = "{} Group".format(account["group"])
+    g_name = "{}".format(account["group"])
 
     try:
         print("Sharing {}'s resource with Group {} with privilege code {}".format(u_name,
