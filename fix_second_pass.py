@@ -7,29 +7,26 @@ import pandas as pd
 
 from util import gen_readme
 from settings import CZO_ACCOUNTS, CZO_DATA_CSV, README_COLUMN_MAP_PATH, \
-     README_SHOW_MAPS, HS_EXTERNAL_FULL_DOMAIN, SECOND_PASS_FILE
+    README_SHOW_MAPS, HS_EXTERNAL_FULL_DOMAIN
 from api_helpers import _extract_value_from_df_row_dict, string_to_list
 from accounts import CZOHSAccount
 
 
 def query_lookup_table(czo_id, lookup_data_df, attr="hs_id"):
-
-        v = lookup_data_df.loc[czo_id][attr]
-        if str(v) == "-1" or str(v).lower() == "nan" or len(str(v)) == 0:
-            return None
-        return v
+    v = lookup_data_df.loc[czo_id][attr]
+    if str(v) == "-1" or str(v).lower() == "nan" or len(str(v)) == 0:
+        return None
+    return v
 
 
 def get_resource_file_url(hs_id, filename):
-
     landing = get_resource_landing_page_url(hs_id)
     file = "{landing}data/contents/{filename}".format(landing=landing,
-                                                       filename=filename)
+                                                      filename=filename)
     return file
 
 
 def get_resource_landing_page_url(hs_id):
-
     hs_res_url = "{HS_FULL_DOMAIN}/resource/{hs_id}/".format(HS_FULL_DOMAIN=HS_EXTERNAL_FULL_DOMAIN,
                                                              hs_id=hs_id)
     return hs_res_url
@@ -43,7 +40,6 @@ def build_maps_md(map_filename, hs_id):
 
 
 def build_related_dataset_md(res_id, czo_id, czo_data_df=None):
-
     res_url = get_resource_landing_page_url(res_id)
     res_title = None
     if czo_data_df is not None:
@@ -58,14 +54,12 @@ def build_related_dataset_md(res_id, czo_id, czo_data_df=None):
 
 
 def get_dict_by_czo_id(czo_id, czo_data_df):
-
     czo_row_dict = czo_data_df.loc[czo_data_df['czo_id'] == czo_id].to_dict(orient='records')[0]
     return czo_row_dict
 
 
-def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
-
-    logging.info("\n\nSecond Pass Started")
+def redo_second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
+    logging.info("\n\nGenerating README Only Started")
 
     # read czo csv
     czo_data_df = pd.read_csv(czo_csv_path)
@@ -105,7 +99,7 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
 
                     related_datasets_md = list(map(functools.partial(build_related_dataset_md,
                                                                      czo_data_df=czo_data_df), hs_id_list,
-                                                   czo_id_list))
+                                                                     czo_id_list))
 
                     # update czo_row_dict for readme.md
                     czo_row_dict["RELATED_DATASETS"] = "\n\r".join(related_datasets_md)
@@ -119,14 +113,14 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
                     ex_metadata_counter += 1
             except Exception as ex:
                 logging.error(
-                    "Failed to updated ex_metadata {0} - {1}: {2}".format(hs_id, czo_id, str(ex)))
+                    "Failed to update related datasets {0} - {1}: {2}".format(hs_id, czo_id, str(ex)))
 
             # update maps
             try:
                 if README_SHOW_MAPS and maps is not None:
                     maps_md = list(map(functools.partial(build_maps_md,
                                                          hs_id=hs_id),
-                                       maps.split('|')))
+                                                         maps.split('|')))
                     # update czo_row_dict for readme.md
                     czo_row_dict["map_uploads"] = "\n\r".join(maps_md)
             except Exception as ex:
@@ -151,19 +145,15 @@ def second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
                 except Exception:
                     logging.error("Failed to make Resource Public")
 
-    logging.info("Second Pass Done: {} ex metadata updated; {} ReadMe files created\n\n".format(ex_metadata_counter,
+    logging.info("README Pass Done: {} ex metadata updated; {} ReadMe files created\n\n".format(ex_metadata_counter,
                                                                                                 readme_counter))
 
 
 if __name__ == "__main__":
-
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)-5.5s]  %(message)s",
         handlers=[logging.StreamHandler()])
 
-    lookup_path = SECOND_PASS_FILE
     czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
-    second_pass(CZO_DATA_CSV,
-                lookup_path,
-                czo_accounts)
+    redo_second_pass(CZO_DATA_CSV, './data/local_missing_readme.txt', czo_accounts)
