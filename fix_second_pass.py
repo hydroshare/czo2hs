@@ -7,7 +7,7 @@ import pandas as pd
 
 from util import gen_readme
 from settings import CZO_ACCOUNTS, CZO_DATA_CSV, README_COLUMN_MAP_PATH, \
-    README_SHOW_MAPS, HS_EXTERNAL_FULL_DOMAIN
+    README_SHOW_MAPS, HS_EXTERNAL_FULL_DOMAIN, NEW_SECOND_PASS
 from api_helpers import _extract_value_from_df_row_dict, string_to_list
 from accounts import CZOHSAccount
 
@@ -59,7 +59,7 @@ def get_dict_by_czo_id(czo_id, czo_data_df):
 
 
 def redo_second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
-    logging.info("\n\nGenerating README Only Started")
+    logging.info("\n\nFix Second Pass Started")
 
     # read czo csv
     czo_data_df = pd.read_csv(czo_csv_path)
@@ -145,7 +145,7 @@ def redo_second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
                 except Exception:
                     logging.error("Failed to make Resource Public")
 
-    logging.info("README Pass Done: {} ex metadata updated; {} ReadMe files created\n\n".format(ex_metadata_counter,
+    logging.info("Fix Pass Done: {} ex metadata updated; {} ReadMe files created\n\n".format(ex_metadata_counter,
                                                                                                 readme_counter))
 
 
@@ -156,4 +156,4 @@ if __name__ == "__main__":
         handlers=[logging.StreamHandler()])
 
     czo_accounts = CZOHSAccount(CZO_ACCOUNTS)
-    redo_second_pass(CZO_DATA_CSV, './data/local_missing_readme.txt', czo_accounts)
+    redo_second_pass(CZO_DATA_CSV, NEW_SECOND_PASS, czo_accounts)
