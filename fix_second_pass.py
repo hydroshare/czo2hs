@@ -133,11 +133,11 @@ def redo_second_pass(czo_csv_path, lookup_csv_path, czo_accounts):
                 readme_path = gen_readme(czo_row_dict, related_datasets_md)
 
                 try:
-                    file_add_respone = hs.addResourceFile(hs_id, readme_path)
+                    file_add_response = hs.addResourceFile(hs_id, readme_path)
                     logging.info("Creating ReadMe file {}".format(readme_path))
                     readme_counter += 1
                 except IndexError as index_err:
-                    logging.error('Resource exists hs: {} czo: {} - {}'.format(hs_id, czo_id, index_err))
+                    logging.error('Resource exists hs: {} czo: {} - {} - {}'.format(hs_id, czo_id, readme_path, index_err))
 
             if not public:
                 try:
