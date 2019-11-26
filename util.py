@@ -103,6 +103,11 @@ def gen_readme(rowdata, related_resources):
         info += normal_write("South latitude", rowdata.get('south_lat'))
         info += normal_write("West longitude", rowdata.get('west_long'))
         info += normal_write("East longitude", rowdata.get('east_long'))
+
+        map_uploads = rowdata.get('map_uploads')
+        if map_uploads and map_uploads != 'nan' and map_uploads.lower() != 'none':
+            info += map_uploads
+
         info += "  \n<br /><br />\n  "
 
         info += "------\n##REFERENCE\n"
