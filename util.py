@@ -55,7 +55,10 @@ def normal_write(_heading, _text):
     :return:
     """
     _text = str(_text)
-    return "###{}\n".format(_heading) + _text.replace('[CRLF]', '\n') + "\n\n"
+    if _text:
+        if _text.lower() != 'nan' and _text.lower() != 'none':
+            return "###{}\n".format(_heading) + _text.replace('[CRLF]', '\n') + "\n\n"
+    return ""
 
 
 def gen_readme(rowdata, related_resources):
@@ -121,7 +124,10 @@ def gen_readme(rowdata, related_resources):
         if _pub_using.lower() != 'nan' and _pub_using.lower() != 'none':
             _pub_using = _pub_using.replace('|', '\n\n')
             info += conditional_write('Publications using this data', _pub_using)
-        info += normal_write("CZO ID", rowdata.get('czo_id'))
+        _czo_id = int(rowdata.get('czo_id'))
+        if _czo_id < 0:
+            raise(Exception("bad id"))
+        info += normal_write("CZO ID", _czo_id)
         info += conditional_write('Related datasets', rowdata.get('RELATED_DATASETS'))
 
         ext_links = str(rowdata.get('EXTERNAL_LINKS-url$link_text'))

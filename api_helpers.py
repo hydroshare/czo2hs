@@ -313,6 +313,8 @@ def _get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None)
                                                         }
                                }
     if name and len(name) > 0:
+        if name.startswith(','):
+            name = name[1:]
         hs_coverage_spatial["value"]["name"] = name
 
     return hs_coverage_spatial
