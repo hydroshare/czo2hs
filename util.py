@@ -105,7 +105,7 @@ def gen_readme(rowdata, related_resources):
         info += normal_write("East longitude", rowdata.get('east_long'))
 
         map_uploads = rowdata.get('map_uploads')
-        if map_uploads and map_uploads != 'nan' and map_uploads.lower() != 'none':
+        if map_uploads and str(map_uploads).lower() != 'nan' and str(map_uploads).lower() != 'none':
             info += map_uploads
 
         info += "  \n<br /><br />\n  "

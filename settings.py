@@ -4,7 +4,7 @@ import os
 logger = logging.getLogger(__name__)
 
 # Path to CZO CMS export (csv file)
-CZO_DATA_CSV = "./data/CZO-datasets-metadata-2019-10-29.csv"
+CZO_DATA_CSV = "./data/IMLCZODatasetsMetadata20191014.csv"
 
 # a list of czo_ids to migrate.
 # If empty or None, list to be generated automatically by START_ROW_INDEX and END_ROW_INDEX below
@@ -42,6 +42,7 @@ CZO_ACCOUNTS = [
     {"czo":  "christina", "group": "CZO Christina", "uname": "czo_christina", "pwd": "123"},
     {"czo":  "shale hills", "group": "CZO Shale-Hills", "uname": "czo_shale-hills", "pwd": "123"},
     {"czo":  "calhoun", "group": "CZO Calhoun", "uname": "czo_calhoun", "pwd": "123"},
+    {"czo":  "iml", "group": "CZO IML", "uname": "czo_iml", "pwd": "123"},
     # Keep the last line unchanged
     {"czo":  "default", "group": "", "uname": "czo", "pwd": "123"},
 ]

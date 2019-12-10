@@ -25,4 +25,3 @@ True,2656,a2c9c3b5655446db9da9ada6da4ef247,czo_sierra,162 sec | 2.70 min,True,kr
 True,2529,0918a6975c864a398766d579e3687004,czo_sierra,1 sec | 0.10 min,True,SSCZO_Map_2013.jpg
 True,2641,37d7295630ca44d0a085da8ea05ccc17,czo_sierra,31 sec | 0.52 min,True,SSCZO_Map_2013.jpg
 True,2642,63bd9676c3bf4a9996bd62b7a120c2be,czo_sierra,68 sec | 1.13 min,True,SSCZO_Map_2013.jpg
-True,2664,d6d8b2a6e5604629b1192233646dfea1,czo_sierra,176 sec | 2.93 min,True,
