@@ -9,7 +9,7 @@ import requests
 from hs_restclient import HydroShare, HydroShareAuthBasic
 
 from file_ops import extract_fileinfo_from_url, retry_func
-from settings import logger, headers
+from settings import logger, headers, MORE_TMP
 from utils_logging import log_exception
 
 # TODO move to settings and test
@@ -313,6 +313,8 @@ def _get_spatial_coverage(north_lat, west_long, south_lat, east_long, name=None)
                                                         }
                                }
     if name and len(name) > 0:
+        if name.startswith(','):
+            name = name[1:]
         hs_coverage_spatial["value"]["name"] = name
 
     return hs_coverage_spatial
@@ -661,6 +663,7 @@ def create_hs_res_from_czo_row(czo_res_dict, czo_hs_account_obj, index=-99, ):
                     try:
                         tmpfile_folder_path = os.path.dirname(f["path_or_url"])
                         assert(tmpfile_folder_path.startswith(tempfile.gettempdir()))
+                        logging.info("DELTREE {}".format(tmpfile_folder_path))
                         shutil.rmtree(tmpfile_folder_path)
                     except Exception:
                         pass

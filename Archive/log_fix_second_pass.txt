@@ -1,0 +1,1045 @@
+2019-11-21 14:57:44,229 [INFO ]
+
+Fix Second Pass Started
+2019-11-21 14:57:44,262 [INFO ]  Updating d841f99381424ebc850842a1dbb5630b - 2400 by account czo_christina
+2019-11-21 14:57:47,148 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:57:47,150 [INFO ]  Updating c635d74874544a72b1145324138b1956 - 2403 by account czo_luquillo
+2019-11-21 14:57:49,896 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:57:49,898 [INFO ]  Updating 98574a24d4344b6bb99d12db5f1c4260 - 2406 by account czo_sierra
+Related datasets ['2643', '2656', '2529', '2598', '2597', '2596']
+2019-11-21 14:57:50,994 [INFO ]  Extended metadata
+2019-11-21 14:57:53,787 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:57:53,789 [INFO ]  Updating 3d25b6d404b3454eb62ce588eceeacd6 - 2407 by account czo_christina
+Related datasets ['2474']
+2019-11-21 14:57:55,104 [INFO ]  Extended metadata
+2019-11-21 14:57:57,896 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:57:57,898 [INFO ]  Updating 28cb4a35ab88427aa24194feac9e0e61 - 2414 by account czo_catalina-jemez
+Related datasets ['2532']
+2019-11-21 14:57:59,096 [INFO ]  Extended metadata
+2019-11-21 14:58:01,825 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:01,827 [INFO ]  Updating 5ca1378090884e72a8dcb796d882bb07 - 2415 by account czo_catalina-jemez
+2019-11-21 14:58:04,567 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:04,569 [INFO ]  Updating 5e6a0596a58a48d5acbbeb0b05c5e243 - 2423 by account czo_boulder
+Related datasets ['2782', '2431', '2423', '2436', '2448', '2433', '2430', '2468']
+2019-11-21 14:58:05,670 [INFO ]  Extended metadata
+2019-11-21 14:58:08,218 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:08,221 [INFO ]  Updating 1db7abcf0eb64ef49000c46a6133949d - 2425 by account czo_catalina-jemez
+2019-11-21 14:58:10,807 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:10,810 [INFO ]  Updating de13d6685e944864aca27217c06ae2bc - 2426 by account czo_boulder
+Related datasets ['4122', '2434', '2429', '2450', '4123', '2423', '2452']
+2019-11-21 14:58:11,892 [INFO ]  Extended metadata
+2019-11-21 14:58:14,662 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:14,664 [INFO ]  Updating 4a4b2b04790147828072151b2a4820e1 - 2428 by account czo_boulder
+Related datasets ['2428', '3969', '3742']
+2019-11-21 14:58:15,726 [INFO ]  Extended metadata
+2019-11-21 14:58:18,445 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:18,447 [INFO ]  Updating 396b28ed9f204621a724afb40cc4b9b4 - 2429 by account czo_boulder
+Related datasets ['2426', '2452', '2434', '4122', '4123', '2450']
+2019-11-21 14:58:19,506 [INFO ]  Extended metadata
+2019-11-21 14:58:22,086 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:22,088 [INFO ]  Updating 48e04554b0b044c095a85c8ee2314134 - 2430 by account czo_boulder
+Related datasets ['2782', '2436', '2431', '2448', '2433']
+2019-11-21 14:58:23,195 [INFO ]  Extended metadata
+2019-11-21 14:58:25,839 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:25,841 [INFO ]  Updating 5f45e73e8e124ab78855f001b954e7ed - 2431 by account czo_boulder
+Related datasets ['2782', '2423', '2430', '2468']
+2019-11-21 14:58:26,959 [INFO ]  Extended metadata
+2019-11-21 14:58:29,593 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:29,595 [INFO ]  Updating 04c139d1dab14cacb239e74ff6d65639 - 2432 by account czo_catalina-jemez
+2019-11-21 14:58:32,345 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:32,347 [INFO ]  Updating e876ee4739b34f3c840c2588942f0381 - 2433 by account czo_boulder
+Related datasets ['2436', '2782', '2423', '2433', '2448', '2431', '2430']
+2019-11-21 14:58:33,465 [INFO ]  Extended metadata
+2019-11-21 14:58:36,325 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:36,327 [INFO ]  Updating a4e4a5914725470494e1eee16907bf86 - 2434 by account czo_boulder
+Related datasets ['4122']
+2019-11-21 14:58:37,416 [INFO ]  Extended metadata
+2019-11-21 14:58:39,987 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:39,990 [INFO ]  Updating 6bf3e44b9de344749d8f665e139e7311 - 2435 by account czo_boulder
+Related datasets ['2821']
+2019-11-21 14:58:40,968 [INFO ]  Extended metadata
+2019-11-21 14:58:43,521 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:43,523 [INFO ]  Updating 01279eb2507e43b9a71d7c877958cf65 - 2436 by account czo_boulder
+Related datasets ['2782', '2433', '2423']
+2019-11-21 14:58:44,580 [INFO ]  Extended metadata
+2019-11-21 14:58:47,253 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:47,255 [INFO ]  Updating 95d124e2db0448e184c89e1859c67754 - 2447 by account czo_boulder
+Related datasets ['2426', '2450', '4123', '2429', '2452']
+2019-11-21 14:58:48,368 [INFO ]  Extended metadata
+2019-11-21 14:58:50,933 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:50,935 [INFO ]  Updating c8d95e8119304d5396a9cecdded22fcc - 2448 by account czo_boulder
+Related datasets ['2431', '2423', '2430', '2433', '2436', '2782']
+2019-11-21 14:58:51,933 [INFO ]  Extended metadata
+2019-11-21 14:58:54,516 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:54,518 [INFO ]  Updating 543c6572a58c434ea6507608eaf04924 - 2450 by account czo_boulder
+Related datasets ['4123', '4122', '2434', '2426', '2450', '2429', '2452']
+2019-11-21 14:58:55,536 [INFO ]  Extended metadata
+2019-11-21 14:58:58,120 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:58:58,123 [INFO ]  Updating 973e4b7bfe4d486684890051347c86d8 - 2451 by account czo_boulder
+2019-11-21 14:59:00,799 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:00,802 [INFO ]  Updating 7a785fdd802747668ead06f60d660250 - 2452 by account czo_boulder
+Related datasets ['4122', '2434', '2426', '2450', '4123', '2447', '2429']
+2019-11-21 14:59:01,827 [INFO ]  Extended metadata
+2019-11-21 14:59:04,428 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:04,429 [INFO ]  Updating a0986c3b6010466da4522620fc8dd14d - 2459 by account czo_boulder
+2019-11-21 14:59:07,094 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:07,096 [INFO ]  Updating c9679d894e87483d9b6b5591f77ee79b - 2460 by account czo_boulder
+2019-11-21 14:59:09,640 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:09,642 [INFO ]  Updating 71470ee608ef438488d1c9c7d122157d - 2461 by account czo_boulder
+2019-11-21 14:59:12,178 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:12,181 [INFO ]  Updating c29f39c122c3411c97a3bfb933f156a2 - 2464 by account czo_christina
+2019-11-21 14:59:15,005 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:15,007 [INFO ]  Updating e9f2ce8da1264a2eb70f643267028955 - 2465 by account czo_christina
+2019-11-21 14:59:17,746 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:17,748 [INFO ]  Updating 9a04a43fa959474d8fe26a5780a757ff - 2467 by account czo_boulder
+Related datasets ['2468', '3737']
+2019-11-21 14:59:18,739 [INFO ]  Extended metadata
+2019-11-21 14:59:21,347 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:21,348 [INFO ]  Updating 4a12a3b0224640e6a572e840c93bbf7f - 2468 by account czo_boulder
+Related datasets ['3737', '2467', '2429', '4123', '2450', '2426', '2431', '2423']
+2019-11-21 14:59:22,365 [INFO ]  Extended metadata
+2019-11-21 14:59:25,029 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:25,031 [INFO ]  Updating 7d882820166f4695ae614fe436db5172 - 2469 by account czo_catalina-jemez
+2019-11-21 14:59:27,662 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:27,665 [INFO ]  Updating de5d0a4f98aa4d98a54f9f67868f41aa - 2473 by account czo_christina
+2019-11-21 14:59:30,255 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:30,257 [INFO ]  Updating 4e8ecb6c93a64d7284fc76c5aa191885 - 2474 by account czo_christina
+Related datasets ['2407', '2464']
+2019-11-21 14:59:31,319 [INFO ]  Extended metadata
+2019-11-21 14:59:33,968 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:33,971 [INFO ]  Updating 0ba983afc62647dc8cfbd91058cfc56d - 2475 by account czo_catalina-jemez
+2019-11-21 14:59:36,668 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:36,670 [INFO ]  Updating 346cf577d01e4b2b90ff1cef86e789bb - 2491 by account czo_catalina-jemez
+2019-11-21 14:59:39,292 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:39,294 [INFO ]  Updating 1dc7b0975ae2469a96e3458075d3b75c - 2494 by account czo_catalina-jemez
+2019-11-21 14:59:41,991 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:41,992 [INFO ]  Updating 9d7dd6ca40984607ad74a00ab0b5121b - 2497 by account czo_catalina-jemez
+2019-11-21 14:59:44,520 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:44,523 [INFO ]  Updating 3d621d21b79e465fb994ff699cc9d72e - 2498 by account czo_catalina-jemez
+2019-11-21 14:59:47,094 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:47,096 [INFO ]  Updating b8692637e187437d961a9964dd3222dc - 2500 by account czo_catalina-jemez
+2019-11-21 14:59:49,699 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:49,701 [INFO ]  Updating 2bbb5c31bd4e47e4a1011ab070653580 - 2501 by account czo_christina
+Related datasets ['2502']
+2019-11-21 14:59:50,824 [INFO ]  Extended metadata
+2019-11-21 14:59:53,489 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:53,492 [INFO ]  Updating 940771e1ca3c46dda51a0f75e15a13a9 - 2502 by account czo_christina
+Related datasets ['2501']
+2019-11-21 14:59:54,504 [INFO ]  Extended metadata
+2019-11-21 14:59:57,084 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:57,086 [INFO ]  Updating c0e5094d1de54547a304d4dec3a7b3ff - 2504 by account czo_catalina-jemez
+2019-11-21 14:59:59,704 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 14:59:59,706 [INFO ]  Updating 1b643229b1bf471e82d3cedfb3e1f22f - 2506 by account czo_christina
+2019-11-21 15:00:02,354 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:02,357 [INFO ]  Updating 9db9d7aa0a194667b0e9ca5e996d5c96 - 2514 by account czo_christina
+Related datasets ['2515', '2506']
+2019-11-21 15:00:03,460 [INFO ]  Extended metadata
+2019-11-21 15:00:06,238 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:06,239 [INFO ]  Updating 0a21b00a54d641e5aa5da0bc32998ad1 - 2515 by account czo_christina
+2019-11-21 15:00:08,848 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:08,850 [INFO ]  Updating e72d7c0cff794f6a80cc3ba7fcd9c408 - 2516 by account czo_christina
+2019-11-21 15:00:11,528 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:11,530 [INFO ]  Updating 55b9270113554c3da3e04c438b6c80c5 - 2517 by account czo_catalina-jemez
+2019-11-21 15:00:14,206 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:14,207 [INFO ]  Updating 5cdab0146d08458db3c50a446e9d3510 - 2518 by account czo_catalina-jemez
+2019-11-21 15:00:16,884 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:16,886 [INFO ]  Updating ae350bc18383499e83d3b1d68d1b1d75 - 2524 by account czo_catalina-jemez
+2019-11-21 15:00:19,499 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:19,501 [INFO ]  Updating d18e071d762c4e888469b687c2850051 - 2525 by account czo_catalina-jemez
+2019-11-21 15:00:22,156 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:22,159 [INFO ]  Updating 0918a6975c864a398766d579e3687004 - 2529 by account czo_sierra
+Related datasets ['2643', '2656', '2406', '2530', '2595']
+2019-11-21 15:00:23,246 [INFO ]  Extended metadata
+2019-11-21 15:00:26,012 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:26,014 [INFO ]  Updating de823cb8f37f46139dd6f06d65f43296 - 2530 by account czo_sierra
+Related datasets ['2595', '2598', '2597', '2596']
+2019-11-21 15:00:27,123 [INFO ]  Extended metadata
+2019-11-21 15:00:29,887 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:29,890 [INFO ]  Updating 172de7fe091f48d98b1d380da5851932 - 2531 by account czo_catalina-jemez
+2019-11-21 15:00:32,482 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:32,483 [INFO ]  Updating f5ae15fbdcc9425e847060f89da61557 - 2532 by account czo_catalina-jemez
+Related datasets ['2414']
+2019-11-21 15:00:33,515 [INFO ]  Extended metadata
+2019-11-21 15:00:36,166 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:36,168 [INFO ]  Updating f7df7b07ea19477ab7ea701c34bc356b - 2543 by account czo_catalina-jemez
+2019-11-21 15:00:38,795 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:38,797 [INFO ]  Updating 6ffd58c0f6e7406fa6e4cc41f62eb787 - 2544 by account czo_christina
+2019-11-21 15:00:41,409 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:41,411 [INFO ]  Updating ad2aa89db4324b7fba80026c87e3f86c - 2545 by account czo_christina
+2019-11-21 15:00:44,039 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:44,041 [INFO ]  Updating cf6f7bef4538411f8dd2832ec195991d - 2551 by account czo_luquillo
+2019-11-21 15:00:46,784 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:46,786 [INFO ]  Updating b83ff173b96f48b192c5b73b736ecaa1 - 2556 by account czo_shale-hills
+2019-11-21 15:00:49,330 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:49,332 [INFO ]  Updating 5c0c7d0a81904ba08c26b89b4f266545 - 2558 by account czo_shale-hills
+2019-11-21 15:00:51,974 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:51,976 [INFO ]  Updating 4f4b237579724355998a4f3c4114597e - 2560 by account czo_catalina-jemez
+2019-11-21 15:00:54,538 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:54,540 [INFO ]  Updating 1b1f6f97db1245e78a01edfede3b1710 - 2561 by account czo_catalina-jemez
+2019-11-21 15:00:57,186 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:00:57,188 [INFO ]  Updating 54dbaa2fb67646b7b62a5aa47b2bdd7d - 2565 by account czo_christina
+2019-11-21 15:00:57,736 [ERROR]  Resource exists hs: 54dbaa2fb67646b7b62a5aa47b2bdd7d czo: 2565 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:00:57,738 [INFO ]  Updating d6367b690baa4b6ca1d5bc1a05b692f8 - 2568 by account czo_shale-hills
+2019-11-21 15:00:58,304 [ERROR]  Resource exists hs: d6367b690baa4b6ca1d5bc1a05b692f8 czo: 2568 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:00:58,306 [INFO ]  Updating dcf98e8c9eb346d6857167d68fd6176b - 2570 by account czo_shale-hills
+2019-11-21 15:01:01,228 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:01:01,230 [INFO ]  Updating 89102ae166d84dc39d4d36fa2edaedfb - 2571 by account czo_shale-hills
+2019-11-21 15:01:01,816 [ERROR]  Resource exists hs: 89102ae166d84dc39d4d36fa2edaedfb czo: 2571 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:01,818 [INFO ]  Updating f6bfad21671e4a31bdd755b3ce83f397 - 2572 by account czo_shale-hills
+2019-11-21 15:01:02,351 [ERROR]  Resource exists hs: f6bfad21671e4a31bdd755b3ce83f397 czo: 2572 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:02,353 [INFO ]  Updating 604b48fd88ec44c7a9c6698064adc186 - 2573 by account czo_shale-hills
+2019-11-21 15:01:02,865 [ERROR]  Resource exists hs: 604b48fd88ec44c7a9c6698064adc186 czo: 2573 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:02,868 [INFO ]  Updating 1244f57498c94bf4bf54e0c927cdf21c - 2574 by account czo_shale-hills
+2019-11-21 15:01:03,391 [ERROR]  Resource exists hs: 1244f57498c94bf4bf54e0c927cdf21c czo: 2574 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:03,394 [INFO ]  Updating 12c8d83bb7a34d7abba562fce2a935fe - 2578 by account czo_shale-hills
+2019-11-21 15:01:03,927 [ERROR]  Resource exists hs: 12c8d83bb7a34d7abba562fce2a935fe czo: 2578 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:03,929 [INFO ]  Updating 7cad518a0ed9497392349024dbb08b89 - 2580 by account czo_shale-hills
+2019-11-21 15:01:04,455 [ERROR]  Resource exists hs: 7cad518a0ed9497392349024dbb08b89 czo: 2580 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:04,457 [INFO ]  Updating 10d8974ca8454e58bdec6fb2270bc40b - 2582 by account czo_shale-hills
+2019-11-21 15:01:04,994 [ERROR]  Resource exists hs: 10d8974ca8454e58bdec6fb2270bc40b czo: 2582 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:04,996 [INFO ]  Updating e598205c8a0a4cb4af988b02a7bb737f - 2583 by account czo_shale-hills
+2019-11-21 15:01:05,606 [ERROR]  Resource exists hs: e598205c8a0a4cb4af988b02a7bb737f czo: 2583 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:05,608 [INFO ]  Updating b33d251ecd164474ab67afe9f83bf6d9 - 2584 by account czo_shale-hills
+2019-11-21 15:01:06,155 [ERROR]  Resource exists hs: b33d251ecd164474ab67afe9f83bf6d9 czo: 2584 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:06,157 [INFO ]  Updating 95dfb1256ee7442089069b4da46a6e02 - 2585 by account czo_shale-hills
+2019-11-21 15:01:06,716 [ERROR]  Resource exists hs: 95dfb1256ee7442089069b4da46a6e02 czo: 2585 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:06,720 [INFO ]  Updating ad23810ef40440058f8ffa2b1d9fa2bd - 2586 by account czo_shale-hills
+2019-11-21 15:01:07,275 [ERROR]  Resource exists hs: ad23810ef40440058f8ffa2b1d9fa2bd czo: 2586 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:07,276 [INFO ]  Updating 4939e8fe6af54a28948230774bdf055f - 2587 by account czo_shale-hills
+2019-11-21 15:01:07,848 [ERROR]  Resource exists hs: 4939e8fe6af54a28948230774bdf055f czo: 2587 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:07,850 [INFO ]  Updating 5f4234d521a24a5488258cf7ff9cf588 - 2588 by account czo_shale-hills
+2019-11-21 15:01:08,424 [ERROR]  Resource exists hs: 5f4234d521a24a5488258cf7ff9cf588 czo: 2588 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:08,427 [INFO ]  Updating b007011b77a94b70bb836d38c9eb1138 - 2591 by account czo_shale-hills
+2019-11-21 15:01:08,968 [ERROR]  Resource exists hs: b007011b77a94b70bb836d38c9eb1138 czo: 2591 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:08,971 [INFO ]  Updating bae5244685d94de79abc857f0b5bd990 - 2593 by account czo_shale-hills
+2019-11-21 15:01:09,504 [ERROR]  Resource exists hs: bae5244685d94de79abc857f0b5bd990 czo: 2593 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:09,506 [INFO ]  Updating 211a5f0e986746668140be49756f7723 - 2594 by account czo_shale-hills
+2019-11-21 15:01:10,051 [ERROR]  Resource exists hs: 211a5f0e986746668140be49756f7723 czo: 2594 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:10,053 [INFO ]  Updating 55766073b69a47f4bcb28ec9d3aade6a - 2595 by account czo_sierra
+Related datasets ['2530', '2598', '2597', '2596']
+2019-11-21 15:01:11,282 [INFO ]  Extended metadata
+2019-11-21 15:01:13,954 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:01:13,957 [INFO ]  Updating 757ed05854ab430dae99841f44622283 - 2596 by account czo_sierra
+Related datasets ['2595', '2530', '2597', '2598']
+2019-11-21 15:01:15,101 [INFO ]  Extended metadata
+2019-11-21 15:01:17,806 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:01:17,807 [INFO ]  Updating aafcc55f646b4207ae975490e6f752ab - 2597 by account czo_sierra
+Related datasets ['2530', '2595', '2598', '2596']
+2019-11-21 15:01:18,889 [INFO ]  Extended metadata
+2019-11-21 15:01:21,678 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:01:21,680 [INFO ]  Updating 378376531f1f4d6f8adb121ce7ac5ad2 - 2598 by account czo_sierra
+Related datasets ['2530', '2595', '2597', '2596']
+2019-11-21 15:01:22,787 [INFO ]  Extended metadata
+2019-11-21 15:01:25,551 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:01:25,553 [INFO ]  Updating f433e8228c8440a1ba9cd8aaf133a7cb - 2599 by account czo_shale-hills
+2019-11-21 15:01:26,097 [ERROR]  Resource exists hs: f433e8228c8440a1ba9cd8aaf133a7cb czo: 2599 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:26,099 [INFO ]  Updating b9cb44e28a46416a9ed9b73f862fb5ec - 2600 by account czo_shale-hills
+2019-11-21 15:01:26,732 [ERROR]  Resource exists hs: b9cb44e28a46416a9ed9b73f862fb5ec czo: 2600 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:26,734 [INFO ]  Updating 4e785837997a4be6ad1e44d1a77ea076 - 2601 by account czo_shale-hills
+2019-11-21 15:01:27,254 [ERROR]  Resource exists hs: 4e785837997a4be6ad1e44d1a77ea076 czo: 2601 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:27,256 [INFO ]  Updating 4cefa72017ce4f128de6b7e61efae487 - 2602 by account czo_shale-hills
+2019-11-21 15:01:27,797 [ERROR]  Resource exists hs: 4cefa72017ce4f128de6b7e61efae487 czo: 2602 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:27,798 [INFO ]  Updating 180f67282b4149ca8d4f41b2438257eb - 2603 by account czo_sierra
+Related datasets ['2664', '2529', '2406']
+2019-11-21 15:01:28,859 [INFO ]  Extended metadata
+2019-11-21 15:01:31,540 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:01:31,543 [INFO ]  Updating 863483895e38410e83e7db02adb6dc92 - 2606 by account czo_shale-hills
+2019-11-21 15:01:32,088 [ERROR]  Resource exists hs: 863483895e38410e83e7db02adb6dc92 czo: 2606 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:32,090 [INFO ]  Updating e45b0d95e6174233bbc90d38307d3fbd - 2607 by account czo_shale-hills
+2019-11-21 15:01:32,688 [ERROR]  Resource exists hs: e45b0d95e6174233bbc90d38307d3fbd czo: 2607 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:32,689 [INFO ]  Updating 59f96e3c5c4d44f798ceacafa45f4c89 - 2608 by account czo_shale-hills
+2019-11-21 15:01:33,267 [ERROR]  Resource exists hs: 59f96e3c5c4d44f798ceacafa45f4c89 czo: 2608 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:33,269 [INFO ]  Updating c6ead75a04ce4349b89e112278757edd - 2609 by account czo_national
+2019-11-21 15:01:33,876 [ERROR]  Resource exists hs: c6ead75a04ce4349b89e112278757edd czo: 2609 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:33,879 [INFO ]  Updating be20dbf354314885a6981f7498f14e7d - 2610 by account czo_shale-hills
+2019-11-21 15:01:34,458 [ERROR]  Resource exists hs: be20dbf354314885a6981f7498f14e7d czo: 2610 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:34,460 [INFO ]  Updating 362f176877e744e8a30e8d59e65d24e0 - 2612 by account czo_catalina-jemez
+2019-11-21 15:01:34,991 [ERROR]  Resource exists hs: 362f176877e744e8a30e8d59e65d24e0 czo: 2612 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:34,993 [INFO ]  Updating cfe6c459d82143739454e85dc1fdf44a - 2613 by account czo_catalina-jemez
+2019-11-21 15:01:37,634 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:01:37,636 [INFO ]  Updating de4cb8a9c5664842a94b5d8a5de98953 - 2615 by account czo_catalina-jemez
+Related datasets ['2613', '2612']
+2019-11-21 15:01:38,650 [INFO ]  Extended metadata
+2019-11-21 15:01:39,189 [ERROR]  Resource exists hs: de4cb8a9c5664842a94b5d8a5de98953 czo: 2615 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:39,191 [INFO ]  Updating a6baaaf051cd4319a8aa3e17dbd42c08 - 2617 by account czo_luquillo
+2019-11-21 15:01:39,740 [ERROR]  Resource exists hs: a6baaaf051cd4319a8aa3e17dbd42c08 czo: 2617 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:39,742 [INFO ]  Updating ecb79f4688674bf1bf954722da992fc7 - 2618 by account czo_luquillo
+2019-11-21 15:01:40,297 [ERROR]  Resource exists hs: ecb79f4688674bf1bf954722da992fc7 czo: 2618 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:40,299 [INFO ]  Updating 5d670c6a577744b4be3156fc038a253d - 2619 by account czo_luquillo
+2019-11-21 15:01:40,847 [ERROR]  Resource exists hs: 5d670c6a577744b4be3156fc038a253d czo: 2619 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:40,849 [INFO ]  Updating 8fb0c17c23da423b8240396342bde0eb - 2621 by account czo_luquillo
+2019-11-21 15:01:41,399 [ERROR]  Resource exists hs: 8fb0c17c23da423b8240396342bde0eb czo: 2621 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:41,402 [INFO ]  Updating 26a884e0549a46368c215fe765fb1d70 - 2620 by account czo_luquillo
+2019-11-21 15:01:41,975 [ERROR]  Resource exists hs: 26a884e0549a46368c215fe765fb1d70 czo: 2620 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:41,977 [INFO ]  Updating 66e3f819a1f54d0faa8144717a4958c7 - 2622 by account czo_luquillo
+2019-11-21 15:01:42,530 [ERROR]  Resource exists hs: 66e3f819a1f54d0faa8144717a4958c7 czo: 2622 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:42,532 [INFO ]  Updating 99ce92f9404e499a88e663be84b9ee72 - 2624 by account czo_luquillo
+2019-11-21 15:01:43,158 [ERROR]  Resource exists hs: 99ce92f9404e499a88e663be84b9ee72 czo: 2624 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:43,160 [INFO ]  Updating 08dbca988daf4fe1b4302f22e0ffd67d - 2626 by account czo_luquillo
+2019-11-21 15:01:43,709 [ERROR]  Resource exists hs: 08dbca988daf4fe1b4302f22e0ffd67d czo: 2626 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:43,711 [INFO ]  Updating 7f63e88c8a104c2da0d5c534fd64cfb2 - 2627 by account czo_luquillo
+2019-11-21 15:01:44,249 [ERROR]  Resource exists hs: 7f63e88c8a104c2da0d5c534fd64cfb2 czo: 2627 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:44,251 [INFO ]  Updating 9211abc0a4fe4611a7c72ac31c35840c - 2628 by account czo_luquillo
+2019-11-21 15:01:44,807 [ERROR]  Resource exists hs: 9211abc0a4fe4611a7c72ac31c35840c czo: 2628 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:44,809 [INFO ]  Updating cabf89b7f00f4dd4ab2c556f10aae0ef - 2630 by account czo_luquillo
+2019-11-21 15:01:45,361 [ERROR]  Resource exists hs: cabf89b7f00f4dd4ab2c556f10aae0ef czo: 2630 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:45,362 [INFO ]  Updating cc6830e186fa455c8b7e70fa677bce51 - 2629 by account czo_luquillo
+2019-11-21 15:01:45,901 [ERROR]  Resource exists hs: cc6830e186fa455c8b7e70fa677bce51 czo: 2629 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:45,903 [INFO ]  Updating b538d75e180a424ca38d54e28500d33e - 2631 by account czo_luquillo
+2019-11-21 15:01:46,475 [ERROR]  Resource exists hs: b538d75e180a424ca38d54e28500d33e czo: 2631 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:46,476 [INFO ]  Updating 390bdf306f2545c78eebde4dac55cfbd - 2632 by account czo_luquillo
+2019-11-21 15:01:47,085 [ERROR]  Resource exists hs: 390bdf306f2545c78eebde4dac55cfbd czo: 2632 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:47,087 [INFO ]  Updating a7ef5030f2c24df8b7a2d449901298a4 - 2633 by account czo_luquillo
+2019-11-21 15:01:47,599 [ERROR]  Resource exists hs: a7ef5030f2c24df8b7a2d449901298a4 czo: 2633 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:47,601 [INFO ]  Updating b39a41c1db56412cb3ccd3a0c042f1ec - 2634 by account czo_luquillo
+2019-11-21 15:01:48,113 [ERROR]  Resource exists hs: b39a41c1db56412cb3ccd3a0c042f1ec czo: 2634 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:48,115 [INFO ]  Updating 29555085fc1341b39fda2fd991b77967 - 2637 by account czo_sierra
+2019-11-21 15:01:48,674 [ERROR]  Resource exists hs: 29555085fc1341b39fda2fd991b77967 czo: 2637 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:48,676 [INFO ]  Updating 92754e5cf7974fb3a95a572acadf1380 - 2638 by account czo_sierra
+2019-11-21 15:01:49,230 [ERROR]  Resource exists hs: 92754e5cf7974fb3a95a572acadf1380 czo: 2638 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:49,233 [INFO ]  Updating 7ab75731196d4a01870c6880f7d903de - 2639 by account czo_sierra
+2019-11-21 15:01:49,792 [ERROR]  Resource exists hs: 7ab75731196d4a01870c6880f7d903de czo: 2639 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:49,795 [INFO ]  Updating 37d7295630ca44d0a085da8ea05ccc17 - 2641 by account czo_sierra
+2019-11-21 15:01:50,341 [ERROR]  Resource exists hs: 37d7295630ca44d0a085da8ea05ccc17 czo: 2641 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:50,343 [INFO ]  Updating 63bd9676c3bf4a9996bd62b7a120c2be - 2642 by account czo_sierra
+Related datasets ['2638', '2639', '2637']
+2019-11-21 15:01:51,416 [INFO ]  Extended metadata
+2019-11-21 15:01:51,929 [ERROR]  Resource exists hs: 63bd9676c3bf4a9996bd62b7a120c2be czo: 2642 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:51,932 [INFO ]  Updating e7d4dcfc401b4a45a1d3c72e6056b103 - 2643 by account czo_sierra
+Related datasets ['2656', '2529', '2406']
+2019-11-21 15:01:53,017 [INFO ]  Extended metadata
+2019-11-21 15:01:55,740 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:01:55,742 [INFO ]  Updating 3c1fd54381764e5b8865609cb4127d63 - 2644 by account czo_catalina-jemez
+2019-11-21 15:01:56,276 [ERROR]  Resource exists hs: 3c1fd54381764e5b8865609cb4127d63 czo: 2644 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:56,278 [INFO ]  Updating f069d663808b45e2b4d83c3a86483f40 - 2645 by account czo_shale-hills
+2019-11-21 15:01:56,853 [ERROR]  Resource exists hs: f069d663808b45e2b4d83c3a86483f40 czo: 2645 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:56,855 [INFO ]  Updating a1a7446f88774fcc929d6214df0ad0df - 2646 by account czo_shale-hills
+2019-11-21 15:01:57,383 [ERROR]  Resource exists hs: a1a7446f88774fcc929d6214df0ad0df czo: 2646 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:57,385 [INFO ]  Updating 0b8c9950806244a186cf4c92443b7de0 - 2648 by account czo_shale-hills
+2019-11-21 15:01:57,972 [ERROR]  Resource exists hs: 0b8c9950806244a186cf4c92443b7de0 czo: 2648 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:57,974 [INFO ]  Updating 56e7a87b9ca54450be5a668183e65092 - 2649 by account czo_shale-hills
+2019-11-21 15:01:58,557 [ERROR]  Resource exists hs: 56e7a87b9ca54450be5a668183e65092 czo: 2649 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:58,561 [INFO ]  Updating a1f8a71a9365496a95d09e4ceb584629 - 2650 by account czo_shale-hills
+2019-11-21 15:01:59,087 [ERROR]  Resource exists hs: a1f8a71a9365496a95d09e4ceb584629 czo: 2650 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:59,089 [INFO ]  Updating bcc8b57176ac4fda91f849cd8ef3fc49 - 2651 by account czo_shale-hills
+2019-11-21 15:01:59,614 [ERROR]  Resource exists hs: bcc8b57176ac4fda91f849cd8ef3fc49 czo: 2651 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:01:59,617 [INFO ]  Updating 041f6222dc2042ff8fda1f35b67c2237 - 2652 by account czo_shale-hills
+2019-11-21 15:02:00,138 [ERROR]  Resource exists hs: 041f6222dc2042ff8fda1f35b67c2237 czo: 2652 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:00,140 [INFO ]  Updating 60e5e80d5a9f48c69e856c87f1d068db - 2653 by account czo_shale-hills
+2019-11-21 15:02:00,731 [ERROR]  Resource exists hs: 60e5e80d5a9f48c69e856c87f1d068db czo: 2653 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:00,733 [INFO ]  Updating a4b02c58bffc4f3dba6651652ee10b8c - 2654 by account czo_shale-hills
+2019-11-21 15:02:01,289 [ERROR]  Resource exists hs: a4b02c58bffc4f3dba6651652ee10b8c czo: 2654 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:01,291 [INFO ]  Updating eca3ef65b674435890908998c288950e - 2655 by account czo_shale-hills
+2019-11-21 15:02:01,808 [ERROR]  Resource exists hs: eca3ef65b674435890908998c288950e czo: 2655 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:01,810 [INFO ]  Updating a2c9c3b5655446db9da9ada6da4ef247 - 2656 by account czo_sierra
+Related datasets ['2529', '2406', '2643']
+2019-11-21 15:02:02,813 [INFO ]  Extended metadata
+2019-11-21 15:02:05,479 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:02:05,481 [INFO ]  Updating 03cf8fc7d6044990b025d026e9b81830 - 2658 by account czo_sierra
+2019-11-21 15:02:06,014 [ERROR]  Resource exists hs: 03cf8fc7d6044990b025d026e9b81830 czo: 2658 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:06,018 [INFO ]  Updating bd4fbdaa1169487aba9d4460d0c13732 - 2659 by account czo_sierra
+2019-11-21 15:02:06,544 [ERROR]  Resource exists hs: bd4fbdaa1169487aba9d4460d0c13732 czo: 2659 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:06,546 [INFO ]  Updating 0c483221851e46d98fe2ecd51428ff58 - 2660 by account czo_sierra
+2019-11-21 15:02:07,151 [ERROR]  Resource exists hs: 0c483221851e46d98fe2ecd51428ff58 czo: 2660 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:07,153 [INFO ]  Updating 70f256d68546483dabc3448145bb8303 - 2661 by account czo_sierra
+2019-11-21 15:02:07,696 [ERROR]  Resource exists hs: 70f256d68546483dabc3448145bb8303 czo: 2661 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:07,699 [INFO ]  Updating 20511efd090748d3b172d591b53984e7 - 2662 by account czo_sierra
+Related datasets ['2661', '2660']
+2019-11-21 15:02:08,706 [INFO ]  Extended metadata
+2019-11-21 15:02:09,236 [ERROR]  Resource exists hs: 20511efd090748d3b172d591b53984e7 czo: 2662 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:09,238 [INFO ]  Updating 5655a16449384a158a3a3fa607ce8cc1 - 2663 by account czo_sierra
+2019-11-21 15:02:09,782 [ERROR]  Resource exists hs: 5655a16449384a158a3a3fa607ce8cc1 czo: 2663 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:09,784 [INFO ]  Updating d6d8b2a6e5604629b1192233646dfea1 - 2664 by account czo_sierra
+Related datasets ['2603', '2643', '2656']
+2019-11-21 15:02:10,912 [INFO ]  Extended metadata
+2019-11-21 15:02:11,437 [ERROR]  Resource exists hs: d6d8b2a6e5604629b1192233646dfea1 czo: 2664 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:11,439 [INFO ]  Updating 6ea633bbe83240f5906c3eeddfa7c236 - 2665 by account czo_sierra
+2019-11-21 15:02:11,943 [ERROR]  Resource exists hs: 6ea633bbe83240f5906c3eeddfa7c236 czo: 2665 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:11,945 [INFO ]  Updating 6175c21450234f75952b2a87dd99777b - 2666 by account czo_catalina-jemez
+2019-11-21 15:02:12,503 [ERROR]  Resource exists hs: 6175c21450234f75952b2a87dd99777b czo: 2666 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:12,505 [INFO ]  Updating 1b604653c1074951828f51f66811b38c - 2688 by account czo_catalina-jemez
+2019-11-21 15:02:13,055 [ERROR]  Resource exists hs: 1b604653c1074951828f51f66811b38c czo: 2688 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:13,057 [INFO ]  Updating 28b106cc56ec4271abf8ccc29b4e501e - 2692 by account czo_shale-hills
+2019-11-21 15:02:13,582 [ERROR]  Resource exists hs: 28b106cc56ec4271abf8ccc29b4e501e czo: 2692 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:13,584 [INFO ]  Updating a04392de2b3448d48836ad47571a1f48 - 2695 by account czo_catalina-jemez
+2019-11-21 15:02:16,325 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:02:16,327 [INFO ]  Updating 1efcd98af1544905adcb80c79e779c3d - 2731 by account czo_catalina-jemez
+2019-11-21 15:02:16,889 [ERROR]  Resource exists hs: 1efcd98af1544905adcb80c79e779c3d czo: 2731 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:16,892 [INFO ]  Updating 3df05937abfc4cb59b8be04d674c4b48 - 2740 by account czo_catalina-jemez
+2019-11-21 15:02:17,456 [ERROR]  Resource exists hs: 3df05937abfc4cb59b8be04d674c4b48 czo: 2740 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:17,458 [INFO ]  Updating edd55219cecf43798efd5fbd539c4125 - 2742 by account czo_catalina-jemez
+Related datasets ['2740']
+2019-11-21 15:02:18,566 [INFO ]  Extended metadata
+2019-11-21 15:02:19,106 [ERROR]  Resource exists hs: edd55219cecf43798efd5fbd539c4125 czo: 2742 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:19,109 [INFO ]  Updating 07f313febf5245daa683b315577be923 - 2751 by account czo_catalina-jemez
+Related datasets ['2469', '2543']
+2019-11-21 15:02:20,189 [INFO ]  Extended metadata
+2019-11-21 15:02:23,012 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:02:23,014 [INFO ]  Updating 4c3da3f64b2f436cae68f45f77f4e3be - 2752 by account czo_shale-hills
+2019-11-21 15:02:23,609 [ERROR]  Resource exists hs: 4c3da3f64b2f436cae68f45f77f4e3be czo: 2752 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:23,611 [INFO ]  Updating 82c980f515ef46a1a3732f78477fcedd - 2782 by account czo_boulder
+Related datasets ['2436', '2433', '2448', '2431', '2423', '2430', '2782']
+2019-11-21 15:02:24,741 [INFO ]  Extended metadata
+2019-11-21 15:02:27,398 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:02:27,401 [INFO ]  Updating 6938ed69fb704022b40b194426cc8302 - 2783 by account czo_boulder
+Related datasets ['3064', '3065']
+2019-11-21 15:02:28,471 [INFO ]  Extended metadata
+2019-11-21 15:02:29,022 [ERROR]  Resource exists hs: 6938ed69fb704022b40b194426cc8302 czo: 2783 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:29,024 [INFO ]  Updating f98c35d1330e41569f8b0e2e339df8d8 - 2784 by account czo_boulder
+Related datasets ['4165', '2428', '2784']
+2019-11-21 15:02:30,108 [INFO ]  Extended metadata
+2019-11-21 15:02:32,802 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:02:32,804 [INFO ]  Updating 0f2bc5365033480790c7d13bb5e5937b - 2785 by account czo_boulder
+Related datasets ['3064', '4165', '3639', '2783', '3065', '2865', '7241']
+2019-11-21 15:02:33,806 [INFO ]  Extended metadata
+2019-11-21 15:02:34,408 [ERROR]  Resource exists hs: 0f2bc5365033480790c7d13bb5e5937b czo: 2785 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:34,411 [INFO ]  Updating 85f9a4f8a696452392e606e78aa14b69 - 2788 by account czo_boulder
+Related datasets ['3894', '2431', '2426', '2423']
+2019-11-21 15:02:35,472 [INFO ]  Extended metadata
+2019-11-21 15:02:36,043 [ERROR]  Resource exists hs: 85f9a4f8a696452392e606e78aa14b69 czo: 2788 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:36,045 [INFO ]  Updating 5a31cca938d34692a0f3c2af0f2cb9ad - 2821 by account czo_boulder
+Related datasets ['2435']
+2019-11-21 15:02:37,048 [INFO ]  Extended metadata
+2019-11-21 15:02:39,791 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:02:39,793 [INFO ]  Updating beed81d0100c4e448cbe61d46957ec9f - 2822 by account czo_boulder
+Related datasets ['2825', '2826']
+2019-11-21 15:02:40,799 [INFO ]  Extended metadata
+2019-11-21 15:02:41,358 [ERROR]  Resource exists hs: beed81d0100c4e448cbe61d46957ec9f czo: 2822 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:41,360 [INFO ]  Updating bf2e9a10f1584f4a91ab7628dd35ddfc - 2825 by account czo_boulder
+Related datasets ['2822', '2826']
+2019-11-21 15:02:42,447 [INFO ]  Extended metadata
+2019-11-21 15:02:42,997 [ERROR]  Resource exists hs: bf2e9a10f1584f4a91ab7628dd35ddfc czo: 2825 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:42,999 [INFO ]  Updating f0bffd715dbe4b4886ae01410329950d - 2826 by account czo_boulder
+2019-11-21 15:02:43,602 [ERROR]  Resource exists hs: f0bffd715dbe4b4886ae01410329950d czo: 2826 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:43,604 [INFO ]  Updating 079adbc764c4419caf0380171a58534a - 2833 by account czo_boulder
+2019-11-21 15:02:44,193 [ERROR]  Resource exists hs: 079adbc764c4419caf0380171a58534a czo: 2833 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:44,195 [INFO ]  Updating fb9fa8adf0004dd3bba28e5742ba5431 - 2860 by account czo_boulder
+2019-11-21 15:02:44,771 [ERROR]  Resource exists hs: fb9fa8adf0004dd3bba28e5742ba5431 czo: 2860 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:44,775 [INFO ]  Updating a1eced7cf4e14244b2ff409555148248 - 2862 by account czo_boulder
+2019-11-21 15:02:45,374 [ERROR]  Resource exists hs: a1eced7cf4e14244b2ff409555148248 czo: 2862 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:45,376 [INFO ]  Updating b7b9550581bb4a0399d4ddb04d467a76 - 2863 by account czo_boulder
+2019-11-21 15:02:45,955 [ERROR]  Resource exists hs: b7b9550581bb4a0399d4ddb04d467a76 czo: 2863 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:45,957 [INFO ]  Updating ebe9144d1e7c4f45ac6ce3e9eba8bd2a - 2864 by account czo_boulder
+2019-11-21 15:02:46,498 [ERROR]  Resource exists hs: ebe9144d1e7c4f45ac6ce3e9eba8bd2a czo: 2864 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:46,500 [INFO ]  Updating 31043d38a97641059306a8fc7008409a - 2865 by account czo_boulder
+2019-11-21 15:02:47,034 [ERROR]  Resource exists hs: 31043d38a97641059306a8fc7008409a czo: 2865 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:47,036 [INFO ]  Updating a9c461b38ec647a7ad3c54a956ea7f89 - 2866 by account czo_boulder
+2019-11-21 15:02:47,608 [ERROR]  Resource exists hs: a9c461b38ec647a7ad3c54a956ea7f89 czo: 2866 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:47,610 [INFO ]  Updating d30b44383d154225b3c99e557d124b7d - 2888 by account czo_boulder
+Related datasets ['2889']
+2019-11-21 15:02:48,704 [INFO ]  Extended metadata
+2019-11-21 15:02:49,231 [ERROR]  Resource exists hs: d30b44383d154225b3c99e557d124b7d czo: 2888 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:49,233 [INFO ]  Updating d66f1f3239a94c7682c71217b1a94e0b - 2889 by account czo_boulder
+Related datasets ['2888']
+2019-11-21 15:02:50,258 [INFO ]  Extended metadata
+2019-11-21 15:02:50,805 [ERROR]  Resource exists hs: d66f1f3239a94c7682c71217b1a94e0b czo: 2889 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:50,808 [INFO ]  Updating a7b99c31adfe4f56899bef1a6700f9cf - 2915 by account czo_boulder
+Related datasets ['2915', '2921', '2866']
+2019-11-21 15:02:51,932 [INFO ]  Extended metadata
+2019-11-21 15:02:54,623 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:02:54,625 [INFO ]  Updating c2384bd1743a4276a88a5110b1964ce0 - 2918 by account czo_boulder
+Related datasets ['3969', '4035', '4036', '2919']
+2019-11-21 15:02:55,656 [INFO ]  Extended metadata
+2019-11-21 15:02:56,197 [ERROR]  Resource exists hs: c2384bd1743a4276a88a5110b1964ce0 czo: 2918 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:56,199 [INFO ]  Updating 0efce710d2d24fab9542730522843a32 - 2919 by account czo_boulder
+Related datasets ['3969', '4035', '4036', '2918']
+2019-11-21 15:02:57,259 [INFO ]  Extended metadata
+2019-11-21 15:02:57,803 [ERROR]  Resource exists hs: 0efce710d2d24fab9542730522843a32 czo: 2919 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:57,806 [INFO ]  Updating ea4c6e4cd6be49fa874b89dcf5b7d1ec - 2921 by account czo_boulder
+Related datasets ['2915', '2921', '2866']
+2019-11-21 15:02:58,799 [INFO ]  Extended metadata
+2019-11-21 15:02:59,345 [ERROR]  Resource exists hs: ea4c6e4cd6be49fa874b89dcf5b7d1ec czo: 2921 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:59,347 [INFO ]  Updating 524c96dcfcad4f2a9148405d2b89190a - 2952 by account czo_luquillo
+2019-11-21 15:02:59,928 [ERROR]  Resource exists hs: 524c96dcfcad4f2a9148405d2b89190a czo: 2952 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:02:59,930 [INFO ]  Updating 112c5a53769240c2a337511b031de9a9 - 2974 by account czo_christina
+2019-11-21 15:03:00,502 [ERROR]  Resource exists hs: 112c5a53769240c2a337511b031de9a9 czo: 2974 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:00,506 [INFO ]  Updating d16b41286d4447d4a6e155dab61f4ef7 - 2978 by account czo_christina
+2019-11-21 15:03:01,102 [ERROR]  Resource exists hs: d16b41286d4447d4a6e155dab61f4ef7 czo: 2978 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:01,104 [INFO ]  Updating 83efb5317d284ba996ddaeb2b74b6a42 - 3001 by account czo_shale-hills
+2019-11-21 15:03:01,705 [ERROR]  Resource exists hs: 83efb5317d284ba996ddaeb2b74b6a42 czo: 3001 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:01,707 [INFO ]  Updating 989821bd3bff4afa886657fb553e986a - 3029 by account czo_luquillo
+2019-11-21 15:03:02,347 [ERROR]  Resource exists hs: 989821bd3bff4afa886657fb553e986a czo: 3029 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:02,349 [INFO ]  Updating 3aa9c239e24f44a68469a2c34b88eced - 3064 by account czo_boulder
+Related datasets ['3969', '2783', '3065']
+2019-11-21 15:03:03,352 [INFO ]  Extended metadata
+2019-11-21 15:03:03,876 [ERROR]  Resource exists hs: 3aa9c239e24f44a68469a2c34b88eced czo: 3064 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:03,878 [INFO ]  Updating 4bb6710317c445cf996793ac1f5d7149 - 3065 by account czo_boulder
+Related datasets ['3064', '4165', '3639', '2783', '2468', '3065', '2784', '2865', '7241']
+2019-11-21 15:03:05,046 [INFO ]  Extended metadata
+2019-11-21 15:03:07,641 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:03:07,643 [INFO ]  Updating db85a1763a5240509c32cb5284b00c92 - 3365 by account czo_christina
+2019-11-21 15:03:08,186 [ERROR]  Resource exists hs: db85a1763a5240509c32cb5284b00c92 czo: 3365 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:08,189 [INFO ]  Updating d6f11c7d6a6447cfab5a5023ca9c3aaf - 3412 by account czo_catalina-jemez
+2019-11-21 15:03:08,748 [ERROR]  Resource exists hs: d6f11c7d6a6447cfab5a5023ca9c3aaf czo: 3412 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:08,750 [INFO ]  Updating 136cc235e72e45f599913d9931132915 - 3422 by account czo_luquillo
+2019-11-21 15:03:09,343 [ERROR]  Resource exists hs: 136cc235e72e45f599913d9931132915 czo: 3422 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:09,346 [INFO ]  Updating ee2c21941e1e4ba8836bc1814f34fa16 - 3457 by account czo_christina
+2019-11-21 15:03:09,877 [ERROR]  Resource exists hs: ee2c21941e1e4ba8836bc1814f34fa16 czo: 3457 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:09,879 [INFO ]  Updating af01319d759e4251b0dd78a718d581f6 - 3590 by account czo_luquillo
+2019-11-21 15:03:10,402 [ERROR]  Resource exists hs: af01319d759e4251b0dd78a718d581f6 czo: 3590 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:10,404 [INFO ]  Updating 95f52e8cdf744c4b909a231dbd8734ac - 3613 by account czo_shale-hills
+2019-11-21 15:03:10,947 [ERROR]  Resource exists hs: 95f52e8cdf744c4b909a231dbd8734ac czo: 3613 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:10,949 [INFO ]  Updating 0403737ef5b147c3916ab30d565db79c - 3614 by account czo_shale-hills
+2019-11-21 15:03:11,482 [ERROR]  Resource exists hs: 0403737ef5b147c3916ab30d565db79c czo: 3614 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:11,484 [INFO ]  Updating fa5e043282894e7e97a663a99f9506ad - 3615 by account czo_shale-hills
+2019-11-21 15:03:12,004 [ERROR]  Resource exists hs: fa5e043282894e7e97a663a99f9506ad czo: 3615 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:12,008 [INFO ]  Updating 95201eb936a84855b8bade628ae37fc2 - 3621 by account czo_shale-hills
+2019-11-21 15:03:12,566 [ERROR]  Resource exists hs: 95201eb936a84855b8bade628ae37fc2 czo: 3621 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:12,568 [INFO ]  Updating 663a9d44e9a24b2391b2903b2bb266fc - 3622 by account czo_luquillo
+2019-11-21 15:03:13,088 [ERROR]  Resource exists hs: 663a9d44e9a24b2391b2903b2bb266fc czo: 3622 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:13,091 [INFO ]  Updating 89506c157c6945cdbe5a57f6436868d6 - 3623 by account czo_luquillo
+2019-11-21 15:03:13,607 [ERROR]  Resource exists hs: 89506c157c6945cdbe5a57f6436868d6 czo: 3623 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:13,609 [INFO ]  Updating fc2b489b5b724b1b87c22087af419f72 - 3624 by account czo_luquillo
+2019-11-21 15:03:14,132 [ERROR]  Resource exists hs: fc2b489b5b724b1b87c22087af419f72 czo: 3624 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:14,134 [INFO ]  Updating 55b9547f6af948699b96a28a658b44c6 - 3625 by account czo_luquillo
+2019-11-21 15:03:14,671 [ERROR]  Resource exists hs: 55b9547f6af948699b96a28a658b44c6 czo: 3625 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:14,673 [INFO ]  Updating cf49999ccc734c268f2ef001cdbc2c16 - 3639 by account czo_boulder
+2019-11-21 15:03:15,234 [ERROR]  Resource exists hs: cf49999ccc734c268f2ef001cdbc2c16 czo: 3639 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:15,236 [INFO ]  Updating 469fe217e06a4bb9968f9666f8cb42f3 - 3641 by account czo_sierra
+2019-11-21 15:03:15,792 [ERROR]  Resource exists hs: 469fe217e06a4bb9968f9666f8cb42f3 czo: 3641 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:15,793 [INFO ]  Updating deb21d8a58e74502859a1fa1a10e89ed - 3642 by account czo_luquillo
+2019-11-21 15:03:16,344 [ERROR]  Resource exists hs: deb21d8a58e74502859a1fa1a10e89ed czo: 3642 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:16,347 [INFO ]  Updating 7cb9ef14b5bb4a09aee07f90158692f8 - 3648 by account czo_luquillo
+2019-11-21 15:03:16,906 [ERROR]  Resource exists hs: 7cb9ef14b5bb4a09aee07f90158692f8 czo: 3648 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:16,908 [INFO ]  Updating 10664457c48342fa8b1e046ea740cd9c - 3654 by account czo_sierra
+2019-11-21 15:03:17,436 [ERROR]  Resource exists hs: 10664457c48342fa8b1e046ea740cd9c czo: 3654 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:17,438 [INFO ]  Updating b385cd3e22bc460d95f2dcc0397f394f - 3656 by account czo_national
+2019-11-21 15:03:17,981 [ERROR]  Resource exists hs: b385cd3e22bc460d95f2dcc0397f394f czo: 3656 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:17,982 [INFO ]  Updating d915275953c94b298b00872d98559e64 - 3657 by account czo_sierra
+2019-11-21 15:03:18,527 [ERROR]  Resource exists hs: d915275953c94b298b00872d98559e64 czo: 3657 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:18,529 [INFO ]  Updating 1a8f4facdc9a446fa2cf48277eb1dbcc - 3663 by account czo_sierra
+2019-11-21 15:03:19,057 [ERROR]  Resource exists hs: 1a8f4facdc9a446fa2cf48277eb1dbcc czo: 3663 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:19,059 [INFO ]  Updating f1ca5b65669c4e6c98a63fb81d663ad6 - 3665 by account czo_luquillo
+2019-11-21 15:03:19,590 [ERROR]  Resource exists hs: f1ca5b65669c4e6c98a63fb81d663ad6 czo: 3665 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:19,593 [INFO ]  Updating cffab97647b64ce2a817fb06e1aab086 - 3676 by account czo_shale-hills
+2019-11-21 15:03:20,138 [ERROR]  Resource exists hs: cffab97647b64ce2a817fb06e1aab086 czo: 3676 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:20,141 [INFO ]  Updating ee12709dc19f4bd081b7b194a1b78f8b - 3722 by account czo_reynolds
+2019-11-21 15:03:20,711 [ERROR]  Resource exists hs: ee12709dc19f4bd081b7b194a1b78f8b czo: 3722 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:20,713 [INFO ]  Updating 701e2a6bdad942aca5b7014bb574dfe3 - 3731 by account czo_reynolds
+2019-11-21 15:03:21,250 [ERROR]  Resource exists hs: 701e2a6bdad942aca5b7014bb574dfe3 czo: 3731 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:21,252 [INFO ]  Updating f7d5bc8a903a4b4aa01cc1db7cc2f40c - 3732 by account czo_reynolds
+2019-11-21 15:03:21,779 [ERROR]  Resource exists hs: f7d5bc8a903a4b4aa01cc1db7cc2f40c czo: 3732 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:21,781 [INFO ]  Updating 612334927b484e8da19c15344d517988 - 3737 by account czo_boulder
+Related datasets ['2468', '2467', '2431', '2423', '2430', '7256']
+2019-11-21 15:03:22,850 [INFO ]  Extended metadata
+2019-11-21 15:03:25,490 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:03:25,492 [INFO ]  Updating 0348b65d71eb46d38bba7db4cb2826db - 3739 by account czo_catalina-jemez
+2019-11-21 15:03:26,053 [ERROR]  Resource exists hs: 0348b65d71eb46d38bba7db4cb2826db czo: 3739 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:26,055 [INFO ]  Updating 6f8ee0a3ce5c45e4870976bb3d8d1bfc - 3742 by account czo_boulder
+Related datasets ['4165']
+2019-11-21 15:03:27,085 [INFO ]  Extended metadata
+2019-11-21 15:03:27,603 [ERROR]  Resource exists hs: 6f8ee0a3ce5c45e4870976bb3d8d1bfc czo: 3742 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:27,605 [INFO ]  Updating 3c88818b8f014e09afcffdc4089b0ffb - 3790 by account czo_catalina-jemez
+2019-11-21 15:03:28,198 [ERROR]  Resource exists hs: 3c88818b8f014e09afcffdc4089b0ffb czo: 3790 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:28,200 [INFO ]  Updating 3b0ff71572634812b20ca9ee992cf44c - 3850 by account czo_luquillo
+2019-11-21 15:03:28,754 [ERROR]  Resource exists hs: 3b0ff71572634812b20ca9ee992cf44c czo: 3850 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:28,756 [INFO ]  Updating aaaf281af73741018278b0d83babb3bf - 3857 by account czo_luquillo
+2019-11-21 15:03:29,306 [ERROR]  Resource exists hs: aaaf281af73741018278b0d83babb3bf czo: 3857 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:29,308 [INFO ]  Updating 60923e1f1a3d44e39a16260d980db974 - 3868 by account czo_shale-hills
+2019-11-21 15:03:29,870 [ERROR]  Resource exists hs: 60923e1f1a3d44e39a16260d980db974 czo: 3868 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:29,872 [INFO ]  Updating 32438ff42d73487888986c3f49f55862 - 3869 by account czo_shale-hills
+2019-11-21 15:03:30,429 [ERROR]  Resource exists hs: 32438ff42d73487888986c3f49f55862 czo: 3869 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:30,431 [INFO ]  Updating 25d61687d5994d93b2065f7c4b6e5ea1 - 3884 by account czo_boulder
+2019-11-21 15:03:31,025 [ERROR]  Resource exists hs: 25d61687d5994d93b2065f7c4b6e5ea1 czo: 3884 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:31,028 [INFO ]  Updating d2202227b2b64d4fbc449049aa646fe7 - 3886 by account czo_shale-hills
+2019-11-21 15:03:31,567 [ERROR]  Resource exists hs: d2202227b2b64d4fbc449049aa646fe7 czo: 3886 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:31,569 [INFO ]  Updating 8a34ef6c6bc14045851f042af9a7d142 - 3888 by account czo_boulder
+2019-11-21 15:03:32,089 [ERROR]  Resource exists hs: 8a34ef6c6bc14045851f042af9a7d142 czo: 3888 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:32,091 [INFO ]  Updating 25ba8374892541c4bfe0c9cf18f520ca - 3894 by account czo_boulder
+2019-11-21 15:03:32,641 [ERROR]  Resource exists hs: 25ba8374892541c4bfe0c9cf18f520ca czo: 3894 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:32,643 [INFO ]  Updating b6c38e0064bd462686e8b47b15a824ff - 3896 by account czo_catalina-jemez
+2019-11-21 15:03:33,175 [ERROR]  Resource exists hs: b6c38e0064bd462686e8b47b15a824ff czo: 3896 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:33,177 [INFO ]  Updating 5b08a09e098444aa8faaa99161244a8e - 3931 by account czo_reynolds
+2019-11-21 15:03:33,720 [ERROR]  Resource exists hs: 5b08a09e098444aa8faaa99161244a8e czo: 3931 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:33,723 [INFO ]  Updating 975e21f9e31b430eaae6173c39717058 - 3932 by account czo_reynolds
+2019-11-21 15:03:34,270 [ERROR]  Resource exists hs: 975e21f9e31b430eaae6173c39717058 czo: 3932 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:34,272 [INFO ]  Updating 89709ac4ef444ede82b6c4931bb26975 - 3934 by account czo_reynolds
+2019-11-21 15:03:34,810 [ERROR]  Resource exists hs: 89709ac4ef444ede82b6c4931bb26975 czo: 3934 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:34,812 [INFO ]  Updating ee157df1b4c84799a2d2c748d3a0b679 - 3935 by account czo_shale-hills
+2019-11-21 15:03:35,393 [ERROR]  Resource exists hs: ee157df1b4c84799a2d2c748d3a0b679 czo: 3935 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:35,395 [INFO ]  Updating 721aac4d278b43128dd973bfafe30611 - 3969 by account czo_boulder
+Related datasets ['3064']
+2019-11-21 15:03:36,451 [INFO ]  Extended metadata
+2019-11-21 15:03:37,061 [ERROR]  Resource exists hs: 721aac4d278b43128dd973bfafe30611 czo: 3969 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:37,064 [INFO ]  Updating ce088478fb5640458b7bbff294be4c1c - 3970 by account czo_luquillo
+2019-11-21 15:03:37,603 [ERROR]  Resource exists hs: ce088478fb5640458b7bbff294be4c1c czo: 3970 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:37,605 [INFO ]  Updating 5db92830e3f648ee8984e4af0b01f2ec - 3972 by account czo_catalina-jemez
+2019-11-21 15:03:39,845 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:03:39,847 [INFO ]  Updating e0ff49ca7eef40f282c74a396bf5a903 - 4018 by account czo_calhoun
+2019-11-21 15:03:41,964 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:03:41,966 [INFO ]  Updating c24625c09a9a4bf08d326a873e385495 - 4032 by account czo_calhoun
+2019-11-21 15:03:42,504 [ERROR]  Resource exists hs: c24625c09a9a4bf08d326a873e385495 czo: 4032 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:42,506 [INFO ]  Updating 6741c4fd8ff2477d9903efb92f1f907e - 4033 by account czo_shale-hills
+2019-11-21 15:03:43,047 [ERROR]  Resource exists hs: 6741c4fd8ff2477d9903efb92f1f907e czo: 4033 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:43,050 [INFO ]  Updating 9fb65bfced6c481baed0b572b98f76d0 - 4035 by account czo_boulder
+Related datasets ['3969', '2918', '2919', '4036']
+2019-11-21 15:03:44,091 [INFO ]  Extended metadata
+2019-11-21 15:03:44,655 [ERROR]  Resource exists hs: 9fb65bfced6c481baed0b572b98f76d0 czo: 4035 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:44,656 [INFO ]  Updating a69e53f2d272462daccc9901f1914c2c - 4036 by account czo_boulder
+Related datasets ['3969', '4035', '2918', '2919']
+2019-11-21 15:03:45,892 [INFO ]  Extended metadata
+2019-11-21 15:03:46,446 [ERROR]  Resource exists hs: a69e53f2d272462daccc9901f1914c2c czo: 4036 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:46,448 [INFO ]  Updating aa9c2317eb2a456e9bcf29fc21b38dbe - 4106 by account czo_calhoun
+2019-11-21 15:03:47,001 [ERROR]  Resource exists hs: aa9c2317eb2a456e9bcf29fc21b38dbe czo: 4106 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:47,003 [INFO ]  Updating fb8172a09c524bd8be172f3057a776c0 - 4107 by account czo_calhoun
+2019-11-21 15:03:47,554 [ERROR]  Resource exists hs: fb8172a09c524bd8be172f3057a776c0 czo: 4107 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:47,556 [INFO ]  Updating 9106c673cdc64312a8d4cc74254ad1a2 - 4108 by account czo_calhoun
+2019-11-21 15:03:48,105 [ERROR]  Resource exists hs: 9106c673cdc64312a8d4cc74254ad1a2 czo: 4108 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:48,107 [INFO ]  Updating 9252655369694879af87db19a8aff29d - 4109 by account czo_catalina-jemez
+2019-11-21 15:03:48,673 [ERROR]  Resource exists hs: 9252655369694879af87db19a8aff29d czo: 4109 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:48,675 [INFO ]  Updating 3477aeb91a39447e90c981b98816e9fe - 4122 by account czo_boulder
+Related datasets ['2434']
+2019-11-21 15:03:49,706 [INFO ]  Extended metadata
+2019-11-21 15:03:52,357 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:03:52,359 [INFO ]  Updating 2c9d57b4769f490095747342f1d84eb7 - 4123 by account czo_boulder
+Related datasets ['2450', '4122', '2429', '2434', '2426', '4123', '2452']
+2019-11-21 15:03:53,397 [INFO ]  Extended metadata
+2019-11-21 15:03:56,138 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:03:56,140 [INFO ]  Updating 443c8dde55b74f5f94239b06a7e678d7 - 4129 by account czo_shale-hills
+2019-11-21 15:03:56,678 [ERROR]  Resource exists hs: 443c8dde55b74f5f94239b06a7e678d7 czo: 4129 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:56,680 [INFO ]  Updating 483d1c29f8984657a6ee85158189fddf - 4130 by account czo_shale-hills
+2019-11-21 15:03:57,216 [ERROR]  Resource exists hs: 483d1c29f8984657a6ee85158189fddf czo: 4130 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:57,218 [INFO ]  Updating 553c42d3a8ee40309b2d77071aa25f2e - 4135 by account czo_catalina-jemez
+2019-11-21 15:03:57,817 [ERROR]  Resource exists hs: 553c42d3a8ee40309b2d77071aa25f2e czo: 4135 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:57,819 [INFO ]  Updating b22305cd06eb4e37bdac1ec090daf7ef - 4148 by account czo_reynolds
+2019-11-21 15:03:58,364 [ERROR]  Resource exists hs: b22305cd06eb4e37bdac1ec090daf7ef czo: 4148 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:58,366 [INFO ]  Updating 8ac13a1fd0fe4876b5ecd4dbf29236aa - 4149 by account czo_reynolds
+2019-11-21 15:03:58,912 [ERROR]  Resource exists hs: 8ac13a1fd0fe4876b5ecd4dbf29236aa czo: 4149 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:58,914 [INFO ]  Updating 38adc4f9b351487e82f665179f5f8d3c - 4155 by account czo_shale-hills
+2019-11-21 15:03:59,461 [ERROR]  Resource exists hs: 38adc4f9b351487e82f665179f5f8d3c czo: 4155 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:03:59,463 [INFO ]  Updating 51ead3cbafd4470b97600b9b44453e86 - 4165 by account czo_boulder
+Related datasets ['3742']
+2019-11-21 15:04:00,483 [INFO ]  Extended metadata
+2019-11-21 15:04:01,095 [ERROR]  Resource exists hs: 51ead3cbafd4470b97600b9b44453e86 czo: 4165 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:01,097 [INFO ]  Updating 4e925c9cc6f14b99834a674c16dfa0d9 - 4174 by account czo_shale-hills
+2019-11-21 15:04:01,651 [ERROR]  Resource exists hs: 4e925c9cc6f14b99834a674c16dfa0d9 czo: 4174 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:01,653 [INFO ]  Updating 611e24535102484e83afb4b706cf34d3 - 4182 by account czo_catalina-jemez
+2019-11-21 15:04:02,239 [ERROR]  Resource exists hs: 611e24535102484e83afb4b706cf34d3 czo: 4182 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:02,241 [INFO ]  Updating 3edb9720a11845169dae4ba5b6212d27 - 4324 by account czo_calhoun
+2019-11-21 15:04:04,933 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:04,935 [INFO ]  Updating 68998b9f1d0740ef90d92dc150d87114 - 4368 by account czo_eel
+2019-11-21 15:04:07,546 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:07,548 [INFO ]  Updating 2b2c8038107048c9849f73867b79d4d5 - 4369 by account czo_eel
+2019-11-21 15:04:08,064 [ERROR]  Resource exists hs: 2b2c8038107048c9849f73867b79d4d5 czo: 4369 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:08,066 [INFO ]  Updating 0668ed25b2d14330b86aa1c2fd227640 - 4606 by account czo_calhoun
+Related datasets ['4671', '5446']
+2019-11-21 15:04:09,159 [INFO ]  Extended metadata
+2019-11-21 15:04:09,732 [ERROR]  Resource exists hs: 0668ed25b2d14330b86aa1c2fd227640 czo: 4606 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:09,734 [INFO ]  Updating 97738917b1fc423ab7c5801f7f406d74 - 4608 by account czo_eel
+2019-11-21 15:04:10,282 [ERROR]  Resource exists hs: 97738917b1fc423ab7c5801f7f406d74 czo: 4608 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:10,284 [INFO ]  Updating 7f9c036b7d804eb3a50bdd60d01bf92a - 4610 by account czo_shale-hills
+2019-11-21 15:04:10,871 [ERROR]  Resource exists hs: 7f9c036b7d804eb3a50bdd60d01bf92a czo: 4610 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:10,872 [INFO ]  Updating fb162ba0ab874abc891784d1f19c2c7b - 4611 by account czo_shale-hills
+2019-11-21 15:04:11,539 [ERROR]  Resource exists hs: fb162ba0ab874abc891784d1f19c2c7b czo: 4611 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:11,541 [INFO ]  Updating e50c332772104a72916878c5797a2b72 - 4612 by account czo_shale-hills
+2019-11-21 15:04:12,132 [ERROR]  Resource exists hs: e50c332772104a72916878c5797a2b72 czo: 4612 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:12,135 [INFO ]  Updating 0df6306f5e374bb38f664099bca1b25d - 4614 by account czo_calhoun
+2019-11-21 15:04:12,698 [ERROR]  Resource exists hs: 0df6306f5e374bb38f664099bca1b25d czo: 4614 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:12,700 [INFO ]  Updating 445cd9abbac74156a946fd9802d594fe - 4618 by account czo_shale-hills
+2019-11-21 15:04:13,248 [ERROR]  Resource exists hs: 445cd9abbac74156a946fd9802d594fe czo: 4618 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:13,250 [INFO ]  Updating d50588e5fe164d4b9f0de26b1704ce04 - 4620 by account czo_calhoun
+2019-11-21 15:04:13,808 [ERROR]  Resource exists hs: d50588e5fe164d4b9f0de26b1704ce04 czo: 4620 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:13,810 [INFO ]  Updating c2f67c84dfe14b6d92cf3455ad767f19 - 4637 by account czo_calhoun
+2019-11-21 15:04:14,353 [ERROR]  Resource exists hs: c2f67c84dfe14b6d92cf3455ad767f19 czo: 4637 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:14,357 [INFO ]  Updating 57a0afc2bb0e42b180478668a565720d - 4658 by account czo_calhoun
+Related datasets ['4659']
+2019-11-21 15:04:15,410 [INFO ]  Extended metadata
+2019-11-21 15:04:15,977 [ERROR]  Resource exists hs: 57a0afc2bb0e42b180478668a565720d czo: 4658 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:15,979 [INFO ]  Updating 272f43b9d49d44ee97a0d3d143e7a5cc - 4659 by account czo_calhoun
+Related datasets ['4658']
+2019-11-21 15:04:17,083 [INFO ]  Extended metadata
+2019-11-21 15:04:17,639 [ERROR]  Resource exists hs: 272f43b9d49d44ee97a0d3d143e7a5cc czo: 4659 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:17,640 [INFO ]  Updating 59cda52523844d4abd39873b2be86b2a - 4660 by account czo_calhoun
+2019-11-21 15:04:18,180 [ERROR]  Resource exists hs: 59cda52523844d4abd39873b2be86b2a czo: 4660 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:18,182 [INFO ]  Updating 96f6ed602b9f4064b7f7da7d5b3b02af - 4665 by account czo_calhoun
+2019-11-21 15:04:18,702 [ERROR]  Resource exists hs: 96f6ed602b9f4064b7f7da7d5b3b02af czo: 4665 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:18,705 [INFO ]  Updating 55e795093f0e443fa061b40b6928df92 - 4671 by account czo_calhoun
+Related datasets ['4606', '5446']
+2019-11-21 15:04:19,708 [INFO ]  Extended metadata
+2019-11-21 15:04:20,262 [ERROR]  Resource exists hs: 55e795093f0e443fa061b40b6928df92 czo: 4671 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:20,265 [INFO ]  Updating 55606327aab649ed809f1cc1c804ff3c - 4673 by account czo_calhoun
+2019-11-21 15:04:20,836 [ERROR]  Resource exists hs: 55606327aab649ed809f1cc1c804ff3c czo: 4673 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:20,838 [INFO ]  Updating c414c5cdc67244a4ada77cc490f8c6fd - 4674 by account czo_calhoun
+2019-11-21 15:04:21,391 [ERROR]  Resource exists hs: c414c5cdc67244a4ada77cc490f8c6fd czo: 4674 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:21,393 [INFO ]  Updating d04a040fefb14ab384a315de2698c6b3 - 4677 by account czo_calhoun
+2019-11-21 15:04:21,962 [ERROR]  Resource exists hs: d04a040fefb14ab384a315de2698c6b3 czo: 4677 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:21,964 [INFO ]  Updating cd92a0c4f9d64c748f21cd8f077cd072 - 4678 by account czo_calhoun
+2019-11-21 15:04:24,759 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:24,762 [INFO ]  Updating faca41bfb3e44755ab11c4db4ae88340 - 4679 by account czo_calhoun
+2019-11-21 15:04:27,477 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:27,479 [INFO ]  Updating 4a30c526f14141bfbd4b496d348fbd20 - 4680 by account czo_calhoun
+2019-11-21 15:04:30,050 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:30,052 [INFO ]  Updating 23a13088ac8849ef85dabbbc8d62e442 - 4681 by account czo_calhoun
+2019-11-21 15:04:32,720 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:32,723 [INFO ]  Updating b7e332f222c4446596c8663d83559841 - 4683 by account czo_calhoun
+2019-11-21 15:04:35,286 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:35,287 [INFO ]  Updating 0ed16cef91d2496c92718b7bb5330b77 - 4684 by account czo_calhoun
+2019-11-21 15:04:37,847 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:37,849 [INFO ]  Updating 80fbaf9cef9745a0ab45a33443912f51 - 4685 by account czo_calhoun
+2019-11-21 15:04:40,363 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:40,365 [INFO ]  Updating 35301f29f15547c884c847ff00eb6220 - 4686 by account czo_calhoun
+2019-11-21 15:04:42,936 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:42,938 [INFO ]  Updating 7396e378524f4b88b8126b6f28d4dfe8 - 4687 by account czo_calhoun
+2019-11-21 15:04:45,490 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:45,491 [INFO ]  Updating 280a73e3d6244a56b27de24375b4210a - 4703 by account czo_reynolds
+2019-11-21 15:04:48,189 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:48,191 [INFO ]  Updating 4f025f6ba647411c8c16800f607d5baf - 4723 by account czo_luquillo
+2019-11-21 15:04:48,745 [ERROR]  Resource exists hs: 4f025f6ba647411c8c16800f607d5baf czo: 4723 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:48,747 [INFO ]  Updating 6bacd957168747f4af8537006205684d - 4730 by account czo_luquillo
+2019-11-21 15:04:49,313 [ERROR]  Resource exists hs: 6bacd957168747f4af8537006205684d czo: 4730 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:04:49,315 [INFO ]  Updating ab5d6ebea61c4d74b2cc582e774139f1 - 4734 by account czo_luquillo
+2019-11-21 15:04:51,923 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:51,925 [INFO ]  Updating 0a40c5df78e4405c811be7a040b5e1a8 - 4739 by account czo_eel
+2019-11-21 15:04:54,569 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:54,571 [INFO ]  Updating 99ce6e0c2f06489a9859f814993eaf3c - 4741 by account czo_eel
+2019-11-21 15:04:57,409 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:04:57,411 [INFO ]  Updating 8ef99543f69643438575e3f740cb2bba - 4742 by account czo_eel
+2019-11-21 15:05:00,181 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:00,184 [INFO ]  Updating 494feb61bb9a45909a3246111f774758 - 4743 by account czo_eel
+2019-11-21 15:05:02,791 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:02,793 [INFO ]  Updating 897feb1bfdf84328b8d18b36c8a9be05 - 4828 by account czo_shale-hills
+2019-11-21 15:05:05,350 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:05,352 [INFO ]  Updating 503b32a8bf8e43a5814336076a98f096 - 4829 by account czo_shale-hills
+2019-11-21 15:05:08,075 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:08,077 [INFO ]  Updating 0edacd0ea7c84867a19273c3f5d211d6 - 4830 by account czo_shale-hills
+2019-11-21 15:05:10,658 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:10,660 [INFO ]  Updating 63cd313bd15b4b77b05b8f34ec9388ee - 4851 by account czo_calhoun
+2019-11-21 15:05:13,394 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:13,396 [INFO ]  Updating 2ecf44a316364998a938c1c0f84fdb67 - 4871 by account czo_shale-hills
+2019-11-21 15:05:16,121 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:16,123 [INFO ]  Updating 295745bf0b854c6bbddc05452a09c602 - 4897 by account czo_eel
+2019-11-21 15:05:18,696 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:18,698 [INFO ]  Updating 417c018edd324a75828195625adbc19f - 4940 by account czo_shale-hills
+2019-11-21 15:05:21,276 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:21,278 [INFO ]  Updating c00a9d3c593c4a4aae67eb6bd7e4b049 - 4982 by account czo_luquillo
+2019-11-21 15:05:23,950 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:23,953 [INFO ]  Updating 90aafb1028ec43dbb5b10a1302548c28 - 4997 by account czo_shale-hills
+2019-11-21 15:05:26,729 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:26,730 [INFO ]  Updating d957c4123c9a4154b3bdfb4bd0c4dfb8 - 5107 by account czo_catalina-jemez
+2019-11-21 15:05:29,287 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:29,289 [INFO ]  Updating 21a405f32af346e19ddd1c2b1c694b2c - 5131 by account czo_national
+2019-11-21 15:05:32,010 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:32,012 [INFO ]  Updating ece96e87f7184bf392f0e7b98132a2c9 - 5137 by account czo_national
+2019-11-21 15:05:34,917 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:34,919 [INFO ]  Updating bdd33326fcf64fd2a8f8659a375f2d58 - 5138 by account czo_national
+2019-11-21 15:05:44,199 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:44,201 [INFO ]  Updating 2a19d06352394d4683355b4cb5d3bb44 - 5139 by account czo_catalina-jemez
+2019-11-21 15:05:47,887 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:47,889 [INFO ]  Updating 51e6489b2f6c4b489288885d2540bcbc - 5140 by account czo_catalina-jemez
+2019-11-21 15:05:51,191 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:51,194 [INFO ]  Updating bcc8d3f2a22844bab057d8c2bbb52df7 - 5189 by account czo_shale-hills
+2019-11-21 15:05:55,085 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:55,087 [INFO ]  Updating 7f0b08d540084115992d4354bb4bd6dd - 5190 by account czo_shale-hills
+2019-11-21 15:05:59,458 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:05:59,460 [INFO ]  Updating ed8a2be3883b4f72b73636ae5d9ed087 - 5198 by account czo_catalina-jemez
+2019-11-21 15:06:04,296 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:06:04,298 [INFO ]  Updating 6cbb07fc45af48db934a64d5c365c7f2 - 5203 by account czo_reynolds
+2019-11-21 15:06:07,500 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:06:07,502 [INFO ]  Updating 391d601761ee4b47a18a511f80df27e6 - 5270 by account czo_reynolds
+2019-11-21 15:06:11,782 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:06:11,784 [INFO ]  Updating 432e180c1aad4f85af8f41321cc4b263 - 5272 by account czo_shale-hills
+2019-11-21 15:06:15,756 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:06:15,758 [INFO ]  Updating 16c1d1cbad5f45f78f7ac1e702d0aafe - 5273 by account czo_shale-hills
+2019-11-21 15:06:18,800 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:06:18,803 [INFO ]  Updating f1aa35bb7ee14b08b305f6424dea34ce - 5274 by account czo_shale-hills
+2019-11-21 15:06:24,429 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:06:24,430 [INFO ]  Updating 4e8f26a8ac564c26b0ea2b07fca50138 - 5277 by account czo_shale-hills
+2019-11-21 15:06:28,478 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:06:28,479 [INFO ]  Updating 61fbd7d954d042f9b8d865952c6d6ad3 - 5278 by account czo_shale-hills
+2019-11-21 15:06:45,481 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:06:45,483 [INFO ]  Updating f11c35908ef247a4bcb8746ef7844a6e - 5280 by account czo_shale-hills
+2019-11-21 15:06:49,983 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:06:49,985 [INFO ]  Updating d349fe52ffea4b0cb62064af9f352b6c - 5281 by account czo_shale-hills
+2019-11-21 15:06:53,160 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:06:53,162 [INFO ]  Updating 993b56797c244ea185a3430ca0cb0fc7 - 5282 by account czo_shale-hills
+2019-11-21 15:06:56,755 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:06:56,757 [INFO ]  Updating 50d00ce62ea34ba5a7d209ce9df558b1 - 5283 by account czo_shale-hills
+2019-11-21 15:07:00,566 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:00,568 [INFO ]  Updating a868f9188e36478db40c02efab920281 - 5285 by account czo_shale-hills
+2019-11-21 15:07:10,119 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:10,121 [INFO ]  Updating f7adcd529a664c70b844c3b58dd672e9 - 5292 by account czo_reynolds
+2019-11-21 15:07:13,282 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:13,283 [INFO ]  Updating 79f7eae8ce664ecf8ed25036f77d8677 - 5300 by account czo_shale-hills
+2019-11-21 15:07:15,876 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:15,881 [INFO ]  Updating 3160f8300bd54f38aafa95aa805ce356 - 5324 by account czo_shale-hills
+2019-11-21 15:07:18,487 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:18,488 [INFO ]  Updating 2deee39922df49c88eb9224768f43a7c - 5326 by account czo_shale-hills
+2019-11-21 15:07:20,933 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:20,935 [INFO ]  Updating 7f56e6d9a5fa4e6e9968cd4bbb4922eb - 5329 by account czo_shale-hills
+2019-11-21 15:07:23,469 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:23,471 [INFO ]  Updating a51c838198ad4c9c9f9c858ecd5e0721 - 5343 by account czo_shale-hills
+2019-11-21 15:07:26,053 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:26,055 [INFO ]  Updating e1f51a36925a4a888563e37275539d7b - 5442 by account czo_luquillo
+2019-11-21 15:07:28,770 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:28,772 [INFO ]  Updating cbdf5af338214abea9bd3e993aae4d01 - 5446 by account czo_calhoun
+Related datasets ['4671']
+2019-11-21 15:07:29,832 [INFO ]  Extended metadata
+2019-11-21 15:07:32,309 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:32,311 [INFO ]  Updating ec8c0256b1b54127a3733bbabc116793 - 5454 by account czo_calhoun
+2019-11-21 15:07:35,033 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:35,037 [INFO ]  Updating 14fe2dcac7114a90a420d1d1a438edd2 - 5460 by account czo_luquillo
+2019-11-21 15:07:37,617 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:37,619 [INFO ]  Updating 38492153da544d55b8183784ce38ed6a - 5470 by account czo_catalina-jemez
+2019-11-21 15:07:40,411 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:40,413 [INFO ]  Updating 52f493d3934c4d07afbd7a40cea067af - 5484 by account czo_eel
+Related datasets ['4608']
+2019-11-21 15:07:41,449 [INFO ]  Extended metadata
+2019-11-21 15:07:44,159 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:44,161 [INFO ]  Updating f3c5349d77644349a6d9ab7cf88305aa - 5485 by account czo_eel
+2019-11-21 15:07:46,793 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:46,796 [INFO ]  Updating bbe40682aa8644b882df84c5db3938fa - 5486 by account czo_eel
+Related datasets ['4608']
+2019-11-21 15:07:47,984 [INFO ]  Extended metadata
+2019-11-21 15:07:50,650 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:50,652 [INFO ]  Updating e69dca10141348808010c4470d99210a - 5488 by account czo_eel
+2019-11-21 15:07:53,152 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:53,154 [INFO ]  Updating 4ab76a12613c493d82b2df57aa970c24 - 5491 by account czo_catalina-jemez
+2019-11-21 15:07:55,923 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:55,925 [INFO ]  Updating 38c0e61607e74c329ac798c8001bfa95 - 5492 by account czo_catalina-jemez
+2019-11-21 15:07:58,523 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:07:58,525 [INFO ]  Updating 5602200fa76c477d86774553b70c71b9 - 5493 by account czo_catalina-jemez
+2019-11-21 15:08:01,138 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:01,140 [INFO ]  Updating 9f9a250586bb45f0b8e78eefbeb35b83 - 5494 by account czo_catalina-jemez
+2019-11-21 15:08:04,545 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:04,547 [INFO ]  Updating cdc63e4bd87646479e1af6a359d542ad - 5496 by account czo_eel
+2019-11-21 15:08:07,139 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:07,141 [INFO ]  Updating 5b58b8254b9248dcab96e7cd2421a1c0 - 5497 by account czo_eel
+2019-11-21 15:08:09,723 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:09,725 [INFO ]  Updating 1f06831dac3041e69ecc85858d2ab39f - 5498 by account czo_luquillo
+2019-11-21 15:08:12,289 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:12,291 [INFO ]  Updating 76bbc82a2b0949668a34e924f0e3d7c3 - 5512 by account czo_catalina-jemez
+2019-11-21 15:08:14,932 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:14,933 [INFO ]  Updating e093b98a554c4ffa80786f3b608de00c - 5531 by account czo_luquillo
+2019-11-21 15:08:17,518 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:17,519 [INFO ]  Updating ae1b338cc7a641f68fd5c4f85dba97a1 - 5533 by account czo_calhoun
+2019-11-21 15:08:20,209 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:20,211 [INFO ]  Updating 1bd22f9415d3461b86f4cf3874e2e1c1 - 5564 by account czo_calhoun
+2019-11-21 15:08:22,742 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:22,744 [INFO ]  Updating 818ecb27e5fb4469bb72283d15b52800 - 5668 by account czo_luquillo
+2019-11-21 15:08:25,362 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:25,364 [INFO ]  Updating 6d3e785feb364ae79f88fa57432a7e92 - 5714 by account czo_reynolds
+2019-11-21 15:08:27,929 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:27,931 [INFO ]  Updating a3b8d8df6ed545c4912b95dfc23c066d - 5751 by account czo_luquillo
+2019-11-21 15:08:30,604 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:30,606 [INFO ]  Updating 6dd3a7e69375411389cc7a587ed6cdf9 - 5817 by account czo_shale-hills
+2019-11-21 15:08:33,265 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:33,267 [INFO ]  Updating 6438f33720e44a7690c094caf331aebe - 5821 by account czo_calhoun
+2019-11-21 15:08:35,815 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:35,817 [INFO ]  Updating 98f23778fae94283a179f1ab242fed96 - 5933 by account czo_calhoun
+2019-11-21 15:08:38,463 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:38,464 [INFO ]  Updating 116fa5ba5645479ea670cf5b5a7f2635 - 5982 by account czo_calhoun
+2019-11-21 15:08:41,210 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:41,212 [INFO ]  Updating 75de7aa9cc69489a828dc4f4216cefeb - 5986 by account czo_calhoun
+2019-11-21 15:08:43,871 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:43,873 [INFO ]  Updating 5a338710aa6549ddba3d008163e977ee - 6026 by account czo_luquillo
+2019-11-21 15:08:46,546 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:46,548 [INFO ]  Updating 4b7d49a5fc3a4a20a1e8dde4d2146f17 - 6103 by account czo_national
+2019-11-21 15:08:49,275 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:49,277 [INFO ]  Updating a60faac4c73649efb4736de7ec587f7c - 6108 by account czo_national
+2019-11-21 15:08:51,996 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:51,998 [INFO ]  Updating cdae735072274dbcb29ebae2ec13a201 - 6112 by account czo_national
+2019-11-21 15:08:54,524 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:54,526 [INFO ]  Updating 1a4d322603d44c599a8aa33997f39357 - 6113 by account czo_national
+2019-11-21 15:08:57,199 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:57,201 [INFO ]  Updating 717902cd669342dface45d9761490c26 - 6118 by account czo_luquillo
+2019-11-21 15:08:59,849 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:08:59,852 [INFO ]  Updating ccb0c4cd1bfd46908da6806ca4a2acfa - 6273 by account czo_reynolds
+2019-11-21 15:09:02,466 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:02,468 [INFO ]  Updating ec3d30b72ad243be929286ca63faebd1 - 6292 by account czo_national
+2019-11-21 15:09:05,193 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:05,195 [INFO ]  Updating 48543185f7bd414b9f883209dc7edef6 - 6421 by account czo_calhoun
+Related datasets ['4686', '6470']
+2019-11-21 15:09:06,193 [INFO ]  Extended metadata
+2019-11-21 15:09:08,693 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:08,695 [INFO ]  Updating 434012bea99b4c589231e4169ffdc6a2 - 6466 by account czo_catalina-jemez
+2019-11-21 15:09:11,498 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:11,501 [INFO ]  Updating a22295e88b204d5997faeeaebb4dbe09 - 6470 by account czo_calhoun
+Related datasets ['6421']
+2019-11-21 15:09:12,520 [INFO ]  Extended metadata
+2019-11-21 15:09:15,291 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:15,295 [INFO ]  Updating d437825c6f034510a48d569d8a449e63 - 6475 by account czo_calhoun
+Related datasets ['4671']
+2019-11-21 15:09:16,360 [INFO ]  Extended metadata
+2019-11-21 15:09:18,968 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:18,970 [INFO ]  Updating 8b700e86effd4c189c3a88379825df18 - 6486 by account czo_reynolds
+2019-11-21 15:09:21,610 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:21,612 [INFO ]  Updating f98e6de110a24227945624ab9ca91c5b - 6487 by account czo_reynolds
+2019-11-21 15:09:24,298 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:24,300 [INFO ]  Updating c476a86a17e043888cd42ae5337e7d6e - 6488 by account czo_reynolds
+2019-11-21 15:09:26,865 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:26,866 [INFO ]  Updating 9dfb6ae4748845ceb94676ec589e75a5 - 6521 by account czo_boulder
+Related datasets ['6522', '6523', '6521', '6526', '6524']
+2019-11-21 15:09:27,911 [INFO ]  Extended metadata
+2019-11-21 15:09:30,591 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:30,593 [INFO ]  Updating e440e0d3ad5b49929927e63f25226307 - 6522 by account czo_boulder
+Related datasets ['6522', '6521', '6523', '6524', '6526']
+2019-11-21 15:09:31,688 [INFO ]  Extended metadata
+2019-11-21 15:09:34,292 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:34,294 [INFO ]  Updating c74ee10b17a740af885ee404644abbed - 6523 by account czo_boulder
+Related datasets ['6524', '6526', '6523', '6522', '6521']
+2019-11-21 15:09:35,300 [INFO ]  Extended metadata
+2019-11-21 15:09:37,946 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:37,947 [INFO ]  Updating 4fa25c67f23d4218980603f05d7012be - 6524 by account czo_boulder
+Related datasets ['6522', '6523', '6521', '6526', '6524']
+2019-11-21 15:09:39,103 [INFO ]  Extended metadata
+2019-11-21 15:09:41,723 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:41,725 [INFO ]  Updating 3ecfe3f27550493683fb32a8f3b6b50c - 6526 by account czo_boulder
+Related datasets ['6524', '6526', '6523', '6522', '6521']
+2019-11-21 15:09:42,719 [INFO ]  Extended metadata
+2019-11-21 15:09:45,280 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:45,283 [INFO ]  Updating 5b9a322c650a44b68666c3e7a45fbdf9 - 6541 by account czo_boulder
+2019-11-21 15:09:47,909 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:47,911 [INFO ]  Updating 79f2db2a5c084a9e85cfedb62ba174d8 - 6565 by account czo_shale-hills
+2019-11-21 15:09:50,484 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:50,486 [INFO ]  Updating 5e4873638923480d9272c5dc375d4a03 - 6566 by account czo_national
+2019-11-21 15:09:53,197 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:53,199 [INFO ]  Updating b134a93a92ba482abc5176e029a6687a - 6568 by account czo_calhoun
+2019-11-21 15:09:55,799 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:55,801 [INFO ]  Updating bdb8919935ec4f8a86f0151d884ef871 - 6569 by account czo_national
+2019-11-21 15:09:58,527 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:09:58,528 [INFO ]  Updating 9b7328ab4c914676891fbb8ff65d98c2 - 6580 by account czo_calhoun
+Related datasets ['4659', '4658']
+2019-11-21 15:09:59,634 [INFO ]  Extended metadata
+2019-11-21 15:10:02,314 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:02,316 [INFO ]  Updating 5474b591c80e44b4866aa5c1eeb830e6 - 6585 by account czo_calhoun
+2019-11-21 15:10:04,956 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:04,958 [INFO ]  Updating 31044067f2494413ab6f21f48461b9d8 - 6587 by account czo_luquillo
+2019-11-21 15:10:07,586 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:07,588 [INFO ]  Updating c83f5bda0d434076a4884081338b7fa4 - 6588 by account czo_luquillo
+2019-11-21 15:10:10,201 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:10,203 [INFO ]  Updating 3fe1e79fc6f4464a9f57bc60c9997706 - 6597 by account czo_sierra
+2019-11-21 15:10:12,894 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:12,896 [INFO ]  Updating a5097f6a7aca4d2fada2335ccf5bd64d - 6625 by account czo_reynolds
+2019-11-21 15:10:15,642 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:15,645 [INFO ]  Updating 00b7e2ff67364a3ebe8a40a57f8f052e - 6630 by account czo_shale-hills
+2019-11-21 15:10:18,408 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:18,410 [INFO ]  Updating f58e83002f01481492f500d62712b993 - 6636 by account czo_shale-hills
+2019-11-21 15:10:21,135 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:21,137 [INFO ]  Updating ae3eb4d9c8604235b41c02efff86ad9c - 6639 by account czo_shale-hills
+2019-11-21 15:10:23,728 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:23,730 [INFO ]  Updating e89be644c3884467b7722ce2f457121c - 6645 by account czo_shale-hills
+2019-11-21 15:10:26,477 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:26,479 [INFO ]  Updating a7a399be862d4862bb2c8f4ed5594387 - 6652 by account czo_luquillo
+2019-11-21 15:10:29,097 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:29,099 [INFO ]  Updating 6393700499984165a4451ec939e44715 - 6654 by account czo_shale-hills
+2019-11-21 15:10:31,739 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:31,742 [INFO ]  Updating bdfaf85ca3d943e691e23eb41cdda801 - 6659 by account czo_shale-hills
+2019-11-21 15:10:34,424 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:34,426 [INFO ]  Updating 302fde4890e74702ac731d2a82680e8f - 6660 by account czo_shale-hills
+2019-11-21 15:10:37,261 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:37,262 [INFO ]  Updating de8fd503eec94b4c9f0d767d2b8c0a79 - 6661 by account czo_shale-hills
+2019-11-21 15:10:39,854 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:39,855 [INFO ]  Updating 5e40c198c2a447a3ae7bbae424b408ea - 6675 by account czo_reynolds
+2019-11-21 15:10:42,446 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:42,448 [INFO ]  Updating 7703d249f062428b8229c03ce072e5c6 - 6686 by account czo_catalina-jemez
+2019-11-21 15:10:45,115 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:45,118 [INFO ]  Updating f38650ba68764d1db8a0e7a13a5153c2 - 6688 by account czo_shale-hills
+2019-11-21 15:10:47,733 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:47,736 [INFO ]  Updating 12b40614cae943ae94032c96041eb526 - 6696 by account czo_shale-hills
+2019-11-21 15:10:48,662 [ERROR]  Resource exists hs: 12b40614cae943ae94032c96041eb526 czo: 6696 - ./tmp2/readme/ReadMe.md - tuple index out of range
+2019-11-21 15:10:48,664 [INFO ]  Updating bac581a34190452ab3346d0297dbee1a - 6706 by account czo_shale-hills
+2019-11-21 15:10:51,227 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:51,229 [INFO ]  Updating 8fa362a534d2494e923c231aa0cc10a5 - 6775 by account czo_calhoun
+2019-11-21 15:10:53,756 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:53,758 [INFO ]  Updating 901a9ac9828d4d7e87deefa357c3a67a - 6778 by account czo_shale-hills
+2019-11-21 15:10:56,470 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:56,472 [INFO ]  Updating e4760f8dfcbe431f8c3d815e70c364e6 - 6779 by account czo_shale-hills
+2019-11-21 15:10:58,974 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:10:58,976 [INFO ]  Updating 5e30ed5401994d609aec0a7c0dc94fc1 - 6786 by account czo_shale-hills
+2019-11-21 15:11:01,583 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:01,586 [INFO ]  Updating a24376aa9f4f4604ab4d3a3e253790d0 - 6787 by account czo_shale-hills
+2019-11-21 15:11:04,159 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:04,161 [INFO ]  Updating 1f9447939ee046ee924129845eaa4c4f - 6788 by account czo_shale-hills
+2019-11-21 15:11:06,705 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:06,707 [INFO ]  Updating 59fe6f8952f94513a9f0f9b3b51f676b - 6789 by account czo_shale-hills
+2019-11-21 15:11:09,382 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:09,385 [INFO ]  Updating b3e1dcd0559a43b19e5d36a84a1f55a2 - 6795 by account czo_luquillo
+2019-11-21 15:11:12,009 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:12,011 [INFO ]  Updating 240d315436414dc192c316f434cab5de - 6803 by account czo_luquillo
+2019-11-21 15:11:14,738 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:14,740 [INFO ]  Updating 7968ba4925004bd5b0e78aef86bdfd7b - 6903 by account czo_boulder
+2019-11-21 15:11:17,388 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:17,389 [INFO ]  Updating 016bc73136974bc0b688ba64a6c690e4 - 6910 by account czo_shale-hills
+2019-11-21 15:11:19,989 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:19,991 [INFO ]  Updating 3fdd7464d9b04576866093a27da05b41 - 6917 by account czo_shale-hills
+Related datasets ['6706', '5300', '2646']
+2019-11-21 15:11:20,975 [INFO ]  Extended metadata
+2019-11-21 15:11:23,569 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:23,572 [INFO ]  Updating cd1ef3ea99ae4c4597569ce4335f36a9 - 6941 by account czo_shale-hills
+2019-11-21 15:11:26,213 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:26,215 [INFO ]  Updating f362d24430e0425b98a0792565c51bcc - 6942 by account czo_shale-hills
+2019-11-21 15:11:28,811 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:28,813 [INFO ]  Updating 8366720914b143b696c952ae90a78a67 - 6947 by account czo_shale-hills
+2019-11-21 15:11:31,423 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:31,425 [INFO ]  Updating 1359ff9e943643729717ee046b416e17 - 6980 by account czo_shale-hills
+2019-11-21 15:11:33,947 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:33,950 [INFO ]  Updating 9ee2e7f1f0ef4746a4991a32055e6812 - 6987 by account czo_shale-hills
+2019-11-21 15:11:36,547 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:36,549 [INFO ]  Updating da61f854a1754e26a7c65de608bf5890 - 6992 by account czo_catalina-jemez
+2019-11-21 15:11:39,118 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:39,121 [INFO ]  Updating 36419d60a7484844acab038b1fb84828 - 6993 by account czo_catalina-jemez
+2019-11-21 15:11:41,648 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:41,650 [INFO ]  Updating 59ec9745d51646eb8efda5e4a6b08d5f - 7062 by account czo_luquillo
+2019-11-21 15:11:44,386 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:44,389 [INFO ]  Updating 8988727a364f4558b6ae2fe9a2ef35b3 - 7092 by account czo_shale-hills
+2019-11-21 15:11:46,925 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:46,928 [INFO ]  Updating ffee4c810774423fb302ed7b735d3805 - 7113 by account czo_catalina-jemez
+Related datasets ['6992']
+2019-11-21 15:11:47,947 [INFO ]  Extended metadata
+2019-11-21 15:11:50,733 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:50,735 [INFO ]  Updating c0adedc79a954bcd81e62a063ae2cbbf - 7158 by account czo_luquillo
+2019-11-21 15:11:53,406 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:53,408 [INFO ]  Updating c801344fcb464624abd0a4ba3fc75d10 - 7161 by account czo_luquillo
+2019-11-21 15:11:56,024 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:56,026 [INFO ]  Updating 5cec195d9d5c40ac92be2319ba4cd6ce - 7162 by account czo_luquillo
+2019-11-21 15:11:58,715 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:11:58,717 [INFO ]  Updating 3776d75974e04f33b8801bfc3503174a - 7164 by account czo_luquillo
+2019-11-21 15:12:01,291 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:01,293 [INFO ]  Updating c94a53ec169940cf948e1111c8fe1762 - 7165 by account czo_luquillo
+2019-11-21 15:12:03,920 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:03,921 [INFO ]  Updating 9a12b8d1295446b7a9ba5ea3c3e499af - 7167 by account czo_luquillo
+2019-11-21 15:12:06,407 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:06,409 [INFO ]  Updating e6d7f6c11aa34662bdc30225bf35ae6e - 7169 by account czo_luquillo
+2019-11-21 15:12:09,036 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:09,038 [INFO ]  Updating d8b725b81bba4bfb8386e30c834e4254 - 7170 by account czo_luquillo
+2019-11-21 15:12:11,667 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:11,669 [INFO ]  Updating 715ffe3828d349d5ae134374ed84dcc3 - 7171 by account czo_luquillo
+2019-11-21 15:12:14,301 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:14,303 [INFO ]  Updating 4a5f560d20004213acf3eb52cca93f67 - 7172 by account czo_luquillo
+2019-11-21 15:12:16,933 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:16,936 [INFO ]  Updating d346b889cf764d508940f6f14943e39c - 7174 by account czo_luquillo
+2019-11-21 15:12:19,479 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:19,482 [INFO ]  Updating 4d0c04e3a7d34f48a465ba5d7bed4472 - 7175 by account czo_luquillo
+2019-11-21 15:12:22,200 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:22,201 [INFO ]  Updating da7a0231f38b4936af6f8179c2a48aa0 - 7204 by account czo_calhoun
+2019-11-21 15:12:25,073 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:25,075 [INFO ]  Updating 8d43148dba4c45fe8f65530d29aab7ae - 7205 by account czo_catalina-jemez
+2019-11-21 15:12:27,697 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:27,699 [INFO ]  Updating 9535cbe97d5843a788fc7648de39a6e5 - 7212 by account czo_shale-hills
+Related datasets ['6947', '4940', '4611', '2752', '3869']
+2019-11-21 15:12:28,798 [INFO ]  Extended metadata
+2019-11-21 15:12:31,489 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:31,491 [INFO ]  Updating 759a4482482647ecbc164f6bcf1eb157 - 7213 by account czo_shale-hills
+2019-11-21 15:12:34,094 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:34,096 [INFO ]  Updating dde802db7f3b4340a9702870bdc5d7ae - 7214 by account czo_shale-hills
+2019-11-21 15:12:37,180 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:37,182 [INFO ]  Updating 2737000d19fb4d50bce263d397ba680f - 7217 by account czo_shale-hills
+2019-11-21 15:12:39,882 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:39,885 [INFO ]  Updating 7f42e49859314944927bfdbbfd4e6699 - 7222 by account czo_shale-hills
+2019-11-21 15:12:42,491 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:42,493 [INFO ]  Updating 70176872f4c74ee09ddb56d1cc7e8472 - 7241 by account czo_boulder
+Related datasets ['3065', '2785', '2860']
+2019-11-21 15:12:43,543 [INFO ]  Extended metadata
+2019-11-21 15:12:46,129 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:46,131 [INFO ]  Updating 4845d6f238764f6e865af78e11a36279 - 7243 by account czo_calhoun
+2019-11-21 15:12:48,813 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:48,815 [INFO ]  Updating 8948434b66fb435cb9e09bdc8c12a128 - 7256 by account czo_boulder
+Related datasets ['2467', '3737', '2468']
+2019-11-21 15:12:49,830 [INFO ]  Extended metadata
+2019-11-21 15:12:52,399 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:52,401 [INFO ]  Updating bb4263b414ac46df845ff1e7f9984718 - 7261 by account czo_boulder
+Related datasets ['2785', '3065', '3064', '3639']
+2019-11-21 15:12:53,434 [INFO ]  Extended metadata
+2019-11-21 15:12:56,180 [INFO ]  Creating ReadMe file ./tmp2/readme/ReadMe.md
+2019-11-21 15:12:56,181 [INFO ]  Fix Pass Done: 85 ex metadata updated; 253 ReadMe files created
+

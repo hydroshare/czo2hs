@@ -1,7 +1,7 @@
 import time
 import tempfile
 import os
-from settings import README_FILENAME
+from settings import README_FILENAME, MORE_TMP
 
 
 def retry_func(fun, args=None, kwargs=None, max_tries=4, interval_sec=5, increase_interval=True, raise_on_failure=True):
@@ -55,7 +55,10 @@ def normal_write(_heading, _text):
     :return:
     """
     _text = str(_text)
-    return "###{}\n".format(_heading) + _text.replace('[CRLF]', '\n') + "\n\n"
+    if _text:
+        if _text.lower() != 'nan' and _text.lower() != 'none':
+            return "###{}\n".format(_heading) + _text.replace('[CRLF]', '\n') + "\n\n"
+    return ""
 
 
 def gen_readme(rowdata, related_resources):
@@ -65,7 +68,10 @@ def gen_readme(rowdata, related_resources):
     :param related_resources: list of hydroshare resource ids
     :return: save markdown file to tmp
     """
-    readme_path = os.path.join(tempfile.mkdtemp(), README_FILENAME)
+    # readme_path = os.path.join(tempfile.mkdtemp(), README_FILENAME)
+    readme_path = os.path.join(MORE_TMP, 'readme')  # TODO parameterize
+    readme_path = os.path.join(readme_path, README_FILENAME)
+
     info = ''
     with open(os.path.join(readme_path), 'w', encoding='utf-8') as f:
         info += "#" + rowdata.get('title') + "\n"
@@ -100,6 +106,11 @@ def gen_readme(rowdata, related_resources):
         info += normal_write("South latitude", rowdata.get('south_lat'))
         info += normal_write("West longitude", rowdata.get('west_long'))
         info += normal_write("East longitude", rowdata.get('east_long'))
+
+        map_uploads = rowdata.get('map_uploads')
+        if map_uploads and str(map_uploads).lower() != 'nan' and str(map_uploads).lower() != 'none':
+            info += map_uploads
+
         info += "  \n<br /><br />\n  "
 
         info += "------\n##REFERENCE\n"
@@ -113,7 +124,10 @@ def gen_readme(rowdata, related_resources):
         if _pub_using.lower() != 'nan' and _pub_using.lower() != 'none':
             _pub_using = _pub_using.replace('|', '\n\n')
             info += conditional_write('Publications using this data', _pub_using)
-        info += normal_write("CZO ID", rowdata.get('czo_id'))
+        _czo_id = int(rowdata.get('czo_id'))
+        if _czo_id < 0:
+            raise(Exception("bad id"))
+        info += normal_write("CZO ID", _czo_id)
         info += conditional_write('Related datasets', rowdata.get('RELATED_DATASETS'))
 
         ext_links = str(rowdata.get('EXTERNAL_LINKS-url$link_text'))

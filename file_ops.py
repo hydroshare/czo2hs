@@ -4,11 +4,11 @@ import tempfile
 import uuid
 import hashlib
 from urllib.parse import unquote
-
+import uuid
 import requests
 import validators
 
-from settings import BIG_FILE_SIZE_MB, MB_TO_BYTE, headers, USE_CACHED_FILES, CACHED_FILE_DIR
+from settings import BIG_FILE_SIZE_MB, MB_TO_BYTE, headers, USE_CACHED_FILES, CACHED_FILE_DIR, MORE_TMP
 from util import retry_func
 
 
@@ -40,16 +40,20 @@ def download_file(url, file_name):
     # TODO try catch and log
     # TODO handle for rate limiting
 
-    save_to_base = tempfile.mkdtemp()
-    save_to = os.path.join(save_to_base, file_name)
+    guid4 = str(uuid.uuid4())
+    save_to = os.path.join(MORE_TMP, guid4)
+    if not os.path.exists(save_to):
+        os.mkdir(save_to)
+    save_to = os.path.join(save_to, file_name)
 
     if USE_CACHED_FILES:
-        f_path, _ = get_cached_file(url)
-        if f_path is not None:
-            f_path = os.path.abspath(f_path)
-            os.symlink(f_path, save_to)  # target must be a absolute path
-            logging.info("Using local cache {} --> {}".format(save_to, f_path))
-            return save_to
+        a=1
+        # f_path, _ = get_cached_file(url)
+        # if f_path is not None:
+        #     f_path = os.path.abspath(f_path)
+        #     os.symlink(f_path, save_to)  # target must be a absolute path
+        #     logging.info("Using local cache {} --> {}".format(save_to, f_path))
+        #     return save_to
 
     # sending headers is very important or in some cases requests.get() wont download the actual file content/binary
     response = requests.get(url, stream=True, headers=headers)

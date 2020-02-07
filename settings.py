@@ -1,9 +1,10 @@
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
 # Path to CZO CMS export (csv file)
-CZO_DATA_CSV = "./data/CZO-datasets-metadata-2019-10-29.csv"
+CZO_DATA_CSV = "./data/IMLCZODatasetsMetadata2020-02-07.csv"
 
 # a list of czo_ids to migrate.
 # If empty or None, list to be generated automatically by START_ROW_INDEX and END_ROW_INDEX below
@@ -31,18 +32,19 @@ HS_EXTERNAL_FULL_DOMAIN = "http://localhost:8000"  # eg: https://www.hydroshare.
 # uname: HydroShare Username (case-sensitive)
 # pwd: HydroShare Password (case-sensitive)
 CZO_ACCOUNTS = [
-    {"czo":  "national", "group": "CZO National", "uname": "czo_national", "pwd": "123"},
-    {"czo":  "boulder", "group": "CZO Boulder", "uname": "czo_boulder", "pwd": "123"},
-    {"czo":  "eel", "group": "CZO Eel", "uname": "czo_eel", "pwd": "123"},
-    {"czo":  "catalina-jemez", "group": "CZO Catalina-Jemez", "uname": "czo_catalina-jemez", "pwd": "123"},
-    {"czo":  "reynolds", "group": "CZO Reynolds", "uname": "czo_reynolds", "pwd": "123"},
-    {"czo":  "luquillo", "group": "CZO Luquillo", "uname": "czo_luquillo", "pwd": "123"},
-    {"czo":  "sierra", "group": "CZO Sierra", "uname": "czo_sierra", "pwd": "123"},
-    {"czo":  "christina", "group": "CZO Christina", "uname": "czo_christina", "pwd": "123"},
-    {"czo":  "shale hills", "group": "CZO Shale-Hills", "uname": "czo_shale-hills", "pwd": "123"},
-    {"czo":  "calhoun", "group": "CZO Calhoun", "uname": "czo_calhoun", "pwd": "123"},
+    {"czo":  "national", "group": "CZO National", "uname": "czo_national", "pwd": "czone123"},
+    {"czo":  "boulder", "group": "CZO Boulder", "uname": "czo_boulder", "pwd": "czone123"},
+    {"czo":  "eel", "group": "CZO Eel", "uname": "czo_eel", "pwd": "czone123"},
+    {"czo":  "catalina-jemez", "group": "CZO Catalina-Jemez", "uname": "czo_catalina-jemez", "pwd": "czone123"},
+    {"czo":  "reynolds", "group": "CZO Reynolds", "uname": "czo_reynolds", "pwd": "czone123"},
+    {"czo":  "luquillo", "group": "CZO Luquillo", "uname": "czo_luquillo", "pwd": "czone123"},
+    {"czo":  "sierra", "group": "CZO Sierra", "uname": "czo_sierra", "pwd": "czone123"},
+    {"czo":  "christina", "group": "CZO Christina", "uname": "czo_christina", "pwd": "czone123"},
+    {"czo":  "shale hills", "group": "CZO Shale-Hills", "uname": "czo_shale-hills", "pwd": "czone123"},
+    {"czo":  "calhoun", "group": "CZO Calhoun", "uname": "czo_calhoun", "pwd": "czone123"},
+    {"czo":  "iml", "group": "CZO IML", "uname": "czo_iml", "pwd": "czone123"},
     # Keep the last line unchanged
-    {"czo":  "default", "group": "", "uname": "czo", "pwd": "123"},
+    {"czo":  "default", "group": "", "uname": "czo", "pwd": "czone123"},
 ]
 
 # file size above this limit to be migrated as reference types
@@ -57,6 +59,15 @@ headers = {
 USE_CACHED_FILES = True
 # Path to predownloaded files
 CACHED_FILE_DIR = "./tmp"
+
+if not os.path.exists("./tmp2"):
+    os.mkdir("./tmp2")
+
+if not os.path.exists("./tmp2/readme"):  # this is hardcoded in util.py
+    os.mkdir("./tmp2/readme")
+
+# More tmp
+MORE_TMP = "./tmp2"
 
 # Unit conversion
 MB_TO_BYTE = 1024 * 1024

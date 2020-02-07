@@ -123,7 +123,8 @@ def main():
         astype(dtype={"elapsed_time": "timedelta64[s]", })
 
     czo_data = pd.read_csv(CZO_DATA_CSV)
-
+    czo_data = czo_data[czo_data.czo_id > 1]
+    czo_data.czo_id = czo_data.czo_id.astype(int)
     czo_id_list = CZO_ID_LIST_TO_MIGRATE.copy()
     if czo_id_list is None or len(czo_id_list) == 0:
         end_index = END_ROW_INDEX
