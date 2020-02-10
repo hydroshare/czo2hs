@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 # Path to CZO CMS export (csv file)
 # CZO_DATA_CSV = "./data/IMLCZODatasetsMetadata2020-02-07.csv"
 
-CZO_DATA_CSV = "./data/IMLCZODatasetsMetadata2020-02-07-unix-lf"
+CZO_DATA_CSV = "./data/IMLCZODatasetsMetadata2020-02-07.csv"
 
 # a list of czo_ids to migrate.
 # If empty or None, list to be generated automatically by START_ROW_INDEX and END_ROW_INDEX below
