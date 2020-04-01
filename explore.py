@@ -19,18 +19,19 @@ def main():
 
     conf_name = []
     sizes = []
+    nf = []
     for f in dg.index:
         while f.endswith('/'):
             f = f[:len(f)-1]
         file_candidate = f.split('/')[-1]
         assert file_candidate, f
-        if '%' in file_candidate:
-            file_candidate = file_candidate.replace('%', ' ')
+
         found = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', file_candidate))
         if not found:
-            print('Not found {}'.format(f))
+            print('{} - Not found {}'.format(len(nf)+1, f))
             conf_name.append('')
             sizes.append(0)
+            nf.append(f)
         else:
             chaff = [x for x in found if "." not in x]
             ffiles = [x for x in found if "." in x]
