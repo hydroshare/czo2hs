@@ -27,7 +27,7 @@ def main():
             print('Seemingly not a file {}'.format(fn))
             conf_name.append('')
             sizes.append(0)
-        if len(s) > 0:
+        elif len(s) > 0:
             conf_name.append(fn)
             sz = os.stat(s[0]).st_size // 1000
             sizes.append(sz)
