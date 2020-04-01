@@ -20,7 +20,9 @@ def main():
     conf_name = []
     sizes = []
     for f in dg.index:
-        file_candidate = f.strip().split('/')[-1].strip()
+        file_candidate = f.split('/')[-1]
+        assert file_candidate, len(file_candidate)
+        assert len(file_candidate) > 1, len(file_candidate)
 
         if '%' in file_candidate:
             file_candidate = file_candidate.replace('%', ' ')
