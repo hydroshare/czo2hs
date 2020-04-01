@@ -23,6 +23,7 @@ def main():
         fn = f.split('/')[-1]
         # print(fn)
         s = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', fn))
+        s = [x for x in s if s.contains('.')]
         if s and len(s)>0:
             if len(s) > 1:
                 print(len(s), s)
