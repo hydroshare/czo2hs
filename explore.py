@@ -31,11 +31,11 @@ def main():
             chaff = [x for x in found if "." not in x]
             ffiles = [x for x in found if "." in x]
             if not ffiles:
-                print('Found only chaff {}'.format(chaff))
+                print('Found only chaff {} - qty {}'.format(chaff[:5], len(chaff)))
                 conf_name.append('')
                 sizes.append(0)
             elif len(ffiles) > 0:
-                assert file_candidate == ffiles[0].split('/'[-1])
+                assert file_candidate == ffiles[0].split('/')[-1], ffiles[0].split('/')[-1]
                 conf_name.append(file_candidate)
                 sz = os.stat(ffiles[0]).st_size // 1000  # KB
                 sizes.append(sz)
