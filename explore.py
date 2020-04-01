@@ -31,7 +31,7 @@ def main():
             chaff = [x for x in found if "." not in x]
             ffiles = [x for x in found if "." in x]
             if not ffiles:
-                print('Found only chaff {} - qty {}'.format(chaff[:5], len(chaff)))
+                print('Found only chaff for {} at {} - qty {}'.format(file_candidate, chaff[:5], len(chaff)))
                 conf_name.append('')
                 sizes.append(0)
             elif len(ffiles) > 0:
