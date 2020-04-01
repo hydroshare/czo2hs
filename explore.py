@@ -26,6 +26,9 @@ def main():
         if s and len(s)>0:
             conf_name.append(fn)
             sizes.append(os.stat(s[0]).st_size // 1000)
+        else:
+            conf_name.append('')
+            sizes.append(0)
 
     dg['conf'] = conf_name
     dg['sizes'] = sizes
