@@ -23,8 +23,11 @@ def main():
         fn = f.split('/')[-1]
         # print(fn)
         s = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', fn))
-        if s and len(s)>1:
-            print(s)
+        if s and len(s)>0:
+            if len(s) > 1:
+                print(len(s), s)
+            else:
+                print(fn, os.path.getsize(s[0]))
     # a=1
 
 
