@@ -19,22 +19,25 @@ def main():
 
     conf_name = []
     sizes = []
-    for f in  dg.index:
-        fn = f.split('/')[-1]
-        s = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', fn))
-        s = [x for x in s if "." in x]
-        if not s:
-            print('Seemingly not a file {}'.format(fn))
+    for f in dg.index:
+        file_candidate = f.split('/')[-1]
+        found = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', file_candidate))
+
+        chaff = [x for x in found if "." not in x]
+        ffiles = [x for x in found if "." in x]
+        if not ffiles:
+            print('Found only chaff {}'.format(chaff))
             conf_name.append('')
             sizes.append(0)
-        elif len(s) > 0:
-            conf_name.append(fn)
-            sz = os.stat(s[0]).st_size // 1000
+        elif len(ffiles) > 0:
+            assert file_candidate == ffiles[0].split('/'[-1])
+            conf_name.append(file_candidate)
+            sz = os.stat(ffiles[0]).st_size // 1000  # KB
             sizes.append(sz)
             if sz == 0:
-                print('Zero size {}'.format(fn))
+                print('Zero size {}'.format(file_candidate))
         else:
-            print('unknown state'.format(fn))
+            print('unknown state'.format(file_candidate))
             conf_name.append('')
             sizes.append(0)
 
