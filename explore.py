@@ -25,10 +25,7 @@ def main():
         s = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', fn))
         s = [x for x in s if "." in x]
         if s and len(s)>0:
-            if len(s) > 1:
-                print(len(s), s)
-            else:
-                print(fn, os.path.getsize(s[0]))
+            print(fn, os.stat(s[0]) // 1000)
     # a=1
 
 
