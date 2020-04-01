@@ -22,6 +22,8 @@ def main():
     for f in dg.index:
         file_candidate = f.split('/')[-1]
 
+        if '%' in file_candidate:
+            file_candidate = file_candidate.replace('%', ' ')
         found = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', file_candidate))
         if not found:
             print('Not found {}'.format(file_candidate))
