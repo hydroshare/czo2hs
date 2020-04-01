@@ -20,7 +20,8 @@ def main():
     conf_name = []
     sizes = []
     for f in dg.index:
-        assert f, f
+        if f.endswith('/'):
+            f = f[:len(f)-1]
         file_candidate = f.split('/')[-1]
         assert file_candidate, f
         assert len(file_candidate) > 1, len(file_candidate)
