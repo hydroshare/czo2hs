@@ -1,10 +1,10 @@
 import pandas as pd
 import time
 from utils_logging import text_emphasis, elapsed_time, log_uploaded_file_stats
-
+import glob
+import os
 
 def main():
-    print('hi')
     czo_data = pd.read_csv('./data/CZO-datasets-metadata-2019-10-29.csv')
     df_rows = czo_data[['CZOS', 'COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']]
     data = []
@@ -19,7 +19,13 @@ def main():
     dg.to_csv('czodata.csv')
 
     df_links = czo_data['EXTERNAL_LINKS-url$link_text']
-    a=1
+    for f in  dg.index:
+        fn = f.split('/')[-1]
+        # print(fn)
+        s = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/', fn))
+        if s:
+            print(s)
+    # a=1
 
 
 
