@@ -23,10 +23,18 @@ def main():
         fn = f.split('/')[-1]
         s = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', fn))
         s = [x for x in s if "." in x]
-        if s and len(s)>0:
+        if not s:
+            print('Seemingly not a file {}'.format(fn))
+            conf_name.append('')
+            sizes.append(0)
+        if len(s) > 0:
             conf_name.append(fn)
-            sizes.append(os.stat(s[0]).st_size // 1000)
+            sz = os.stat(s[0]).st_size // 1000
+            sizes.append(sz)
+            if sz == 0:
+                print('Zero size {}'.format(fn))
         else:
+            print('unknown state'.format(fn))
             conf_name.append('')
             sizes.append(0)
 
