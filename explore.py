@@ -16,18 +16,20 @@ def main():
             data.append(line)
     df = pd.DataFrame.from_records(data, columns=['czo', 'files'])
     dg = df.groupby('files').first()
-    dg.to_csv('czodata.csv')
 
-    df_links = czo_data['EXTERNAL_LINKS-url$link_text']
+    conf_name = []
+    sizes = []
     for f in  dg.index:
         fn = f.split('/')[-1]
-        # print(fn)
         s = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', fn))
         s = [x for x in s if "." in x]
         if s and len(s)>0:
-            print(fn, os.stat(s[0]) // 1000)
-    # a=1
+            conf_name.append(fn)
+            sizes.append(os.stat(s[0]).st_size // 1000)
 
+    dg['conf'] = conf_name
+    dg['sizes'] = sizes
+    dg.to_csv('czodata.csv')
 
 
 if __name__ == "__main__":
