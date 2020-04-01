@@ -22,7 +22,7 @@ def main():
     for f in dg.index:
         assert f, f
         file_candidate = f.split('/')[-1]
-        assert file_candidate, len(file_candidate)
+        assert file_candidate, f
         assert len(file_candidate) > 1, len(file_candidate)
 
         if '%' in file_candidate:
