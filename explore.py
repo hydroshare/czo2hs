@@ -24,13 +24,11 @@ def main():
             f = f[:len(f)-1]
         file_candidate = f.split('/')[-1]
         assert file_candidate, f
-        assert len(file_candidate) > 1, len(file_candidate)
-
         if '%' in file_candidate:
             file_candidate = file_candidate.replace('%', ' ')
         found = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', file_candidate))
         if not found:
-            print('Not found {}'.format(file_candidate))
+            print('Not found {}'.format(f))
             conf_name.append('')
             sizes.append(0)
         else:
