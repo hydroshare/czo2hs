@@ -22,7 +22,7 @@ def main():
     for f in  dg.index:
         fn = f.split('/')[-1]
         print(fn)
-        s = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/', fn))
+        s = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', fn))
         if s:
             print(s)
     # a=1
