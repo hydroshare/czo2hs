@@ -21,9 +21,9 @@ def main():
     df_links = czo_data['EXTERNAL_LINKS-url$link_text']
     for f in  dg.index:
         fn = f.split('/')[-1]
-        print(fn)
+        # print(fn)
         s = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', fn))
-        if s:
+        if s and len(s.split("/")>1):
             print(s)
     # a=1
 
