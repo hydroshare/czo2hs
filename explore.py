@@ -67,12 +67,12 @@ def main():
     with open('./outputs/notfound.txt', 'w') as f:
         for item in nf1:
             f.write(item + '\n')
-        f.write(len(nf1))
+        f.write(str(len(nf1)))
 
     with open('./outputs/extlinks.txt', 'w') as f:
         for item in nf2:
             f.write(item + '\n')
-        f.write(len(nf2))
+        f.write(str(len(nf2)))
 
 
 if __name__ == "__main__":
