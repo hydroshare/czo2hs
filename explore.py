@@ -68,6 +68,7 @@ def main():
 
     dg['conf'] = conf_name
     dg['sizes'] = sizes
+    dg['type'] = ftype
     dg.to_csv('czodata.csv')
 
     if not os.path.exists('./outputs'):
