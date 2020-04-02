@@ -3,6 +3,7 @@ import time
 from utils_logging import text_emphasis, elapsed_time, log_uploaded_file_stats
 import glob
 import os
+import requests
 
 
 def main():
@@ -21,6 +22,7 @@ def main():
     conf_name = []
     sizes = []
     nf1, nf2 = [], []
+    ftype = []
     for f in dg.index:
         while f.endswith('/'):
             f = f[:len(f)-1]
@@ -41,6 +43,7 @@ def main():
                 print('{} - Likely external link {}'.format(len(nf2), f))
             conf_name.append('')
             sizes.append(0)
+            ftype.append('')
         else:
             chaff = [x for x in found if "." not in x]
             ffiles = [x for x in found if "." in x]
@@ -48,17 +51,20 @@ def main():
                 print('Found only chaff for {} at {} - qty {}'.format(file_candidate, chaff[:5], len(chaff)))
                 conf_name.append('')
                 sizes.append(0)
+                ftype.append('')
             elif len(ffiles) > 0:
                 assert file_candidate == ffiles[0].split('/')[-1], ffiles[0].split('/')[-1]
                 conf_name.append(file_candidate)
                 sz = os.stat(ffiles[0]).st_size // 1000  # KB
                 sizes.append(sz)
+                ftype.append(file_candidate.split('.')[-1]).lower()
                 if sz == 0:
                     print('Zero size {}'.format(file_candidate))
             else:
                 print('unknown state'.format(file_candidate))
                 conf_name.append('')
                 sizes.append(0)
+                ftype.append('')
 
     dg['conf'] = conf_name
     dg['sizes'] = sizes
@@ -79,10 +85,13 @@ def main():
 
 
 if __name__ == "__main__":
-    with open('./notfound.txt', 'r') as f:
-        e = f.readlines()
-
-    print(e)
+    # with open('./notfound.txt', 'r') as f:
+    #     e = f.read().splitlines()
+    #
+    # for item in e:
+    #     res = requests.get(item)
+    #     if not res.status_code == 200:
+    #         print(item, res)
 
     start_time = time
     start = time.time()
