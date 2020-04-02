@@ -30,7 +30,7 @@ def main():
         found = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', file_candidate))
         if not found:
             likely_file = '.' in f.split('/')[-1]
-            for item in ['.htm', '.jsp', '.ml', '.php', '.shtm', '.nc', '.aspx', '']:
+            for item in ['.htm', '.jsp', '.ml', '.php', '.shtm', '.nc', '.aspx']:
                 if item in f.split('/')[-1]:
                     likely_file = False
             if likely_file:
@@ -79,6 +79,11 @@ def main():
 
 
 if __name__ == "__main__":
+    with open('./notfound.txt', 'r') as f:
+        e = f.readlines()
+
+    print(e)
+
     start_time = time
     start = time.time()
 
