@@ -4,6 +4,7 @@ from utils_logging import text_emphasis, elapsed_time, log_uploaded_file_stats
 import glob
 import os
 
+
 def main():
     czo_data = pd.read_csv('./data/CZO-datasets-metadata-2019-10-29.csv')
     df_rows = czo_data[['CZOS', 'COMPONENT_FILES-location$topic$url$data_level$private$doi$metadata_url']]
@@ -19,7 +20,7 @@ def main():
 
     conf_name = []
     sizes = []
-    nf = []
+    nf1, nf2 = [], []
     for f in dg.index:
         while f.endswith('/'):
             f = f[:len(f)-1]
@@ -28,10 +29,15 @@ def main():
 
         found = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', file_candidate))
         if not found:
-            print('{} - Not found {}'.format(len(nf)+1, f))
+            likely_file = '.' in f.split('/')[-1]
+            if likely_file:
+                nf1.append(f)
+                print('{} - Not found {}'.format(len(nf1), f))
+            else:
+                nf2.append(f)
+                print('{} - Likely external link {}'.format(len(nf2), f))
             conf_name.append('')
             sizes.append(0)
-            nf.append(f)
         else:
             chaff = [x for x in found if "." not in x]
             ffiles = [x for x in found if "." in x]
