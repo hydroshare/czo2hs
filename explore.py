@@ -57,7 +57,7 @@ def main():
                 conf_name.append(file_candidate)
                 sz = os.stat(ffiles[0]).st_size // 1000  # KB
                 sizes.append(sz)
-                ftype.append(file_candidate.split('.')[-1]).lower()
+                ftype.append(file_candidate.split('.')[-1].lower())
                 if sz == 0:
                     print('Zero size {}'.format(file_candidate))
             else:
