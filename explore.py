@@ -30,7 +30,7 @@ def main():
         found = glob.glob(os.path.join('/home/mobrien/czo2hs/tmp2/**/', file_candidate))
         if not found:
             likely_file = '.' in f.split('/')[-1]
-            for item in ['.htm', '.jsp', '.ml', '.php', '.shtm', '.nc']:
+            for item in ['.htm', '.jsp', '.ml', '.php', '.shtm', '.nc', '.aspx', '']:
                 if item in f.split('/')[-1]:
                     likely_file = False
             if likely_file:
