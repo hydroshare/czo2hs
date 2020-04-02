@@ -61,6 +61,19 @@ def main():
     dg['sizes'] = sizes
     dg.to_csv('czodata.csv')
 
+    if not os.path.exists('./outputs'):
+        os.mkdir('./outputs')
+
+    with open('./outputs/notfound.txt') as f:
+        for item in nf1:
+            f.write(item + '\n')
+        f.write(len(nf1))
+
+    with open('./outputs/extlinks.txt') as f:
+        for item in nf2:
+            f.write(item + '\n')
+        f.write(len(nf2))
+
 
 if __name__ == "__main__":
     start_time = time
