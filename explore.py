@@ -64,12 +64,12 @@ def main():
     if not os.path.exists('./outputs'):
         os.mkdir('./outputs')
 
-    with open('./outputs/notfound.txt') as f:
+    with open('./outputs/notfound.txt', 'w') as f:
         for item in nf1:
             f.write(item + '\n')
         f.write(len(nf1))
 
-    with open('./outputs/extlinks.txt') as f:
+    with open('./outputs/extlinks.txt', 'w') as f:
         for item in nf2:
             f.write(item + '\n')
         f.write(len(nf2))
